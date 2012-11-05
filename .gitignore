@@ -1,4 +1,7 @@
-#VIM
+# OS X
+*.DS_Store
+
+# VIM
 *.un~
 *.swp
 *.swo

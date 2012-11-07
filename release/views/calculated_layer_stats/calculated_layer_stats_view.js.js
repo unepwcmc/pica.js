@@ -12,16 +12,14 @@
       CalculatedLayerStatsView.__super__.constructor.apply(this, arguments);
     }
 
-    CalculatedLayerStatsView.prototype.tagName = "ul";
+    CalculatedLayerStatsView.prototype.id = "calculated-layer-stats";
 
-    CalculatedLayerStatsView.prototype.id = "calculated_layer_stats";
-
-    CalculatedLayerStatsView.prototype.template = "#calculated_layer_stats_tmpl";
+    CalculatedLayerStatsView.prototype.template = "#calculated-layer-stats-tmpl";
 
     CalculatedLayerStatsView.prototype.itemView = Pica.Views.CalculatedLayerStatView;
 
     CalculatedLayerStatsView.prototype.appendHtml = function(collectionView, itemView) {
-      return collectionView.$el.append(itemView.el);
+      return collectionView.$('#calculated-layer-stats-list').append(itemView.el);
     };
 
     return CalculatedLayerStatsView;

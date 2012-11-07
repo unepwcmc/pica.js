@@ -1,4 +1,4 @@
-window.PICA.config = {}
+Pica.Routers ||= []
 
 class Pica.Routers.PicaRouter extends Backbone.Router
   routes:
@@ -7,7 +7,7 @@ class Pica.Routers.PicaRouter extends Backbone.Router
     ".*": "start"
 
   introduction: (magpieAddress) ->
-    window.PICA.config.magpieAddress = magpieAddress
+    Pica.config.magpieAddress = magpieAddress
 
   start: () ->
     @currentView = new Pica.Views.DrawOrLoadView()

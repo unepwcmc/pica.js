@@ -12,7 +12,7 @@
       CalculatedLayerStatView.__super__.constructor.apply(this, arguments);
     }
 
-    CalculatedLayerStatView.prototype.template = '#calculated_layer_stat_tmpl';
+    CalculatedLayerStatView.prototype.template = '#calculated-layer-stat-tmpl';
 
     CalculatedLayerStatView.prototype.tagName = 'li';
 

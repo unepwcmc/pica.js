@@ -1,7 +1,8 @@
 (function() {
-  var Pica;
 
-  Pica = new Backbone.Marionette.Application();
+  window.Pica = new Backbone.Marionette.Application();
+
+  window.Pica.config = {};
 
   Pica.addRegions({
     main: "#map",

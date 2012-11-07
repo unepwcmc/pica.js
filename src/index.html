@@ -1,5 +1,46 @@
 <html>
   <head>
-    <script src="app.js.coffee" type="text/javascript"></script>
+    <!-- Libs -->
+    <script src="../lib/jquery.js" type="text/javascript"></script>
+    <script src="../lib/json2.js" type="text/javascript"></script>
+    <script src="../lib/underscore.js" type="text/javascript"></script>
+    <script src="../lib/backbone.js" type="text/javascript"></script>
+    <script src="../lib/backbone.marionette.min.js" type="text/javascript"></script>
+
+    <!-- Backbone -->
+    <!-- Collections -->
+    <script src="../release/collections/calcaulted_layer_stats.js.js" type="text/javascript"></script>
+
+    <!-- Model -->
+    <script src="../release/models/calcaulted_layer_stat.js.js" type="text/javascript"></script>
+    <script src="../release/models/polygon.js.js" type="text/javascript"></script>
+
+    <!-- Routers -->
+    <script src="../release/models/pica_router.js.js" type="text/javascript"></script>
+    
+    <!-- Views -->
+    <script src="../release/views/draw_or_load_view.js.js" type="text/javascript"></script>
+    <script src="../release/views/map_edit_view.js.js" type="text/javascript"></script>
+    <script src="../release/views/calculated_layer_stats/calculated_layer_stat_view.js.js" type="text/javascript"></script>
+    <script src="../release/views/calculated_layer_stats/calculated_layer_stats_view.js.js" type="text/javascript"></script>
+    <script src="../release/views/polygons/new_polygon_view.js.js" type="text/javascript"></script>
+
+    <script src="../release/app.js.js" type="text/javascript"></script>
+
+    <!-- Templates -->
+    <script type="text/template" id="calculated-layer-stats-tmpl">
+      <h2>Stats:</h2>
+      <ul id="calculated-layer-stats-list"></ul>
+    </script>
+
+    <script type="text/template" id="calculated-layer-stat-tmpl">
+      <h4><%= name %>:</h4><span><%= value %></span>
+    </script>
+
+    <script type="text/javascript">
+      $(function() {
+        
+      })
+    </script>
   </head>
 </html>

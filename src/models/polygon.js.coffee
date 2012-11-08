@@ -1,5 +1,6 @@
-Pica.Models ||= []
+Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
-class Pica.Models.Polygon extends Backbone.Model
-  url: () ->
-    "#{window.PICA.magpieAddress}/polygon"
+  class Models.Polygon extends Backbone.Model
+    url: () ->
+      "#{window.PICA.magpieAddress}/polygon"
+)

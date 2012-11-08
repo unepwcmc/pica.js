@@ -1,2 +1,2 @@
 rm -r release/*
-coffee -c -o release src
+coffee -c -o release/js src

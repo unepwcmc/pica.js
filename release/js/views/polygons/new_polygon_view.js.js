@@ -10,23 +10,37 @@
 
       function NewPolygonView() {
         this.render = __bind(this.render, this);
+        this.startPolygon = __bind(this.startPolygon, this);
         NewPolygonView.__super__.constructor.apply(this, arguments);
       }
 
+      NewPolygonView.prototype.template = '#new-polygon-view-tmpl';
+
       NewPolygonView.prototype.events = {
-        'click #analyse': 'createPolygon'
+        'click input': 'createPolygon'
       };
 
-      NewPolygonView.prototype.initialize = function() {
-        return this.polygon = new Pica.Models.Polygon();
+      NewPolygonView.prototype.initialize = function(map) {
+        this.polygon = new Pica.Models.Polygon();
+        this.map = map;
+        return this.map.on('click', this.startPolygon);
+      };
+
+      NewPolygonView.prototype.startPolygon = function(event) {
+        this.map.off('click', this.startPolygon);
+        this.mapPolygon = L.polygon([event.latlng]);
+        this.mapPolygon.editing.enable();
+        return this.mapPolygon.addTo(this.map);
       };
 
       NewPolygonView.prototype.createPolygon = function() {
-        this.polygon.save;
-        return PICA.router.navigate("/analysis/" + (this.polygon.get('analysis_id')) + "/polygon/" + (this.polygon.get('id')));
+        return Pica.vent.trigger("routeTo:polygonShow", this.polygon);
       };
 
       NewPolygonView.prototype.render = function() {
+        var compiledTemplate;
+        compiledTemplate = _.template($(this.template).html());
+        this.$el.html(compiledTemplate());
         return this;
       };
 

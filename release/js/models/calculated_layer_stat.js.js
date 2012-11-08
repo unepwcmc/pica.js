@@ -2,8 +2,8 @@
   var __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  Pica.module('CalculatedLayerStats', function(CalculatedLayerStats, App, Backbone, Marionette, $, _) {
-    CalculatedLayerStats.CalculatedLayerStat = (function(_super) {
+  Pica.module('Models', function(Models, App, Backbone, Marionette, $, _) {
+    return Models.CalculatedLayerStat = (function(_super) {
 
       __extends(CalculatedLayerStat, _super);
 
@@ -18,7 +18,10 @@
       return CalculatedLayerStat;
 
     })(Backbone.Model);
-    return CalculatedLayerStats.CalculatedLayerStatList = (function(_super) {
+  });
+
+  Pica.module('Collections', function(Collections, App, Backbone, Marionette, $, _) {
+    return Collections.CalculatedLayerStatList = (function(_super) {
 
       __extends(CalculatedLayerStatList, _super);
 
@@ -26,7 +29,7 @@
         CalculatedLayerStatList.__super__.constructor.apply(this, arguments);
       }
 
-      CalculatedLayerStatList.prototype.model = CalculatedLayerStats.CalculatedLayerStat;
+      CalculatedLayerStatList.prototype.model = Pica.Models.CalculatedLayerStat;
 
       return CalculatedLayerStatList;
 

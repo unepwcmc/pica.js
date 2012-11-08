@@ -1,9 +1,11 @@
-Pica.module('CalculatedLayerStats', (CalculatedLayerStats, App, Backbone, Marionette, $, _) ->
+Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
-  class CalculatedLayerStats.CalculatedLayerStat extends Backbone.Model
+  class Models.CalculatedLayerStat extends Backbone.Model
     url: () ->
       "#{window.PICA.magpieAddress}/polygon"
+)
 
-  class CalculatedLayerStats.CalculatedLayerStatList extends Backbone.Collection
-    model: CalculatedLayerStats.CalculatedLayerStat
+Pica.module('Collections', (Collections, App, Backbone, Marionette, $, _) ->
+  class Collections.CalculatedLayerStatList extends Backbone.Collection
+    model: Pica.Models.CalculatedLayerStat
 )

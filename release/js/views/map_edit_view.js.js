@@ -13,13 +13,6 @@
         MapEditView.__super__.constructor.apply(this, arguments);
       }
 
-      MapEditView.prototype.el = '#side_panel';
-
-      MapEditView.prototype.initialize = function(map) {
-        this.map = map;
-        return this.polygon = new Pica.Models.Polygon();
-      };
-
       MapEditView.prototype.render = function() {
         return this;
       };

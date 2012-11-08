@@ -3,30 +3,30 @@
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  Pica.Views || (Pica.Views = {});
+  Pica.module('Views', function(Views, App, Backbone, Marionette, $, _) {
+    return Views.MapEditView = (function(_super) {
 
-  Pica.Views.MapEditView = (function(_super) {
+      __extends(MapEditView, _super);
 
-    __extends(MapEditView, _super);
+      function MapEditView() {
+        this.render = __bind(this.render, this);
+        MapEditView.__super__.constructor.apply(this, arguments);
+      }
 
-    function MapEditView() {
-      this.render = __bind(this.render, this);
-      MapEditView.__super__.constructor.apply(this, arguments);
-    }
+      MapEditView.prototype.el = '#side_panel';
 
-    MapEditView.prototype.el = '#side_panel';
+      MapEditView.prototype.initialize = function(map) {
+        this.map = map;
+        return this.polygon = new Pica.Models.Polygon();
+      };
 
-    MapEditView.prototype.initialize = function(map) {
-      this.map = map;
-      return this.polygon = new Pica.Models.Polygon();
-    };
+      MapEditView.prototype.render = function() {
+        return this;
+      };
 
-    MapEditView.prototype.render = function() {
-      return this;
-    };
+      return MapEditView;
 
-    return MapEditView;
-
-  })(Backbone.View);
+    })(Backbone.View);
+  });
 
 }).call(this);

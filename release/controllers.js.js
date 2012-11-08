@@ -48,7 +48,7 @@
       };
 
       MainController.prototype.start = function() {
-        this.calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView({
+        debugger;        this.calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView({
           collection: this.calculatedLayerStatList
         });
         return Pica.sidePanel.show(this.calculatedLayerStatsView);

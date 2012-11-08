@@ -1,9 +1,10 @@
-Pica.Views ||= {}
+Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
-class Pica.Views.DrawOrLoadView extends Backbone.View
-  el: '#start_modal'
+  class Views.DrawOrLoadView extends Backbone.View
+    el: '#start_modal'
 
-  initialize: () ->
+    initialize: () ->
 
-  render: =>
-    return this
+    render: =>
+      return this
+)

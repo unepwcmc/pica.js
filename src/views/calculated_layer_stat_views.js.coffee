@@ -1,4 +1,4 @@
-Pica.module('CalculatedLayerStats.Views', (Views, App, Backbone, Marionette, $, _) ->
+Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
   class Views.CalculatedLayerStatView extends Backbone.Marionette.ItemView
     template: '#calculated-layer-stat-tmpl',

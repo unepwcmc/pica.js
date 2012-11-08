@@ -3,27 +3,27 @@
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  Pica.Views || (Pica.Views = {});
+  Pica.module('Views', function(Views, App, Backbone, Marionette, $, _) {
+    return Views.DrawOrLoadView = (function(_super) {
 
-  Pica.Views.DrawOrLoadView = (function(_super) {
+      __extends(DrawOrLoadView, _super);
 
-    __extends(DrawOrLoadView, _super);
+      function DrawOrLoadView() {
+        this.render = __bind(this.render, this);
+        DrawOrLoadView.__super__.constructor.apply(this, arguments);
+      }
 
-    function DrawOrLoadView() {
-      this.render = __bind(this.render, this);
-      DrawOrLoadView.__super__.constructor.apply(this, arguments);
-    }
+      DrawOrLoadView.prototype.el = '#start_modal';
 
-    DrawOrLoadView.prototype.el = '#start_modal';
+      DrawOrLoadView.prototype.initialize = function() {};
 
-    DrawOrLoadView.prototype.initialize = function() {};
+      DrawOrLoadView.prototype.render = function() {
+        return this;
+      };
 
-    DrawOrLoadView.prototype.render = function() {
-      return this;
-    };
+      return DrawOrLoadView;
 
-    return DrawOrLoadView;
-
-  })(Backbone.View);
+    })(Backbone.View);
+  });
 
 }).call(this);

@@ -15,10 +15,29 @@
 
   Pica.addInitializer(function(options) {
     var calculatedLayerStatsView;
-    calculatedLayerStatsView = new calculatedLayerStatsView({
+    calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView({
       collection: options.calculatedLayerStats
     });
-    return Pica.main.show(calculatedLayerStats);
+    return Pica.main.show(calculatedLayerStatsView);
+  });
+
+  $(document).ready(function() {
+    var calculatedLayerStats;
+    calculatedLayerStats = new Pica.Collections.CalculatedLayerStats([
+      new Pica.Models.CalculatedLayerStat({
+        name: "Carbon",
+        value: 50
+      }), new Pica.Models.CalculatedLayerStat({
+        name: "Beef",
+        value: 5
+      }), new Pica.Models.CalculatedLayerStat({
+        name: "Watermelon",
+        value: 150
+      })
+    ]);
+    return Pica.start({
+      calculatedLayerStats: calculatedLayerStats
+    });
   });
 
 }).call(this);

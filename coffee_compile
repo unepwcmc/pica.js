@@ -1,1 +1,2 @@
+rm -r release/*
 coffee -c -o release src

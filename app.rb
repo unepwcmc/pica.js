@@ -22,4 +22,11 @@ class App < Sinatra::Base
 
     @json.to_json
   end
+
+  get '/polygon/:id/calculated_layer_stats' do
+    [
+      {name: 'Carbon', value: 5},
+      {name: 'Forest', value: 8}
+    ].to_json
+  end
 end

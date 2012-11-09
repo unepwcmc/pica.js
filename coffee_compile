@@ -1,2 +1,0 @@
-rm -r release/*
-coffee -c -w -o release/js src

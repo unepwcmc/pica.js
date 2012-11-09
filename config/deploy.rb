@@ -27,3 +27,11 @@ set :scm_username, "unepwcmc-read"
 set :git_enable_submodules, 1
 default_run_options[:pty] = true # Must be set for the password prompt from git to work
 
+# stop app from trying to use rake
+namespace :deploy do
+  namespace :rake_tasks do
+    task :singleton, :roles => :db, :only => {:primary => true} do
+      puts "do nothing"
+    end
+  end
+end

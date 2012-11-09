@@ -16,6 +16,7 @@ class App < Sinatra::Base
   end
 
   post '/polygon' do
+    # TODO Actually store the polygon somewhere
     @json = JSON.parse(request.body.read)
     @json['id'] = 5
     @json['analysis_id'] = 1
@@ -24,6 +25,7 @@ class App < Sinatra::Base
   end
 
   get '/polygon/:id/calculated_layer_stats' do
+    # TODO Return calculated stats for the given polygon
     [
       {name: 'Carbon', value: 5},
       {name: 'Forest', value: 8}

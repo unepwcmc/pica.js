@@ -2,16 +2,17 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
   class Models.Polygon extends Backbone.Model
     url: () ->
-      '../dummyData/polygon.json'
+      '/polygon'
 
-    sync: (method, model, options) ->
-      console.log @url()
-      $.ajax(
-        url: @url(),
-        success: () ->
-          model.set(data)
-          options.success()
-        dataType: 'json'
+    setGeomFromPoints: (points) ->
+      points = _.map(points, (p) ->
+        [p.lat, p.lng]
       )
 
+      @set(geom: 
+        "type": "Feature",
+        "geometry": 
+          "type": "Polygon",
+          "coordinates": [[points]]
+      )
 )

@@ -17,10 +17,11 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       @mapPolygon.addTo(@map)
 
     createPolygon: () ->
+      @polygon.setGeomFromPoints(@mapPolygon.getLatLngs())
       @polygon.save(
-        {polygon: @polygon.get('geom')},
-        {success: () ->
-          Pica.vent.trigger("polygon:Created", @polygon)
+        @polygon.attributes,
+        {success: (model, response, options) ->
+          Pica.vent.trigger("polygon:Created", model)
         }
       )
 

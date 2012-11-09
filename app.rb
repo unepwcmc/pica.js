@@ -1,4 +1,5 @@
 require 'sinatra/assetpack'
+require 'json'
 
 class App < Sinatra::Base
   set :root, File.dirname(__FILE__)
@@ -11,7 +12,14 @@ class App < Sinatra::Base
   }
 
   get '/' do
-    puts ""
     File.read(File.join('app', 'index.html'))
+  end
+
+  post '/polygon' do
+    @json = JSON.parse(request.body.read)
+    @json['id'] = 5
+    @json['analysis_id'] = 1
+
+    @json.to_json
   end
 end

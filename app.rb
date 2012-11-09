@@ -6,7 +6,12 @@ class App < Sinatra::Base
 
   assets {
     serve '/js',     from: 'app/js'
-    serve '/css',    from: 'app/css'       # Optional
+    serve '/lib',    from: 'app/lib'       # Optional
     serve '/images', from: 'app/images'    # Optional
   }
+
+  get '/' do
+    puts ""
+    File.read(File.join('app', 'index.html'))
+  end
 end

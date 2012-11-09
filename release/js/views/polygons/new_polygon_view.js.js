@@ -34,7 +34,13 @@
       };
 
       NewPolygonView.prototype.createPolygon = function() {
-        return Pica.vent.trigger("polygon:Created", this.polygon);
+        return this.polygon.save({
+          polygon: this.polygon.get('geom')
+        }, {
+          success: function() {
+            return Pica.vent.trigger("polygon:Created", this.polygon);
+          }
+        });
       };
 
       NewPolygonView.prototype.render = function() {

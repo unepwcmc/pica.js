@@ -17,8 +17,13 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       @mapPolygon.addTo(@map)
 
     createPolygon: () ->
-      # TODO: actually save
-      Pica.vent.trigger("polygon:Created", @polygon)
+      @polygon.save(
+        {polygon: @polygon.get('geom')},
+        {success: () ->
+          Pica.vent.trigger("polygon:Created", @polygon)
+        }
+      )
+
       #window.open("#/analysis/#{@polygon.get('analysis_id')}/polygon/#{@polygon.get('id')}")
 
     render: =>

@@ -12,7 +12,19 @@
       }
 
       Polygon.prototype.url = function() {
-        return "" + window.PICA.magpieAddress + "/polygon";
+        return '../dummyData/polygon.json';
+      };
+
+      Polygon.prototype.sync = function(method, model, options) {
+        console.log(this.url());
+        return $.ajax({
+          url: this.url(),
+          success: function() {
+            model.set(data);
+            return options.success();
+          },
+          dataType: 'json'
+        });
       };
 
       return Polygon;

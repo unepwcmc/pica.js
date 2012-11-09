@@ -20,14 +20,7 @@
       };
 
       MainRouter.prototype.initialize = function(options) {
-        var _this = this;
-        this.controller = options.controller;
-        return Pica.vent.on("routeTo:polygonShow", function(polygon) {
-          console.log("Navigating to /analysis/" + (polygon.get('analysis_id')) + "/polygon/" + (polygon.get('id')));
-          return _this.navigate("/analysis/" + (polygon.get('analysis_id')) + "/polygon/" + (polygon.get('id')), {
-            trigger: true
-          });
-        });
+        return this.controller = options.controller;
       };
 
       MainRouter.prototype.polygonShow = function(analysis_id, id) {
@@ -46,7 +39,8 @@
       }
 
       MainController.prototype.initialize = function(options) {
-        return this.calculatedLayerStatList = new Pica.Collections.CalculatedLayerStatList([
+        var tileLayer, tileLayerUrl;
+        this.calculatedLayerStatList = new Pica.Collections.CalculatedLayerStatList([
           new Pica.Models.CalculatedLayerStat({
             name: "Carbon",
             value: 50
@@ -58,19 +52,24 @@
             value: 150
           })
         ]);
+        this.map = L.map('map').setView([51.505, -0.09], 3);
+        tileLayerUrl = 'http://carbon-tool.cartodb.com/tiles/ne_countries/{z}/{x}/{y}.png';
+        return tileLayer = new L.TileLayer(tileLayerUrl, {
+          maxZoom: 18
+        }).addTo(this.map);
       };
 
       MainController.prototype.start = function() {
-        var tileLayer, tileLayerUrl;
-        this.map = L.map('map').setView([51.505, -0.09], 3);
-        tileLayerUrl = 'http://carbon-tool.cartodb.com/tiles/ne_countries/{z}/{x}/{y}.png';
-        tileLayer = new L.TileLayer(tileLayerUrl, {
-          maxZoom: 18
-        }).addTo(this.map);
-        return Pica.sidePanel.show(new Pica.Views.NewPolygonView(this.map));
+        return this.drawNewPolygon();
+      };
+
+      MainController.prototype.drawNewPolygon = function() {
+        Pica.sidePanel.show(new Pica.Views.NewPolygonView(new Pica.Models.Polygon(), this.map));
+        return Pica.vent.on("polygon:Created", this.showPolygon);
       };
 
       MainController.prototype.showPolygon = function(polygon) {
+        Pica.router.navigate("/analysis/" + (polygon.get('analysis_id')) + "/polygon/" + (polygon.get('id')));
         this.calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView({
           collection: this.calculatedLayerStatList
         });
@@ -83,7 +82,7 @@
     return Controllers.addInitializer(function() {
       var controller;
       controller = new Controllers.MainController();
-      new Controllers.MainRouter({
+      Pica.router = new Controllers.MainRouter({
         controller: controller
       });
       return controller.start();

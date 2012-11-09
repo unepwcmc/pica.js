@@ -20,8 +20,8 @@
         'click input': 'createPolygon'
       };
 
-      NewPolygonView.prototype.initialize = function(map) {
-        this.polygon = new Pica.Models.Polygon();
+      NewPolygonView.prototype.initialize = function(polygon, map) {
+        this.polygon = polygon;
         this.map = map;
         return this.map.on('click', this.startPolygon);
       };
@@ -34,7 +34,7 @@
       };
 
       NewPolygonView.prototype.createPolygon = function() {
-        return Pica.vent.trigger("routeTo:polygonShow", this.polygon);
+        return Pica.vent.trigger("polygon:Created", this.polygon);
       };
 
       NewPolygonView.prototype.render = function() {

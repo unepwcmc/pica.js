@@ -9,11 +9,6 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
     initialize: (options) ->
       @controller = options.controller
 
-      # App triggered changes
-      Pica.vent.on("routeTo:polygonShow", (polygon) =>
-        console.log "Navigating to /analysis/#{polygon.get('analysis_id')}/polygon/#{polygon.get('id')}"
-        @navigate("/analysis/#{polygon.get('analysis_id')}/polygon/#{polygon.get('id')}", trigger: true)
-      )
 
     polygonShow: (analysis_id, id) =>
       @controller.showPolygon(id)
@@ -26,15 +21,23 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
         new Pica.Models.CalculatedLayerStat(name: "Watermelon", value: 150)
       ])
 
-    start: () ->
       @map = L.map('map').setView([51.505, -0.09], 3)
       tileLayerUrl = 'http://carbon-tool.cartodb.com/tiles/ne_countries/{z}/{x}/{y}.png'
       tileLayer = new L.TileLayer(tileLayerUrl, {
         maxZoom: 18
       }).addTo @map
-      Pica.sidePanel.show(new Pica.Views.NewPolygonView(@map))
+
+    start: () ->
+      @drawNewPolygon()
+
+    drawNewPolygon: () ->
+      Pica.sidePanel.show(new Pica.Views.NewPolygonView(new Pica.Models.Polygon(), @map))
+      
+      Pica.vent.on("polygon:Created", @showPolygon)
 
     showPolygon: (polygon) ->
+      Pica.router.navigate("/analysis/#{polygon.get('analysis_id')}/polygon/#{polygon.get('id')}")
+
       @calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView(
         collection: @calculatedLayerStatList
       )
@@ -43,7 +46,7 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
   # App entry point
   Controllers.addInitializer ->
     controller = new Controllers.MainController()
-    new Controllers.MainRouter(controller: controller)
+    Pica.router = new Controllers.MainRouter(controller: controller)
 
     controller.start()
 )

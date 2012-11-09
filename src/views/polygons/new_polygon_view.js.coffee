@@ -5,8 +5,8 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
     events: 
       'click input': 'createPolygon'
 
-    initialize: (map) ->
-      @polygon = new Pica.Models.Polygon()
+    initialize: (polygon, map) ->
+      @polygon = polygon
       @map = map
       @map.on('click', @startPolygon)
 
@@ -18,7 +18,8 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
     createPolygon: () ->
       # TODO: actually save
-      Pica.vent.trigger("routeTo:polygonShow", @polygon)
+      Pica.vent.trigger("polygon:Created", @polygon)
+      #window.open("#/analysis/#{@polygon.get('analysis_id')}/polygon/#{@polygon.get('id')}")
 
     render: =>
       compiledTemplate = _.template($(@template).html())

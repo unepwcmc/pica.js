@@ -7,8 +7,9 @@ class App < Sinatra::Base
 
   assets {
     serve '/js',     from: 'app/js'
-    serve '/lib',    from: 'app/lib'       # Optional
-    serve '/images', from: 'app/images'    # Optional
+    serve '/lib',    from: 'app/lib'
+    serve '/css',    from: 'app/css'
+    serve '/img',    from: 'app/img'
   }
 
   get '/' do
@@ -26,9 +27,8 @@ class App < Sinatra::Base
 
   post '/polygon/:id/calculated_layer_stats' do
     # TODO Return calculated stats for the given polygon
-    the_body = request.body.read
-    puts the_body
-    @geo_json = JSON.parse(the_body)
+    @geo_json = JSON.parse(request.body.read)
+    puts @geo_json
     [
       {name: 'Carbon', value: 5},
       {name: 'Forest', value: 8}

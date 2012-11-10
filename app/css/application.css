@@ -1,0 +1,19 @@
+body {
+  background: url('/img/hexabump.png');
+}
+
+#header {
+  color: #FFF;
+}
+#header p {
+  color: #EEE;
+}
+
+#map {
+  height: 500px;
+  width: 100%;
+}
+#side-panel {
+  height: 450px;
+  width: 100%;
+}

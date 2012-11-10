@@ -15,7 +15,7 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
 
   class Controllers.MainController extends Marionette.Controller
     initialize: (options) ->
-      @map = L.map('map').setView([51.505, -0.09], 3)
+      @map = L.map('map').setView([0, 0], 2)
       tileLayerUrl = 'http://carbon-tool.cartodb.com/tiles/ne_countries/{z}/{x}/{y}.png'
       tileLayer = new L.TileLayer(tileLayerUrl, {
         maxZoom: 18

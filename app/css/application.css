@@ -27,7 +27,9 @@ body {
 #side-panel h3 {
   line-height: 25px;
   margin-top: 0;
+  font-size: 20px;
 }
 #side-panel h4 {
   color: blue;
+  font-size: 22px;
 }

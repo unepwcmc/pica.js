@@ -41,7 +41,7 @@ class App < Sinatra::Base
     @response_json = JSON.parse(response.body)
 
     [
-      {name: "Carbon Count (#{@response_json['elapsed']}ms)", value: @response_json['carbon_count'],},
+      {name: "Carbon Count (#{@response_json['elapsed']}ms)", value: "#{@response_json['carbon_count']} kt",},
     ].to_json
   end
 end

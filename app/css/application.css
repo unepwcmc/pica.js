@@ -14,6 +14,11 @@ body {
   width: 100%;
 }
 #side-panel {
-  height: 450px;
+  height: 460px;
   width: 100%;
+}
+
+#side-panel h3 {
+  line-height: 25px;
+  margin-top: 0;
 }

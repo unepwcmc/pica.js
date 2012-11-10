@@ -6,14 +6,14 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
     setGeomFromPoints: (points) ->
       points = _.map(points, (p) ->
-        [p.lat, p.lng]
+        [p.lng, p.lat]
       )
       points.push points[0]
 
       @set(geom: 
         "type": "Feature",
         "geometry": 
-          "type": "MultiPolygon",
-          "coordinates": [[[points]]]
+          "type": "Polygon",
+          "coordinates": [[points]]
       )
 )

@@ -28,10 +28,20 @@ class App < Sinatra::Base
   post '/polygon/:id/calculated_layer_stats' do
     # TODO Return calculated stats for the given polygon
     @geo_json = JSON.parse(request.body.read)
-    puts @geo_json
+
+    @request_json = @geo_json['polygonGeoJSON']['geometry']
+    puts @request_json
+    response = HTTParty.get("http://46.51.133.104:8080/carbon/?polygon=#{URI.encode @request_json.to_json.to_s}")
+
+    @request_body = {
+      :polygon => @geo_json['polygonGeoJSON']
+    }
+    #response = HTTParty.post("http://46.51.133.104:8080/carbon/", {polygon: @geo_json['polygonGeoJSON']})
+
+    @response_json = JSON.parse(response.body)
+
     [
-      {name: 'Carbon', value: 5},
-      {name: 'Forest', value: 8}
+      {name: "Carbon Count (#{@response_json['elapsed']}ms)", value: @response_json['carbon_count'],},
     ].to_json
   end
 end

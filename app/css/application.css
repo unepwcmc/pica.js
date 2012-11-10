@@ -18,7 +18,16 @@ body {
   width: 100%;
 }
 
+#side-panel ul {
+  margin-left: 0
+}
+#side-panel ul li {
+  list-style-type: none;
+}
 #side-panel h3 {
   line-height: 25px;
   margin-top: 0;
+}
+#side-panel h4 {
+  color: blue;
 }

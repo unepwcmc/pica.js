@@ -10,7 +10,22 @@ Pica.module('Collections', (Collections, App, Backbone, Marionette, $, _) ->
     model: Pica.Models.CalculatedLayerStat
     initialize: (options) ->
       @polygonId = options.polygonId
+      @polygonGeoJSON = options.polygonGeoJSON
 
     url: () ->
       "/polygon/#{@polygonId}/calculated_layer_stats"
+
+    fetch: (options) ->
+      $.ajax(
+        url: @url(),
+        type: 'post',
+        data: JSON.stringify(
+          polygonGeoJSON: @polygonGeoJSON
+        )
+        success: (data) =>
+          @reset($.parseJSON(data))
+          options.success(@)
+        error: (data) ->
+          console.log "Fetched failed"
+      )
 )

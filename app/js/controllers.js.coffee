@@ -32,13 +32,18 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
     showPolygon: (polygon) ->
       Pica.router.navigate("/analysis/#{polygon.get('analysis_id')}/polygon/#{polygon.get('id')}")
 
-      @layerStatList = new Pica.Collections.CalculatedLayerStatList({polygonId: polygon.get('id')})
+      @layerStatList = new Pica.Collections.CalculatedLayerStatList(
+        polygonId: polygon.get('id')
+        polygonGeoJSON: polygon.get('geom')
+      )
       @layerStatList.fetch(
         success: (collection, response, options) =>
           @calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView(
             collection: collection
           )
           Pica.sidePanel.show(@calculatedLayerStatsView)
+        error: () =>
+          console.log 'fetch failed'
       )
 
 

@@ -24,8 +24,11 @@ class App < Sinatra::Base
     @json.to_json
   end
 
-  get '/polygon/:id/calculated_layer_stats' do
+  post '/polygon/:id/calculated_layer_stats' do
     # TODO Return calculated stats for the given polygon
+    the_body = request.body.read
+    puts the_body
+    @geo_json = JSON.parse(the_body)
     [
       {name: 'Carbon', value: 5},
       {name: 'Forest', value: 8}

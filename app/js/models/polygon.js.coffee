@@ -8,11 +8,12 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
       points = _.map(points, (p) ->
         [p.lat, p.lng]
       )
+      points.push points[0]
 
       @set(geom: 
         "type": "Feature",
         "geometry": 
-          "type": "Polygon",
-          "coordinates": [[points]]
+          "type": "MultiPolygon",
+          "coordinates": [[[points]]]
       )
 )

@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/decioferreira/bootstrap-generators.git
+  revision: b6fba1e36e96fa8607943ed6e7ee3888d153f05d
+  specs:
+    bootstrap-generators (2.1.1)
+      railties (~> 3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -37,6 +44,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.4.0)
+    ejs (1.0.0)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -69,6 +77,10 @@ GEM
       activesupport (= 3.2.8)
       bundler (~> 1.0)
       railties (= 3.2.8)
+    rails-backbone (0.7.2)
+      coffee-script (~> 2.2.0)
+      ejs (~> 1.0.0)
+      railties (>= 3.1.0)
     railties (3.2.8)
       actionpack (= 3.2.8)
       activesupport (= 3.2.8)
@@ -103,9 +115,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bootstrap-generators (~> 2.1)!
   coffee-rails (~> 3.2.1)
   jquery-rails
   rails (= 3.2.8)
+  rails-backbone
   sass-rails (~> 3.2.3)
   sqlite3
   uglifier (>= 1.0.3)

@@ -1,7 +1,7 @@
 Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
   class Views.NewPolygonView extends Pica.Views.MapEditView
-    template: '#new-polygon-view-tmpl'
+    template: window.JST["templates/new-polygon-view"]
     events: 
       'click input': 'createPolygon'
 

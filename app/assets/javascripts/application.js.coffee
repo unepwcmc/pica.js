@@ -1,5 +1,6 @@
 #= require jquery
 #= require jquery_ujs
+#= require jquery_cors_ovr
 #= require bootstrap
 #= require underscore
 #= require backbone

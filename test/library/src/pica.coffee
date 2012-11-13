@@ -1,8 +1,9 @@
 window.Pica =
-  truth: -> true
-
   start: (options = {}) ->
-    L.map(options.map) if options.map
-    @renderSidebar()
+    @renderMap(options.map)
+    @renderSidebar(options.sidebar)
 
-  renderSidebar: ->
+  renderMap: (id) ->
+    L.map(id) if id?
+
+  renderSidebar: (selector) ->

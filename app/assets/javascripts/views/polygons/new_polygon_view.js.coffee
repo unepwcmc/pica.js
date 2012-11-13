@@ -8,13 +8,12 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
     initialize: (polygon, map) ->
       @polygon = polygon
       @map = map
-      @map.on('click', @startPolygon)
 
-    startPolygon: (event) =>
-      @map.off('click', @startPolygon)
-      @mapPolygon = L.polygon([event.latlng])
-      @mapPolygon.editing.enable()
-      @mapPolygon.addTo(@map)
+      (new L.Polygon.Draw(@map, {})).enable()
+
+      @map.on 'draw:poly-created', (e) =>
+        @mapPolygon = e.poly
+        @mapPolygon.addTo(@map)
 
     createPolygon: () ->
       @polygon.setGeomFromPoints(@mapPolygon.getLatLngs())

@@ -10,10 +10,5 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
       )
       points.push points[0]
 
-      @set(polygon: 
-        "type": "Feature",
-        "geometry": 
-          "type": "Polygon",
-          "coordinates": [[points]]
-      )
+      @set(geometry: [[points]])
 )

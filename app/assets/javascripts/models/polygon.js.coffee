@@ -2,7 +2,7 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
   class Models.Polygon extends Backbone.Model
     url: () ->
-      '/polygon'
+      "#{Pica.config.magpieAddress}/polygon"
 
     setGeomFromPoints: (points) ->
       points = _.map(points, (p) ->

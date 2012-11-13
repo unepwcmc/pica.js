@@ -68,7 +68,13 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
       @map.addLayer(drawnItems)
 
     start: () ->
-      @drawNewPolygon()
+      @drawNewOrLoad()
+
+    drawNewOrLoad: () ->
+      Pica.sidePanel.show(new Pica.Views.NewOrLoadView(new Pica.Models.Polygon(), @map))
+      
+      @transitionToActionOn('userRequest:drawNewArea', @drawNewPolygon)
+      Pica.vent.on('userRequest:loadArea', () -> alert('Implement me'))
 
     drawNewPolygon: () ->
       Pica.sidePanel.show(new Pica.Views.NewPolygonView(new Pica.Models.Polygon(), @map))
@@ -80,7 +86,6 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
 
       @layerStatList = new Pica.Collections.CalculatedLayerStatList(
         polygonId: polygon.get('id')
-        polygonGeoJSON: polygon.get('geom')
       )
       @layerStatList.fetch(
         success: (collection, response, options) =>

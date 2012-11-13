@@ -1,25 +1,41 @@
 describe 'Pica', ->
-  describe '#truth()', ->
-    it 'should return Boolean true', ->
-      assert(Pica.truth())
-
   describe '#start()', ->
-    it 'should render a map', ->
-      stub = sinon.stub(L, 'map', (id) -> )
-
+    it 'should render the map', ->
+      stub = sinon.stub(Pica, 'renderMap')
       Pica.start({map: 'map'})
-      assert(stub.calledWith('map'));
+      assert(stub.calledWith('map'))
+
+      Pica.renderMap.restore()
+
+    it 'should render the sidebar', ->
+      stub = sinon.stub(Pica, 'renderSidebar')
+      Pica.start({sidebar: '#sidebar'})
+      assert(stub.calledWith('#sidebar'))
+
+      Pica.renderSidebar.restore()
+
+  describe '#renderMap()', ->
+    it 'should render a map with Leaflet', ->
+      stub = sinon.stub(L, 'map')
+
+      Pica.renderMap('map')
+      assert(stub.calledWith('map'))
 
       L.map.restore()
 
-    it 'should call the renderSidebar method', ->
-      spy = sinon.spy(Pica, 'renderSidebar')
-      Pica.start()
-      assert.equal(spy.callCount, 1)
-
   describe '#renderSidebar()', ->
-    it 'should create an element to create a New Area'
+    it 'should create a New Area element', ->
+      sidebar_div = $('<div>')
+      stub = sinon.stub($.fn, 'init', -> sidebar_div)
+
+      Pica.renderSidebar()
+
+      $.fn.init.restore()
+
     it 'should create an element to load a saved Area of Interest'
+
+    context 'when there is no data', ->
+      it 'should show some initial instructions'
 
     describe 'when there is data', ->
       it 'should create an element to delete each of the Areas'

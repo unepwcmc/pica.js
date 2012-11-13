@@ -2,31 +2,49 @@
 (function() {
 
   describe('Pica', function() {
-    describe('#truth()', function() {
-      return it('should return Boolean true', function() {
-        return assert(Pica.truth());
-      });
-    });
     describe('#start()', function() {
-      it('should render a map', function() {
+      it('should render the map', function() {
         var stub;
-        stub = sinon.stub(L, 'map', function(id) {});
+        stub = sinon.stub(Pica, 'renderMap');
         Pica.start({
           map: 'map'
         });
         assert(stub.calledWith('map'));
-        return L.map.restore();
+        return Pica.renderMap.restore();
       });
-      return it('should call the renderSidebar method', function() {
-        var spy;
-        spy = sinon.spy(Pica, 'renderSidebar');
-        Pica.start();
-        return assert.equal(spy.callCount, 1);
+      return it('should render the sidebar', function() {
+        var stub;
+        stub = sinon.stub(Pica, 'renderSidebar');
+        Pica.start({
+          sidebar: '#sidebar'
+        });
+        assert(stub.calledWith('#sidebar'));
+        return Pica.renderSidebar.restore();
+      });
+    });
+    describe('#renderMap()', function() {
+      return it('should render a map with Leaflet', function() {
+        var stub;
+        stub = sinon.stub(L, 'map');
+        Pica.renderMap('map');
+        assert(stub.calledWith('map'));
+        return L.map.restore();
       });
     });
     return describe('#renderSidebar()', function() {
-      it('should create an element to create a New Area');
+      it('should create a New Area element', function() {
+        var sidebar_div, stub;
+        sidebar_div = $('<div>');
+        stub = sinon.stub($.fn, 'init', function() {
+          return sidebar_div;
+        });
+        Pica.renderSidebar();
+        return $.fn.init.restore();
+      });
       it('should create an element to load a saved Area of Interest');
+      context('when there is no data', function() {
+        return it('should show some initial instructions');
+      });
       return describe('when there is data', function() {
         it('should create an element to delete each of the Areas');
         it('should create a tab for each Area');

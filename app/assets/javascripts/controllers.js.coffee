@@ -47,7 +47,7 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
 
     drawNewOrLoad: () ->
       Pica.sidePanel.show(new Pica.Views.NewOrLoadView(new Pica.Models.Polygon(), @map))
-      
+
       @transitionToActionOn('userRequest:drawNewArea', @drawNewPolygon)
       Pica.vent.on('userRequest:loadArea', () -> alert('Implement me'))
 

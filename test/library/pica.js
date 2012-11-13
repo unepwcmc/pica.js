@@ -2,19 +2,19 @@
 (function() {
 
   window.Pica = {
-    truth: function() {
-      return true;
-    },
     start: function(options) {
       if (options == null) {
         options = {};
       }
-      if (options.map) {
-        L.map(options.map);
-      }
-      return this.renderSidebar();
+      this.renderMap(options.map);
+      return this.renderSidebar(options.sidebar);
     },
-    renderSidebar: function() {}
+    renderMap: function(id) {
+      if (id != null) {
+        return L.map(id);
+      }
+    },
+    renderSidebar: function(selector) {}
   };
 
 }).call(this);

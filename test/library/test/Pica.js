@@ -1,10 +1,14 @@
 var assert = chai.assert;
 
 describe('Pica', function(){
-  describe('#new()', function(){
-    it('should return an object', function(){
-      var pica = Pica.new();
-      assert.typeOf(pica, 'object');
+  describe('#start()', function(){
+    it('should render a map', function() {
+      var stub = sinon.stub(L, 'map', function(id) {});
+
+      Pica.start({map: 'map'});
+      assert(stub.calledWith('map'));
+
+      L.map.restore();
     })
   })
 })

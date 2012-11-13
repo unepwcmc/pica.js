@@ -1,9 +1,11 @@
 var Pica;
 
 (Pica = function() {
+    var api_url = '';
+
     return {
-      new: function() {
-        return this;
+      start: function(options) {
+        L.map(options.map);
       }
     }
 }());

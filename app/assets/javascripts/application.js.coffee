@@ -7,6 +7,7 @@
 #= require backbone_datalink
 #= require backbone.marionette.min
 #= require leaflet
+#= require leaflet.draw
 #= require pica
 #= require_tree ./models
 #= require controllers

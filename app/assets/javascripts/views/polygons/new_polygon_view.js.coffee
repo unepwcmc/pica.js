@@ -9,9 +9,7 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       @polygon = polygon
       @map = map
 
-      @map.on 'click', (e) =>
-        draw = new L.Polygon.Draw(@map, {})
-        draw.enable()
+      (new L.Polygon.Draw(@map, {})).enable()
 
       @map.on 'draw:poly-created', (e) =>
         @mapPolygon = e.poly

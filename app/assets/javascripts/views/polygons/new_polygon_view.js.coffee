@@ -1,7 +1,7 @@
 Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
   class Views.NewPolygonView extends Pica.Views.MapEditView
-    template: window.JST["templates/new-polygon-view"]
+    template: JST["templates/new-polygon-view"]
     events: 
       'click input': 'createPolygon'
 
@@ -28,8 +28,6 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       #window.open("#/analysis/#{@polygon.get('analysis_id')}/polygon/#{@polygon.get('id')}")
 
     render: =>
-      compiledTemplate = _.template($(@template).html())
-
-      @$el.html(compiledTemplate())
+      @$el.html(@template())
       return this
 )

@@ -10,8 +10,8 @@
 #= require pica
 #= require_tree ./models
 #= require controllers
-#= require_tree ./views
 #= require_tree ./templates
+#= require_tree ./views
 
 Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
 

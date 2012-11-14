@@ -2,8 +2,6 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
   class Views.NewPolygonView extends Pica.Views.MapEditView
     template: JST["templates/new-polygon-view"]
-    events: 
-      'click input': 'createPolygon'
 
     initialize: (polygon, map) ->
       @polygon = polygon
@@ -13,11 +11,12 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       (new L.Polygon.Draw(@map, {})).enable()
 
       @map.on 'draw:poly-created', (e) =>
-        @mapPolygon = e.poly
-        @mapPolygon.addTo(@map)
+        mapPolygon = e.poly
+        mapPolygon.addTo(@map)
+        @createPolygon mapPolygon
 
-    createPolygon: () ->
-      @polygon.setGeomFromPoints(@mapPolygon.getLatLngs())
+    createPolygon: (mapPolygon) ->
+      @polygon.setGeomFromPoints(mapPolygon.getLatLngs())
       @polygon.save(
         @polygon.attributes,
         {success: (model, response, options) ->

@@ -9,6 +9,7 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       @polygon = polygon
       @map = map
 
+      # Turn on Leaflet.draw polygon tool
       (new L.Polygon.Draw(@map, {})).enable()
 
       @map.on 'draw:poly-created', (e) =>

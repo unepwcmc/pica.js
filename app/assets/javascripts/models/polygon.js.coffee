@@ -12,3 +12,10 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
       @set(geometry: [[points]])
 )
+Pica.module('Collections', (Collections, App, Backbone, Marionette, $, _) ->
+
+ class Collections.PolygonList extends Backbone.Collection
+    model: Pica.Models.Polygon
+    initialize: (models, options) ->
+      @area =  options.area
+)

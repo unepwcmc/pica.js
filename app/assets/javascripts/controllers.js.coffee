@@ -42,7 +42,8 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
       }).addTo @map
 
     start: () ->
-      @drawNewOrLoad()
+      #@drawNewOrLoad()
+      @showArea(new Pica.Models.Polygon())
 
     drawNewOrLoad: () ->
       Pica.sidePanel.show(new Pica.Views.NewOrLoadView(new Pica.Models.Polygon(), @map))
@@ -53,23 +54,15 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
     drawNewPolygon: () ->
       Pica.sidePanel.show(new Pica.Views.NewPolygonView(new Pica.Models.Polygon(), @map))
 
-      @transitionToActionOn('polygon:Created', @showPolygon)
+      @transitionToActionOn('polygon:Created', @showArea)
 
-    showPolygon: (polygon) ->
-      Pica.router.navigate("/analysis/#{polygon.get('analysis_id')}/polygon/#{polygon.get('id')}")
+    showArea: (polygon) ->
+      Pica.router.navigate("/analysis/#{polygon.get('analysis_id')}/area/#{polygon.get('area_id')}")
 
-      @layerStatList = new Pica.Collections.CalculatedLayerStatList(
-        polygonId: polygon.get('id')
-      )
-      @layerStatList.fetch(
-        success: (collection, response, options) =>
-          @calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView(
-            collection: collection
-          )
-          Pica.sidePanel.show(@calculatedLayerStatsView)
-        error: () =>
-          console.log 'fetch failed'
-      )
+      Pica.sidePanel.show(new Pica.Views.AnalysisView(
+        model: new Pica.Models.Area()
+      ))
+
 
 
   # App entry point

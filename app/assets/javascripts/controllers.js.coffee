@@ -42,8 +42,7 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
       }).addTo @map
 
     start: () ->
-      #@drawNewOrLoad()
-      @showArea(new Pica.Models.Polygon())
+      @drawNewOrLoad()
 
     drawNewOrLoad: () ->
       Pica.sidePanel.show(new Pica.Views.NewOrLoadView(new Pica.Models.Polygon(), @map))

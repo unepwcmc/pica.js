@@ -5,8 +5,8 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
     events: 
       'click input': 'createPolygon'
 
-    initialize: (polygon) ->
-      @polygon = polygon
+    initialize: (options) ->
+      @polygon = options.polygon
 
       (new L.Polygon.Draw(Pica.map, {})).enable()
 
@@ -17,10 +17,7 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
     createPolygon: () ->
       @polygon.setGeomFromPoints(@mapPolygon.getLatLngs())
       @polygon.save(
-        @polygon.attributes,
-        {success: (model, response, options) ->
-          Pica.vent.trigger("polygon:Created", model)
-        }
+        @polygon.attributes
       )
 
       #window.open("#/analysis/#{@polygon.get('analysis_id')}/polygon/#{@polygon.get('id')}")

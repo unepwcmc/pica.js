@@ -45,7 +45,7 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
       @drawNewOrLoad()
 
     drawNewOrLoad: () ->
-      Pica.sidePanel.show(new Pica.Views.NewOrLoadView(new Pica.Models.Polygon()))
+      Pica.sidePanel.show(new Pica.Views.NewOrLoadView())
 
       @transitionToActionOn('userRequest:drawNewArea', @newAnalysis)
       Pica.vent.on('userRequest:loadArea', () -> alert('Implement me'))
@@ -53,21 +53,12 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
     newAnalysis: () ->
       Pica.sidePanel.show(new Pica.Views.AnalysisView(new Pica.Models.Analysis()))
 
-      @transitionToActionOn('polygon:Created', @showArea)
-
-    showArea: (polygon) ->
-      Pica.router.navigate("/analysis/#{polygon.get('analysis_id')}/area/#{polygon.get('area_id')}")
-
-      Pica.sidePanel.show(new Pica.Views.AnalysisView(
-        model: new Pica.Models.Area()
-      ))
-
-
-
   # App entry point
   Controllers.addInitializer ->
     controller = new Controllers.MainController()
     Pica.router = new Controllers.MainRouter(controller: controller)
+
+    Pica.calculationList = new Pica.Collections.CalculationList([{name: 'mangrove_carbon_sum'}])
 
     controller.start()
 )

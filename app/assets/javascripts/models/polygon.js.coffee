@@ -4,6 +4,9 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
     url: () ->
       "#{Pica.config.magpieAddress}/polygons"
 
+    initialize: (options) ->
+      @area = options.area
+
     setGeomFromPoints: (points) ->
       points = _.map(points, (p) ->
         [p.lng, p.lat]
@@ -11,6 +14,22 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
       points.push points[0]
 
       @set(geometry: [[points]])
+
+    save: (attributes, options) =>
+      options ||= {}
+      @set(area_id: @get('area').get('id')) unless @get('area_id')?
+
+      # Don't save unless we have a parent area id
+      if @get('area_id')?
+        #super(arguments)
+        console.log('Pretending to save polygon, remove me when magpie works')
+        @set('id', parseInt(Math.random()*2902, 10))
+        options.success(@, {}, options) if options.success?
+        @trigger('sync')
+      else
+        @get('area').save({}, success: () =>
+          @save {}, options
+        )
 )
 Pica.module('Collections', (Collections, App, Backbone, Marionette, $, _) ->
 

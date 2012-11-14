@@ -6,16 +6,23 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       @area = options.area
       @area = new Pica.Models.Area() unless @area?
       if @area.get('polygons').length == 0
-        @currentView = new Pica.Views.NewPolygonView(new Pica.Models.Polygon())
+        newPolygon = new Pica.Models.Polygon(area: @area)
+        @currentView = new Pica.Views.NewPolygonView(polygon: newPolygon)
+        newPolygon.on('sync', @showLayerStatsView)
       else
-        console.log "implement me"
-        @calculatedLayerStatList = new Pica.Collections.CalculatedLayerStatList(
-          areaId: options.areaId
-        )
-        @calculatedLayerStatList.fetch()
-        @calculatedLayerStatsView = new Pica.Views.CalculatedLayerStatsView(
-          collection: @calculatedLayerStatList
-        )
+        @showLayerStatsView()
+
+    showLayerStatsView: () =>
+      @calculatedStatList = new Pica.Collections.CalculatedStatList(
+        area: @area
+        calculationList: Pica.calculationList
+      )
+      @calculatedStatList.fetch()
+      @calculatedStatsView = new Pica.Views.CalculatedStatsView(
+        collection: @calculatedStatList
+      )
+      @currentView = @calculatedStatsView
+      @render()
 
     render: () ->
       @$el.html(@template())

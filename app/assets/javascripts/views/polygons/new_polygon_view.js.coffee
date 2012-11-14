@@ -5,15 +5,14 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
     events: 
       'click input': 'createPolygon'
 
-    initialize: (polygon, map) ->
+    initialize: (polygon) ->
       @polygon = polygon
-      @map = map
 
-      (new L.Polygon.Draw(@map, {})).enable()
+      (new L.Polygon.Draw(Pica.map, {})).enable()
 
-      @map.on 'draw:poly-created', (e) =>
+      Pica.map.on 'draw:poly-created', (e) =>
         @mapPolygon = e.poly
-        @mapPolygon.addTo(@map)
+        @mapPolygon.addTo(Pica.map)
 
     createPolygon: () ->
       @polygon.setGeomFromPoints(@mapPolygon.getLatLngs())

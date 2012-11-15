@@ -42,7 +42,7 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
       }).addTo Pica.map
 
     start: () ->
-      @drawNewOrLoad()
+      @newAnalysis()
 
     drawNewOrLoad: () ->
       Pica.sidePanel.show(new Pica.Views.NewOrLoadView())

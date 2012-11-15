@@ -35,40 +35,30 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
 
   class Controllers.MainController extends Controllers.EventTransitionController
     initialize: (options) ->
-      @map = L.map('map').setView([0, 0], 2)
+      Pica.map = L.map('map').setView([0, 0], 2)
       tileLayerUrl = 'http://carbon-tool.cartodb.com/tiles/ne_countries/{z}/{x}/{y}.png'
       tileLayer = new L.TileLayer(tileLayerUrl, {
         maxZoom: 18
-      }).addTo @map
+      }).addTo Pica.map
 
     start: () ->
-      #@drawNewOrLoad()
-      @showArea(new Pica.Models.Polygon())
+      @drawNewOrLoad()
 
     drawNewOrLoad: () ->
-      Pica.sidePanel.show(new Pica.Views.NewOrLoadView(new Pica.Models.Polygon(), @map))
+      Pica.sidePanel.show(new Pica.Views.NewOrLoadView())
 
-      @transitionToActionOn('userRequest:drawNewArea', @drawNewPolygon)
+      @transitionToActionOn('userRequest:drawNewArea', @newAnalysis)
       Pica.vent.on('userRequest:loadArea', () -> alert('Implement me'))
 
-    drawNewPolygon: () ->
-      Pica.sidePanel.show(new Pica.Views.NewPolygonView(new Pica.Models.Polygon(), @map))
-
-      @transitionToActionOn('polygon:Created', @showArea)
-
-    showArea: (polygon) ->
-      Pica.router.navigate("/analysis/#{polygon.get('analysis_id')}/area/#{polygon.get('area_id')}")
-
-      Pica.sidePanel.show(new Pica.Views.AnalysisView(
-        model: new Pica.Models.Area()
-      ))
-
-
+    newAnalysis: () ->
+      Pica.sidePanel.show(new Pica.Views.AnalysisView(analysis: new Pica.Models.Analysis()))
 
   # App entry point
   Controllers.addInitializer ->
     controller = new Controllers.MainController()
     Pica.router = new Controllers.MainRouter(controller: controller)
+
+    Pica.calculationList = new Pica.Collections.CalculationList([{name: 'mangrove_carbon_sum'}])
 
     controller.start()
 )

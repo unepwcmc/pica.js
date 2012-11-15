@@ -4,7 +4,9 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
     template: JST["templates/analysis-template"]
 
     initialize: (options) ->
-      @area = new Pica.Models.Area
+      @analysis = options.analysis
+      @area = options.area if options.area?
+      @area ||= new Pica.Models.Area({analysis: @analysis})
 
       @render()
       
@@ -12,9 +14,9 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       @$el.html(@template())
 
       @currentTab = new Backbone.Marionette.Region(
-        el: "#current-area-tab"
+        el: @el
       )
-      @currentTab.show(new Pica.Views.AreaView(@area))
+      @currentTab.show(new Pica.Views.AreaView(area: @area))
 
-      return this
+      return @
 )

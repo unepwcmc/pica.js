@@ -1,4 +1,4 @@
-describe 'Pica', ->
+describe 'Pica.JS', ->
   describe '#start()', ->
     it 'should render the map', ->
       stub = sinon.stub(Pica, 'renderMap')
@@ -25,17 +25,35 @@ describe 'Pica', ->
 
   describe '#renderSidebar()', ->
     it 'should create a New Area element', ->
-      sidebar_div = $('<div>')
-      stub = sinon.stub($.fn, 'init', -> sidebar_div)
+      sidebar_div = $('<div id="sidebar">')
+      stub = sinon.stub($.fn, 'init')
+      stub.withArgs('#sidebar').returns(sidebar_div)
 
-      Pica.renderSidebar()
+      Pica.renderSidebar('#sidebar')
+      assert.notEqual(sidebar_div.text().indexOf('New Area'), -1, "Sidebar doesn't contain 'New Area' text")
 
       $.fn.init.restore()
 
-    it 'should create an element to load a saved Area of Interest'
+    it 'should create an element to load a saved Area of Interest', ->
+      sidebar_div = $('<div id="sidebar">')
+      stub = sinon.stub($.fn, 'init')
+      stub.withArgs('#sidebar').returns(sidebar_div)
+
+      Pica.renderSidebar('#sidebar')
+      assert.notEqual(sidebar_div.text().indexOf('or load a saved Area of Interest'), -1, "Sidebar doesn't contain 'or load a saved Area of Interest' text")
+
+      $.fn.init.restore()
 
     context 'when there is no data', ->
-      it 'should show some initial instructions'
+      it 'should show some initial instructions', ->
+        sidebar_div = $('<div id="sidebar">')
+        stub = sinon.stub($.fn, 'init')
+        stub.withArgs('#sidebar').returns(sidebar_div)
+
+        Pica.renderSidebar('#sidebar')
+        assert.notEqual(sidebar_div.text().indexOf('Click on the map to start drawing your first polygon and define an Area Of Interest'), -1, "Sidebar doesn't contain introduction text")
+
+        $.fn.init.restore()
 
     describe 'when there is data', ->
       it 'should create an element to delete each of the Areas'

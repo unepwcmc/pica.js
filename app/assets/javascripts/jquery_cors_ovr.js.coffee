@@ -3,7 +3,7 @@ $.originalAjax = $.ajax
 # Override $.ajax to support CORS in >IE8
 $.ajax = (options) ->
   if $.browser.msie and window.XDomainRequest
-    url = options.url + "?" + $.param(query)
+    url = options.url + "?" + $.param(data)
     
     # Use Microsoft XDR
     xdr = new XDomainRequest()
@@ -15,7 +15,7 @@ $.ajax = (options) ->
     xdr.onload = ->
       JSON = $.parseJSON(xdr.responseText)
       JSON = $.parseJSON(data.firstChild.textContent)  if JSON is null or typeof (JSON) is "undefined"
-      success.call context, JSON
+      options.success.call options.context, JSON
 
     xdr.send()
   else
@@ -23,7 +23,7 @@ $.ajax = (options) ->
       type: options.type
       url: options.url
       dataType: options.dataType
-      data: options.query
+      data: options.data
       success: (data) ->
-        success.call context, data
+        options.success.call options.context, data
       crossDomain: true

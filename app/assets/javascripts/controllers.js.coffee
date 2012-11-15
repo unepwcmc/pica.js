@@ -51,7 +51,7 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
       Pica.vent.on('userRequest:loadArea', () -> alert('Implement me'))
 
     newAnalysis: () ->
-      Pica.sidePanel.show(new Pica.Views.AnalysisView(new Pica.Models.Analysis()))
+      Pica.sidePanel.show(new Pica.Views.AnalysisView(analysis: new Pica.Models.Analysis()))
 
   # App entry point
   Controllers.addInitializer ->

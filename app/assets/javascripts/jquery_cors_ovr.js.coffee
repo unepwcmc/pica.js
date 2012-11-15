@@ -15,7 +15,7 @@ $.ajax = (options) ->
     xdr.onload = ->
       JSON = $.parseJSON(xdr.responseText)
       JSON = $.parseJSON(data.firstChild.textContent)  if JSON is null or typeof (JSON) is "undefined"
-      success.call context, JSON
+      options.success.call options.context, JSON
 
     xdr.send()
   else
@@ -25,5 +25,5 @@ $.ajax = (options) ->
       dataType: options.dataType
       data: options.data
       success: (data) ->
-        success.call context, data
+        options.success.call options.context, data
       crossDomain: true

@@ -1,15 +1,22 @@
 Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
   class Models.Area extends Backbone.Model
-    initialize: () ->
+    initialize: (options) ->
+      @set(analysis: options.analysis)
       @set(polygons: new Pica.Collections.PolygonList([], {area: @}))
 
     url: () ->
       "#{Pica.config.magpieAddress}/areas"
 
     save: (attributes, options) ->
-      console.log('Pretending to save area, remove me when magpie works')
-      @set('id', parseInt(Math.random()*2902, 10))
+      options ||= {}
+      @set(analysis_id: @get('analysis').get('id')) unless @get('analysis_id')?
 
-      options.success(@, {}, options)
+      # Don't save unless we have a parent area id
+      if @get('analysis_id')?
+        super(arguments)
+      else
+        @get('analysis').save({}, success: () =>
+          @save {}, options
+        )
 )

@@ -1,12 +1,12 @@
 Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
-  class Views.AnalysisView extends Backbone.View
-    template: JST["templates/analysis-template"]
+  class Views.WorkspaceView extends Backbone.View
+    template: JST["templates/workspace-template"]
 
     initialize: (options) ->
-      @analysis = options.analysis
+      @workspace = options.workspace
       @area = options.area if options.area?
-      @area ||= new Pica.Models.Area({analysis: @analysis})
+      @area ||= new Pica.Models.Area({workspace: @workspace})
 
       @render()
       

@@ -1,18 +1,5 @@
 Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
 
-  class Controllers.MainRouter extends Backbone.Router
-    routes:
-      "new_polygon": "newPolygon"
-      "analysis/:analysis_id/polygon/:id": "polygonShow"
-      ".*": "start"
-
-    initialize: (options) ->
-      @controller = options.controller
-
-
-    polygonShow: (analysis_id, id) =>
-      @controller.showPolygon(id)
-
   # Extended controller that adds concept of action events bindings,
   # which are event bindings that are only valid for the duration
   # of an action
@@ -42,23 +29,16 @@ Pica.module('Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
       }).addTo Pica.map
 
     start: () ->
-      @drawNewOrLoad()
+      @newWorkspace()
 
-    drawNewOrLoad: () ->
-      Pica.sidePanel.show(new Pica.Views.NewOrLoadView())
-
-      @transitionToActionOn('userRequest:drawNewArea', @newAnalysis)
-      Pica.vent.on('userRequest:loadArea', () -> alert('Implement me'))
-
-    newAnalysis: () ->
-      Pica.sidePanel.show(new Pica.Views.AnalysisView(analysis: new Pica.Models.Analysis()))
+    newWorkspace: () ->
+      Pica.sidePanel.show(new Pica.Views.WorkspaceView(workspace: new Pica.Models.Workspace()))
 
   # App entry point
   Controllers.addInitializer ->
     controller = new Controllers.MainController()
-    Pica.router = new Controllers.MainRouter(controller: controller)
 
-    Pica.calculationList = new Pica.Collections.CalculationList([{name: 'mangrove_carbon_sum'}])
+    Pica.layers = new Pica.Collections.LayerList(Pica.config.appId)
 
     controller.start()
 )

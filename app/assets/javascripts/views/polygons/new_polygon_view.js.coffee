@@ -20,8 +20,6 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
         @polygon.attributes
       )
 
-      #window.open("#/analysis/#{@polygon.get('analysis_id')}/polygon/#{@polygon.get('id')}")
-
     render: =>
       @$el.html(@template())
       return this

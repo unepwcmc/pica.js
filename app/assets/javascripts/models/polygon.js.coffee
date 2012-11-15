@@ -21,10 +21,7 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
       # Don't save unless we have a parent area id
       if @get('area_id')?
-        #super(arguments)
-        console.log('Pretending to save polygon, remove me when magpie works')
-        @set('id', parseInt(Math.random()*2902, 10))
-        options.success(@, {}, options) if options.success?
+        super(arguments)
         @trigger('sync')
       else
         @get('area').save({}, success: () =>

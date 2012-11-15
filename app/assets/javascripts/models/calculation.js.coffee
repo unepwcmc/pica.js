@@ -9,4 +9,9 @@ Pica.module('Collections', (Collections, App, Backbone, Marionette, $, _) ->
 
   class Collections.CalculationList extends Backbone.Collection
     model: Pica.Models.Calculation
+
+    initialize: (collection, options) ->
+      collection.each (calculation) ->
+        calculation.fetch()
+
 )

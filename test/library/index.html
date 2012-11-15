@@ -4,21 +4,23 @@
 <head>
   <meta charset="utf-8">
   <title>Pica.js</title>
-  <script src="vendor/jquery.min.js"></script>
+  <script src="test/vendor/jquery.min.js"></script>
   <script>
     $(function () {
-      Pica.start({map: 'map', sidebar: '#sidebar'})
+      var pica = Pica.start();
+      pica.renderMap('map');
+      pica.renderSidepanel('sidepanel');
     });
   </script>
 
   <!-- include dependency files here... -->
-  <script src="vendor/leaflet.js"></script>
+  <script src="test/vendor/leaflet.js"></script>
 
   <!-- include source files here... -->
-  <script src="../pica.js"></script>
+  <script src="pica.js"></script>
 </head>
 <body>
   <div id="map"></div>
-  <div id="sidebar"></div>
+  <div id="sidepanel"></div>
 </body>
 </html>

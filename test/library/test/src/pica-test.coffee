@@ -1,62 +1,63 @@
-describe 'Pica.JS', ->
-  describe '#start()', ->
-    it 'should render the map', ->
-      stub = sinon.stub(Pica, 'renderMap')
-      Pica.start({map: 'map'})
-      assert(stub.calledWith('map'))
+describe 'Pica', ->
+  describe '#constructor()', ->
+    it 'should create a Workspace', ->
+      stub = sinon.stub(Pica.prototype, 'createWorkspace')
 
-      Pica.renderMap.restore()
+      pica = new Pica()
+      assert(stub.calledOnce)
 
-    it 'should render the sidebar', ->
-      stub = sinon.stub(Pica, 'renderSidebar')
-      Pica.start({sidebar: '#sidebar'})
-      assert(stub.calledWith('#sidebar'))
+      stub.restore()
 
-      Pica.renderSidebar.restore()
+    it 'should render the Map with map_id and workspace params', ->
+      workspace = sinon.stub()
 
-  describe '#renderMap()', ->
-    it 'should render a map with Leaflet', ->
-      stub = sinon.stub(L, 'map')
+      renderMapStub = sinon.stub(Pica.prototype, 'renderMap')
+      createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace').returns(workspace)
 
-      Pica.renderMap('map')
-      assert(stub.calledWith('map'))
+      pica = new Pica({map_id: 'mapId'})
+      assert(renderMapStub.calledWith('mapId', workspace))
 
-      L.map.restore()
+      renderMapStub.restore()
+      createWorkspaceStub.restore()
 
-  describe '#renderSidebar()', ->
-    it 'should create a New Area element', ->
-      sidebar_div = $('<div id="sidebar">')
-      stub = sinon.stub($.fn, 'init')
-      stub.withArgs('#sidebar').returns(sidebar_div)
+    it 'should render the Sidepanel with sidepanel_id and workspace params', ->
+      workspace = sinon.stub()
 
-      Pica.renderSidebar('#sidebar')
-      assert.notEqual(sidebar_div.text().indexOf('New Area'), -1, "Sidebar doesn't contain 'New Area' text")
+      renderSidepanelStub = sinon.stub(Pica.prototype, 'renderSidepanel')
+      createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace').returns(workspace)
 
-      $.fn.init.restore()
+      pica = new Pica({sidepanel_id: 'sidepanelId'})
+      assert(renderSidepanelStub.calledWith('sidepanelId', workspace))
 
-    it 'should create an element to load a saved Area of Interest', ->
-      sidebar_div = $('<div id="sidebar">')
-      stub = sinon.stub($.fn, 'init')
-      stub.withArgs('#sidebar').returns(sidebar_div)
+      renderSidepanelStub.restore()
+      createWorkspaceStub.restore()
 
-      Pica.renderSidebar('#sidebar')
-      assert.notEqual(sidebar_div.text().indexOf('or load a saved Area of Interest'), -1, "Sidebar doesn't contain 'or load a saved Area of Interest' text")
+    describe 'when there is a workspace_id on the URL', ->
+      it 'should pass it to createWorkspace', ->
+        getWorkspaceIdFromUrlStub = sinon.stub(Pica.prototype, 'getWorkspaceIdFromUrl').returns(1)
+        createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace')
 
-      $.fn.init.restore()
+        pica = new Pica()
+        assert(createWorkspaceStub.calledWith(1))
 
-    context 'when there is no data', ->
-      it 'should show some initial instructions', ->
-        sidebar_div = $('<div id="sidebar">')
-        stub = sinon.stub($.fn, 'init')
-        stub.withArgs('#sidebar').returns(sidebar_div)
+        getWorkspaceIdFromUrlStub.restore()
+        createWorkspaceStub.restore()
 
-        Pica.renderSidebar('#sidebar')
-        assert.notEqual(sidebar_div.text().indexOf('Click on the map to start drawing your first polygon and define an Area Of Interest'), -1, "Sidebar doesn't contain introduction text")
+  describe '#getWorkspaceIdFromUrl()', ->
+    describe 'when there is a workspace_id on the URL', ->
+      it 'should return it', ->
+        stub = sinon.stub(window.location, 'hash').returns('#workspace/1')
 
-        $.fn.init.restore()
+        pica = new Pica()
+        assert.equal(pica.getWorkspaceIdFromUrl(), 1)
 
-    describe 'when there is data', ->
-      it 'should create an element to delete each of the Areas'
-      it 'should create a tab for each Area'
-      it 'should show the name of each Layer'
-      it 'should show statistics for each Layer'
+        stub.restore()
+
+    describe "when there isn't a workspace_id on the URL", ->
+      it 'should return NULL', ->
+        stub = sinon.stub(window.location, 'hash').returns('')
+
+        pica = new Pica()
+        assert.equal(pica.getWorkspaceIdFromUrl(), null)
+
+        stub.restore()

@@ -5,17 +5,18 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
     initialize: (options) ->
       @area = options.area
       @area = new Pica.Models.Area() unless @area?
+      @area.bind('reset', @render)
+
       if @area.get('polygons').length == 0
-        newPolygon = new Pica.Models.Polygon(area: @area)
+        newPolygon = new Pica.Models.Polygon(area_id: @area.get 'id')
+        @area.get('polygons').add(newPolygon)
         @currentView = new Pica.Views.NewPolygonView(polygon: newPolygon)
-        newPolygon.on('sync', @showLayerStatsView)
       else
         @showLayerStatsView()
 
     showLayerStatsView: () =>
       @calculatedStatList = new Pica.Collections.CalculatedStatList(
         area: @area
-        calculationList: Pica.calculationList
       )
       @calculatedStatList.fetch()
       @calculatedStatsView = new Pica.Views.CalculatedStatsView(
@@ -24,7 +25,9 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
       @currentView = @calculatedStatsView
       @render()
 
-    render: () ->
+    renderNewPolygonView: () ->
+
+    render: () =>
       @$el.html(@template())
       
       @$el.find('#area-sub-view-container').html(@currentView.render().el)

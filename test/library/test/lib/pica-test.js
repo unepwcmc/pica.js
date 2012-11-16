@@ -3,26 +3,56 @@
 
   describe('Pica', function() {
     describe('#constructor()', function() {
+      beforeEach(function() {
+        this.createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace');
+        return this.fetchStub = sinon.stub(Pica.prototype, 'fetch');
+      });
+      afterEach(function() {
+        this.createWorkspaceStub.restore();
+        return this.fetchStub.restore();
+      });
       it('should call createWorkspace method', function() {
-        var pica, stub;
-        stub = sinon.stub(Pica.prototype, 'createWorkspace');
+        var pica;
         pica = new Pica();
-        assert(stub.calledOnce);
-        return stub.restore();
+        return assert(this.createWorkspaceStub.calledOnce);
       });
       return it('should call fetch method', function() {
-        var pica, stub;
-        stub = sinon.stub(Pica.prototype, 'fetch');
+        var pica;
         pica = new Pica();
-        assert(stub.calledOnce);
-        return stub.restore();
+        return assert(this.fetchStub.calledOnce);
       });
+    });
+    describe('#renderMap()', function() {
+      return it('should create a new Map');
+    });
+    describe('#renderSidepanel()', function() {
+      return it('should create a new Sidepanel');
     });
     describe('#createWorkspace()', function() {
       return it('should create a new Workspace');
     });
+    describe('#getWorkspaceIdFromUrl()', function() {
+      describe('When there is a workspace_id on the URL', function() {
+        return it('should return it', function() {
+          var pica, stub;
+          stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('#workspace/1');
+          pica = new Pica();
+          assert.equal(pica.getWorkspaceIdFromUrl(), 1);
+          return stub.restore();
+        });
+      });
+      return describe("When there isn't a workspace_id on the URL", function() {
+        return it('should return NULL', function() {
+          var pica, stub;
+          stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('');
+          pica = new Pica();
+          assert.equal(pica.getWorkspaceIdFromUrl(), null);
+          return stub.restore();
+        });
+      });
+    });
     describe('#fetch()', function() {
-      return it('should make an ajax call', function() {
+      it('should make an ajax call', function() {
         var pica, server, stub;
         server = sinon.fakeServer.create();
         server.respondWith("GET", "http://magpie.com/api/v1/applications/1.json", [
@@ -46,29 +76,67 @@
         }));
         return server.restore();
       });
+      return it("should not make an ajax call if there isn't a server_url", function() {
+        var pica, spy;
+        spy = sinon.spy($, 'ajax');
+        pica = new Pica();
+        pica.fetch();
+        assert.fail($.ajax.calledOnce);
+        return $.ajax.restore();
+      });
     });
     describe('#parse()', function() {
+      it('should not throw an error');
       return it('should save layers');
     });
-    return describe('#getWorkspaceIdFromUrl()', function() {
-      describe('When there is a workspace_id on the URL', function() {
-        return it('should return it', function() {
-          var pica, stub;
-          stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('#workspace/1');
-          pica = new Pica();
-          assert.equal(pica.getWorkspaceIdFromUrl(), 1);
-          return stub.restore();
-        });
+    return describe('#getLayers()', function() {
+      return it('should return the list of layers for the application');
+    });
+  });
+
+  describe('Map', function() {
+    describe('#constructor()', function() {
+      beforeEach(function() {
+        this.mapStub = sinon.stub();
+        this.leafletStub = sinon.stub(window.L, 'map').returns(this.mapStub);
+        return this.defineMapEventHandlersStub = sinon.stub(Map.prototype, 'defineMapEventHandlers');
       });
-      return describe("When there isn't a workspace_id on the URL", function() {
-        return it('should return NULL', function() {
-          var pica, stub;
-          stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('');
-          pica = new Pica();
-          assert.equal(pica.getWorkspaceIdFromUrl(), null);
-          return stub.restore();
-        });
+      afterEach(function() {
+        this.leafletStub.restore();
+        return this.defineMapEventHandlersStub.restore();
       });
+      it('should create a new Leaflet map', function() {
+        new Map({
+          dom_id: 'map-id'
+        });
+        return assert(this.leafletStub.calledWith('map-id'), 'creates a new Leaflet map');
+      });
+      return it('should call defineMapEventHandlers method', function() {
+        var map;
+        map = new Map();
+        return assert(this.defineMapEventHandlersStub.calledWith(this.mapStub), 'calls defineMapEventHandlers method');
+      });
+    });
+    describe('#defineMapEventHandlers()', function() {
+      it('should enable Leaflet.Polygon.Draw tool');
+      return it("should create listener to 'draw:poly-created' event on map");
+    });
+    return describe('#addPolygon()', function() {
+      it('should add event polygon to map', function() {
+        var leafletStub, map, polygonDrawEvent, stub;
+        stub = sinon.stub();
+        leafletStub = sinon.stub(window.L, 'map').returns(this.mapStub);
+        polygonDrawEvent = {
+          poly: {
+            addTo: stub
+          }
+        };
+        map = new Map();
+        map.addPolygon(polygonDrawEvent);
+        assert(stub.calledOnce);
+        return leafletStub.restore();
+      });
+      return it('should call addPolygon on the current area of interest');
     });
   });
 

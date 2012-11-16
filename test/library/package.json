@@ -1,0 +1,7 @@
+{
+  "name": "pica.js",
+  "description": "Magpie JS library",
+  "dependencies": {
+    "coffee-script": "~1.4.0"
+  }
+}

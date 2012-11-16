@@ -1,6 +1,6 @@
 describe 'Pica', ->
   describe '#constructor()', ->
-    it 'should create a Workspace', ->
+    it 'should call createWorkspace method', ->
       stub = sinon.stub(Pica.prototype, 'createWorkspace')
 
       pica = new Pica()
@@ -8,54 +8,47 @@ describe 'Pica', ->
 
       stub.restore()
 
-    it 'should render the Map with map_id and workspace params', ->
-      workspace = sinon.stub()
+    it 'should call fetch method', ->
+      stub = sinon.stub(Pica.prototype, 'fetch')
 
-      renderMapStub = sinon.stub(Pica.prototype, 'renderMap')
-      createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace').returns(workspace)
+      pica = new Pica()
+      assert(stub.calledOnce)
 
-      pica = new Pica({map_id: 'mapId'})
-      assert(renderMapStub.calledWith('mapId', workspace))
+      stub.restore()
 
-      renderMapStub.restore()
-      createWorkspaceStub.restore()
+  describe '#createWorkspace()', ->
+    it 'should create a new Workspace'
 
-    it 'should render the Sidepanel with sidepanel_id and workspace params', ->
-      workspace = sinon.stub()
+  describe '#fetch()', ->
+    it 'should make an ajax call', ->
+      server = sinon.fakeServer.create()
+      server.respondWith("GET", "http://magpie.com/api/v1/applications/1.json", [200, {"Content-Type": "application/json"}, '{"layers": [{"id": 1, "display_name": "Mangroves"}]}'])
 
-      renderSidepanelStub = sinon.stub(Pica.prototype, 'renderSidepanel')
-      createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace').returns(workspace)
+      stub = sinon.stub(Pica.prototype, 'parse')
 
-      pica = new Pica({sidepanel_id: 'sidepanelId'})
-      assert(renderSidepanelStub.calledWith('sidepanelId', workspace))
+      pica = new Pica({server_url: 'http://magpie.com/api/v1'})
+      pica.fetch()
+      server.respond()
+      assert(stub.calledWith({layers: [{id: 1, display_name: "Mangroves"}]}))
 
-      renderSidepanelStub.restore()
-      createWorkspaceStub.restore()
+      server.restore()
 
-    describe 'when there is a workspace_id on the URL', ->
-      it 'should pass it to createWorkspace', ->
-        getWorkspaceIdFromUrlStub = sinon.stub(Pica.prototype, 'getWorkspaceIdFromUrl').returns(1)
-        createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace')
-
-        pica = new Pica()
-        assert(createWorkspaceStub.calledWith(1))
-
-        getWorkspaceIdFromUrlStub.restore()
-        createWorkspaceStub.restore()
+  describe '#parse()', ->
+    it 'should save layers'
 
   describe '#getWorkspaceIdFromUrl()', ->
-    describe 'when there is a workspace_id on the URL', ->
+    describe 'When there is a workspace_id on the URL', ->
       it 'should return it', ->
-        stub = sinon.stub(window.location, 'hash').returns('#workspace/1')
+        stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('#workspace/1')
 
         pica = new Pica()
         assert.equal(pica.getWorkspaceIdFromUrl(), 1)
 
         stub.restore()
 
-    describe "when there isn't a workspace_id on the URL", ->
+    describe "When there isn't a workspace_id on the URL", ->
       it 'should return NULL', ->
-        stub = sinon.stub(window.location, 'hash').returns('')
+        stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('')
 
         pica = new Pica()
         assert.equal(pica.getWorkspaceIdFromUrl(), null)

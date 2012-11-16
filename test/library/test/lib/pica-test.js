@@ -3,63 +3,67 @@
 
   describe('Pica', function() {
     describe('#constructor()', function() {
-      it('should create a Workspace', function() {
+      it('should call createWorkspace method', function() {
         var pica, stub;
         stub = sinon.stub(Pica.prototype, 'createWorkspace');
         pica = new Pica();
         assert(stub.calledOnce);
         return stub.restore();
       });
-      it('should render the Map with map_id and workspace params', function() {
-        var createWorkspaceStub, pica, renderMapStub, workspace;
-        workspace = sinon.stub();
-        renderMapStub = sinon.stub(Pica.prototype, 'renderMap');
-        createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace').returns(workspace);
-        pica = new Pica({
-          map_id: 'mapId'
-        });
-        assert(renderMapStub.calledWith('mapId', workspace));
-        renderMapStub.restore();
-        return createWorkspaceStub.restore();
-      });
-      it('should render the Sidepanel with sidepanel_id and workspace params', function() {
-        var createWorkspaceStub, pica, renderSidepanelStub, workspace;
-        workspace = sinon.stub();
-        renderSidepanelStub = sinon.stub(Pica.prototype, 'renderSidepanel');
-        createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace').returns(workspace);
-        pica = new Pica({
-          sidepanel_id: 'sidepanelId'
-        });
-        assert(renderSidepanelStub.calledWith('sidepanelId', workspace));
-        renderSidepanelStub.restore();
-        return createWorkspaceStub.restore();
-      });
-      return describe('when there is a workspace_id on the URL', function() {
-        return it('should pass it to createWorkspace', function() {
-          var createWorkspaceStub, getWorkspaceIdFromUrlStub, pica;
-          getWorkspaceIdFromUrlStub = sinon.stub(Pica.prototype, 'getWorkspaceIdFromUrl').returns(1);
-          createWorkspaceStub = sinon.stub(Pica.prototype, 'createWorkspace');
-          pica = new Pica();
-          assert(createWorkspaceStub.calledWith(1));
-          getWorkspaceIdFromUrlStub.restore();
-          return createWorkspaceStub.restore();
-        });
+      return it('should call fetch method', function() {
+        var pica, stub;
+        stub = sinon.stub(Pica.prototype, 'fetch');
+        pica = new Pica();
+        assert(stub.calledOnce);
+        return stub.restore();
       });
     });
+    describe('#createWorkspace()', function() {
+      return it('should create a new Workspace');
+    });
+    describe('#fetch()', function() {
+      return it('should make an ajax call', function() {
+        var pica, server, stub;
+        server = sinon.fakeServer.create();
+        server.respondWith("GET", "http://magpie.com/api/v1/applications/1.json", [
+          200, {
+            "Content-Type": "application/json"
+          }, '{"layers": [{"id": 1, "display_name": "Mangroves"}]}'
+        ]);
+        stub = sinon.stub(Pica.prototype, 'parse');
+        pica = new Pica({
+          server_url: 'http://magpie.com/api/v1'
+        });
+        pica.fetch();
+        server.respond();
+        assert(stub.calledWith({
+          layers: [
+            {
+              id: 1,
+              display_name: "Mangroves"
+            }
+          ]
+        }));
+        return server.restore();
+      });
+    });
+    describe('#parse()', function() {
+      return it('should save layers');
+    });
     return describe('#getWorkspaceIdFromUrl()', function() {
-      describe('when there is a workspace_id on the URL', function() {
+      describe('When there is a workspace_id on the URL', function() {
         return it('should return it', function() {
           var pica, stub;
-          stub = sinon.stub(window.location, 'hash').returns('#workspace/1');
+          stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('#workspace/1');
           pica = new Pica();
           assert.equal(pica.getWorkspaceIdFromUrl(), 1);
           return stub.restore();
         });
       });
-      return describe("when there isn't a workspace_id on the URL", function() {
+      return describe("When there isn't a workspace_id on the URL", function() {
         return it('should return NULL', function() {
           var pica, stub;
-          stub = sinon.stub(window.location, 'hash').returns('');
+          stub = sinon.stub(Pica.prototype, 'getLocationHash').returns('');
           pica = new Pica();
           assert.equal(pica.getWorkspaceIdFromUrl(), null);
           return stub.restore();

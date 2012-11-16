@@ -1,12 +1,28 @@
-window.Pica =
-  start: (options = {}) ->
-    @renderMap(options.map)
-    @renderSidebar(options.sidebar)
+class Workspace
 
-  renderMap: (id) ->
-    L.map(id) if id?
+window.Workspace = Workspace
 
-  renderSidebar: (selector) ->
-    $(selector).append('<a href="#">New Area</a>')
-    $(selector).append('<a href="#">or load a saved Area of Interest</a>')
-    $(selector).append('Click on the map to start drawing your first polygon and define an Area Of Interest')
+class Pica
+  constructor: (_options) ->
+    @options = _options || {}
+
+    @createWorkspace()
+    @fetch()
+
+  createWorkspace: ->
+    @workspace = new Workspace(@, @getWorkspaceIdFromUrl())
+
+  fetch: ->
+    $.getJSON "#{@options.server_url}/applications/1.json", @parse
+
+  parse: (data) ->
+
+  getWorkspaceIdFromUrl: ->
+    match = @getLocationHash().match(/workspace\/(\d+)/)
+    return match[1] if match
+    return null
+
+  # http://stackoverflow.com/a/7050884
+  getLocationHash: -> window.location.hash
+
+window.Pica = Pica

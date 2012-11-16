@@ -5,8 +5,8 @@ Pica.module('Views', (Views, App, Backbone, Marionette, $, _) ->
 
     initialize: (options) ->
       @workspace = options.workspace
-      @area = options.area if options.area?
-      @area ||= new Pica.Models.Area({workspace: @workspace})
+      @area ||= new Pica.Models.Area({workspace_id: @workspace.get 'id'})
+      @workspace.get('areas').add(@area)
 
       @render()
       

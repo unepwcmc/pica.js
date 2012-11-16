@@ -5,7 +5,7 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
       "#{Pica.config.magpieAddress}/polygons"
 
     initialize: (options) ->
-      @area = options.area
+      @set(area_id: options.area_id) if options?
 
     setGeomFromPoints: (points) ->
       points = _.map(points, (p) ->
@@ -17,15 +17,20 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
 
     save: (attributes, options) =>
       options ||= {}
-      @set(area_id: @get('area').get('id')) unless @get('area_id')?
 
       # Don't save unless we have a parent area id
       if @get('area_id')?
-        super(arguments)
+        super
         @trigger('sync')
       else
-        @get('area').save({}, success: () =>
-          @save {}, options
+        @trigger('requestAreaId', {},
+          success: (area, response, callbackOptions) =>
+            @set(area_id: area.get('id'))
+            debugger
+            @save {}, options
+          error: (error, response, callbackOptions) ->
+            console.log "Unable to save polygon:"
+            console.log error
         )
 )
 Pica.module('Collections', (Collections, App, Backbone, Marionette, $, _) ->

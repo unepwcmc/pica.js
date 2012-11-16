@@ -20,9 +20,6 @@ Pica.module('Collections', (Collections, App, Backbone, Marionette, $, _) ->
 
     fetch: (options) ->
       @remove(@models)
-      @calculationList.each (calculation) =>
-        calculatedStat = new Pica.Models.CalculatedStat(calculation: calculation, area: @area)
-        @add(calculatedStat)
-        calculatedStat.fetch()
+      @
 
 )

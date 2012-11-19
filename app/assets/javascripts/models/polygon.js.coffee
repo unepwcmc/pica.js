@@ -26,8 +26,10 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
         @trigger('requestAreaId', {},
           success: (area, response, callbackOptions) =>
             @set(area_id: area.get('id'))
-            debugger
-            @save {}, options
+            if @get('area_id')?
+              @save {}, options
+            else
+              options.error(@, {error: "Could not save area, so cannot save polygon"}, callbackOptions) if options.error?
           error: (error, response, callbackOptions) ->
             console.log "Unable to save polygon:"
             console.log error

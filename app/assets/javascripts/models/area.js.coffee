@@ -3,6 +3,7 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
   class Models.Area extends Backbone.Model
     initialize: (options) ->
       @set(workspace_id: options.workspace_id) if options?
+      @set(name: 'my lovely area')
       @set(polygons: new Pica.Collections.PolygonList([], {area: @}))
       @set(calculatedStatList: new Pica.Collections.CalculatedStatList([], {area: @}))
       
@@ -13,14 +14,14 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
       @
 
     url: () ->
-      "#{Pica.config.magpieAddress}/areas_of_interest/"
+      "#{Pica.config.magpieAddress}/workspaces/#{@get('workspace_id')}/areas_of_interest/"
 
     parse: (response) ->
       super
       @trigger('reset')
       
     save: (attributes, options) =>
-      console.log "saving area, it's id is #{@get('id')}"
+      console.log "saving area, its id is #{@get('id')}"
       options ||= {}
 
       # Don't save unless we have a parent area id
@@ -30,7 +31,10 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
         @trigger('requestWorkspaceId', {},
           success: (workspace, response, callbackOptions) =>
             @set(workspace_id: workspace.get('id'))
-            @save {}, options
+            if @get('workspace_id')?
+              @save {}, options
+            else
+              options.error(@, {error: "Could not save workspace, so cannot save area"}, callbackOptions)
         )
 )
 

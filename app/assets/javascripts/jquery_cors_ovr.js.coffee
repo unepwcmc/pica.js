@@ -5,4 +5,5 @@ $.originalAjax = $.ajax
 $.ajax = (options) ->
   delete options.beforeSend
   delete options.contentType
+  options['X-Magpie-AppId'] = Pica.config.appId
   $.originalAjax options

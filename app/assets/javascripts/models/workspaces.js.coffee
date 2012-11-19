@@ -12,8 +12,7 @@ Pica.module('Models', (Models, App, Backbone, Marionette, $, _) ->
       )
 
     save: (attributes, options) =>
-      console.log 'Mocking workspace save, remove method when magpie works'
-      @set(id: 6)
-      options.success(@, options, options)
+      console.log 'Saving workspace'
+      super
 
 )

@@ -11,6 +11,9 @@ Creates a new instance of pica, taking in configuration options:
 #### workspace()
 Returns the current workspace
 
+#### newWorkspace()
+Create a new workspace
+
 #### setWorkspace(id)
 * id - id of the workspace
 
@@ -71,10 +74,52 @@ sets the name of the area, and persists to magpie
 triggered whenever stats are fetched from the server, either on user request, or when polygons change
 
 ## ShowPolysView
-### close()
+#### close()
 Remove the current polygons from the map
 
 ## PolygonEditView
-### close()
+#### close()
 Stops drawing and removes the view from the map
+
+
+# Usage example
+In this simple example we will create an app which builds a new workspace, allows the user to draw a new polygon, 
+then renders the calculated stats for that polygon
+
+```
+// Initialise Pica and create a new workspace
+pica = new Pica({
+  magpieUrl: '…',
+  appId: 3,
+  map: new L.Map('#map')
+});
+pica.newWorkspace();
+
+// Start drawing a polygon for our new workspace
+pica.workspace().area().drawNewPolygonView(function(polygon){
+  AreaView('#pica-content');
+});
+
+/* == AreaView.js == 
+This area view implementation binds its render method to the area:statsCalculated event,
+meaning that when stats are calculated, it will show them */
+AreaView = (function(targetElement) {
+
+  var render = function(stats) {
+    var stat, _i, _len;
+
+    $(targetElement).empty();
+
+    for (_i = 0, _len = stats.length; _i < _len; _i++) {
+      stat = stats[_i];
+      $(targetElement).append(stat.name + ': ' + stat.value + stat.unit + '<br/>');
+    }
+  };
+
+  return function() {
+    pica.workspace().area().bind('area:statsCalculated', this.render);
+  };
+})();
+
+```
 

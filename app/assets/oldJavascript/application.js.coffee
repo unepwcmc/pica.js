@@ -1,0 +1,16 @@
+#= require jquery
+#= require jquery_ujs
+#= require jquery_cors_ovr
+#= require bootstrap
+#= require underscore
+#= require backbone
+#= require backbone_rails_sync
+#= require backbone_datalink
+#= require backbone.marionette.min
+#= require leaflet
+#= require leaflet.draw
+#= require pica
+#= require_tree ./models
+#= require controllers
+#= require_tree ./templates
+#= require_tree ./views

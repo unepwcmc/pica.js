@@ -1,9 +1,11 @@
-window.Pica = new Backbone.Marionette.Application()
+window.Pica = {}
+Pica.Models = {}
+Pica.Views = {}
 
-Pica.addInitializer((options) ->
-  @config = options
-)
+class Pica.Application
+  constructor: (@config) ->
+    Pica.config = @config
 
-Pica.addRegions
-  main: "#map"
-  sidePanel: "#side-panel"
+  newWorkspace: () ->
+    @currentWorkspace = new Pica.Models.Workspace()
+

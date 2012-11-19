@@ -1,5 +1,5 @@
 # Pica API
-## Pica
+## Pica.Application
 ### Methods
 #### new(config)
 Creates a new instance of pica, taking in configuration options:

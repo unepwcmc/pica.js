@@ -8,7 +8,7 @@ Creates a new instance of pica, taking in configuration options:
     appId: ID of your application
     map: leaflet map object
 
-#### workspace()
+#### currentWorkspace()
 Returns the current workspace
 
 #### newWorkspace()
@@ -96,15 +96,15 @@ pica = new Pica({
 pica.newWorkspace();
 
 // Start drawing a polygon for our new workspace
-pica.workspace().area().drawNewPolygonView(function(polygon){
+pica.currentWorkspace().currentArea().drawNewPolygonView(function(polygon){
   AreaView('#pica-content');
 });
 
 /* == AreaView.js == 
-This area view implementation binds its render method to the area:statsCalculated event,
-meaning that when stats are calculated, it will show them */
+Render an area's stats as they are calcualted */
 AreaView = (function(targetElement) {
 
+  // Render area's stats
   var render = function(stats) {
     var stat, _i, _len;
 
@@ -117,9 +117,9 @@ AreaView = (function(targetElement) {
   };
 
   return function() {
-    pica.workspace().area().bind('area:statsCalculated', this.render);
+    // Listen to area:statsCalculated event, and re-render when it happens
+    pica.currentWorkspace().currentArea().bind('area:statsCalculated', render);
   };
 })();
 
 ```
-

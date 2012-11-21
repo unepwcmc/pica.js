@@ -1,0 +1,40 @@
+body {
+  background: url('../img/hexabump.png');
+}
+
+#header {
+  color: #FFF;
+
+  p {
+    color: #EEE;
+  }
+}
+
+#map {
+  height: 500px;
+  width: 100%;
+}
+
+#side-panel {
+  height: 460px;
+  width: 100%;
+}
+
+#side-panel ul {
+  margin-left: 0;
+}
+
+#side-panel ul li {
+  list-style-type: none;
+}
+
+#side-panel h3 {
+  line-height: 25px;
+  margin-top: 0;
+  font-size: 20px;
+}
+
+#side-panel h4 {
+  color: blue;
+  font-size: 22px;
+}

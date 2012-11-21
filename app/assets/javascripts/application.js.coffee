@@ -18,7 +18,7 @@ $(() ->
 
   # Initialise Pica and create a new workspace
   pica = new Pica.Application(
-    magpieUrl: "…"
+    magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net"
     appId: 3
     map: map
   )

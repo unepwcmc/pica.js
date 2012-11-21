@@ -68,13 +68,24 @@ module.exports = function(grunt) {
     uglify: {},
     clean: {
       folder: 'dist/'
+    },
+
+    // Copy compiled JS to the example directory for use in the static
+    // example
+    copy: {
+      dist: {
+        files: {
+          "example/js/": "<config:min.dist.dest>"
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-coffee');
   grunt.loadNpmTasks('grunt-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task.
-  grunt.registerTask('default', 'lint coffee test concat min');
+  grunt.registerTask('default', 'clean lint coffee test concat min copy');
 
 };

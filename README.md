@@ -3,6 +3,7 @@
 Coffeescript Library for implementing Magpie stats in your web applications
 
 ## Getting Started
+
 ### On the server
 Install the module with: `npm install pica.js`
 

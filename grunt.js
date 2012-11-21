@@ -7,17 +7,27 @@ module.exports = function(grunt) {
       banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
         '<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>' +
-        '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;';
+        '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; */'
     },
     coffee: {
       src: {
         src: ['lib/**/*.js.coffee'],
-        dest: 'dist/src'
+        dest: 'dist/src',
+        options: {
+          base_path: 'lib',
+          preserve_dirs: true
+        }
       }
     },
     concat: {
       dist: {
-        src: ['<banner:meta.banner>', 'dist/src/**/*.js'],
+        src: [
+               '<banner:meta.banner>',
+               'dist/src/<%= pkg.name %>.js',
+               'dist/src/lib/**/*.js',
+               'dist/src/models/**/*.js',
+               'dist/src/views/**/*.js'
+             ],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
@@ -55,10 +65,14 @@ module.exports = function(grunt) {
         module: false
       }
     },
-    uglify: {}
+    uglify: {},
+    clean: {
+      folder: 'dist/'
+    }
   });
 
   grunt.loadNpmTasks('grunt-coffee');
+  grunt.loadNpmTasks('grunt-clean');
 
   // Default task.
   grunt.registerTask('default', 'lint coffee test concat min');

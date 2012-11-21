@@ -41,11 +41,11 @@ module.exports = function(grunt) {
       files: ['test/**/*.js']
     },
     lint: {
-      files: ['grunt.js', 'lib/**/*.js', 'test/**/*.js']
+      files: ['grunt.js', 'dist/src/**/*.js', 'test/**/*.js']
     },
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint test'
+      files: ['lib/**/*.coffee', 'example/**'],
+      tasks: 'default'
     },
     jshint: {
       options: {

@@ -1,0 +1,35 @@
+{
+  "name": "pica.js",
+  "description": "Coffeescript Library for implementing Magpie stats in your web applications",
+  "version": "0.1.0",
+  "homepage": "https://github.com/unepwcmc/pica.js",
+  "author": {
+    "name": "UNEP-WCMC",
+    "email": "informatics@unep-wcmc.org",
+    "url": "http://unep-wcmc.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/unepwcmc/pica.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/unepwcmc/pica.js/issues"
+  },
+  "licenses": [
+    {
+      "type": "None",
+      "url": "https://github.com/unepwcmc/pica.js/blob/master/LICENSE-None"
+    }
+  ],
+  "main": "y",
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt": "~0.3.17"
+  },
+  "keywords": []
+}

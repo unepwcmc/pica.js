@@ -1,6 +1,37 @@
-# Pica API
+# Pica.js
+
+Coffeescript Library for implementing Magpie stats in your web applications
+
+## Getting Started
+### On the server
+Install the module with: `npm install pica.js`
+
+```javascript
+var pica_js = require('pica.js');
+pica_js.awesome(); // "awesome"
+```
+
+### In the browser
+Download the [production version][min] or the [development version][max].
+
+[min]: https://raw.github.com/unepwcmc/pica.js/master/dist/pica.js.min.js
+[max]: https://raw.github.com/unepwcmc/pica.js/master/dist/pica.js.js
+
+In your web page:
+
+```html
+<script src="dist/pica.js.min.js"></script>
+<script>
+awesome(); // "awesome"
+</script>
+```
+
+## API Documentation
+
 ## Pica.Application
+
 ### Methods
+
 #### new(config)
 Creates a new instance of pica, taking in configuration options:
 
@@ -21,7 +52,9 @@ Gets the workspace from the server
 
 
 ## Workspace
+
 ### Methods
+
 #### currentArea()
 Returns the current area for the workspace
 
@@ -38,7 +71,9 @@ Fetch all the areas from the server, pass results to callback
 
 
 ## Areas
+
 ### Methods
+
 #### polygons()
 Array of polygon objects currently in memory
 
@@ -68,21 +103,25 @@ Fetch all the calculated_stats from the server, pass results to callback
 
 sets the name of the area, and persists to magpie
 
+
 ### Events
+
 #### area:statsCalculated
 * stats - array of calculated_stat objects
 triggered whenever stats are fetched from the server, either on user request, or when polygons change
 
 ## ShowPolysView
+
 #### close()
 Remove the current polygons from the map
 
 ## PolygonEditView
+
 #### close()
 Stops drawing and removes the view from the map
 
+## Examples
 
-# Usage example
 In this simple example we will create an app which builds a new workspace, allows the user to draw a new polygon, 
 then renders the calculated stats for that polygon
 
@@ -123,3 +162,14 @@ AreaView = (function(targetElement) {
 })();
 
 ```
+
+## Contributing
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt](http://gruntjs.com/).
+
+_Also, please don't edit files in the "dist" subdirectory as they are generated via grunt. You'll find source code in the "lib" subdirectory!_
+
+## Release History
+_(Nothing yet)_
+
+## License
+Copyright (c) 2012 UNEP-WCMC

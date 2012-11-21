@@ -20,4 +20,5 @@ class Pica.Views.NewPolygonView
     )
 
   close: () ->
-    console.log("NewPolygonView.close needs implementing, unbind etc...")
+    @polygonDraw.disable()
+    Pica.config.map.off('draw:poly-created')

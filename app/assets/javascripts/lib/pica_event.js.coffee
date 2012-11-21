@@ -16,8 +16,8 @@ class Pica.Events
           delete @events[event]
     else
       @events = []
-    
+
   trigger: (event, args) ->
     if @events? && @events[event]?
       while callback = @events[event].shift()
-        callback.apply(@, args)
+        callback.apply(@, [].concat(args))

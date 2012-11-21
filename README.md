@@ -8,6 +8,12 @@ A [demo][demo] is available on this repository's Github Page.
 
 [demo]: http://unepwcmc.github.com/pica.js/example/
 
+## Development
+
+Running `grunt watch` monitors `lib/` and `example/` for changes and
+auto compiles the Javascript, etc. Point your browser to
+`example/index.html` to view your changes.
+
 ## API Documentation
 
 ## Pica.Application

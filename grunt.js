@@ -75,7 +75,7 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: {
-          "example/js/": "<config:min.dist.dest>"
+          "example/js/": "<config:concat.dist.dest>"
         }
       }
     }

@@ -2,30 +2,11 @@
 
 Coffeescript Library for implementing Magpie stats in your web applications
 
-## Getting Started
+## Demo
 
-### On the server
-Install the module with: `npm install pica.js`
+A [demo][demo] is available on this repository's Github Page.
 
-```javascript
-var pica_js = require('pica.js');
-pica_js.awesome(); // "awesome"
-```
-
-### In the browser
-Download the [production version][min] or the [development version][max].
-
-[min]: https://raw.github.com/unepwcmc/pica.js/master/dist/pica.js.min.js
-[max]: https://raw.github.com/unepwcmc/pica.js/master/dist/pica.js.js
-
-In your web page:
-
-```html
-<script src="dist/pica.js.min.js"></script>
-<script>
-awesome(); // "awesome"
-</script>
-```
+[demo]: http://unepwcmc.github.com/pica.js/example/
 
 ## API Documentation
 

@@ -11,7 +11,7 @@ class Pica.Models.Polygon extends Pica.Model
     @set('geometry', [[points]])
 
   url: () ->
-    read: "#{Pica.config.magpieUrl}/polygons"
+    read: "#{Pica.config.magpieUrl}/polygons/#{@get('id')}"
     create: "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('area_id')}/polygons"
 
   save: (options) =>

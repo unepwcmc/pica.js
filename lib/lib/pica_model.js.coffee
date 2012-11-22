@@ -3,9 +3,11 @@ class Pica.Model extends Pica.Events
 
 
   get: (attribute) ->
+    @attributes ?= {}
     @attributes[attribute]
 
   set: (attribute, value) ->
+    @attributes ?= {}
     @attributes[attribute] = value
 
 
@@ -18,6 +20,7 @@ class Pica.Model extends Pica.Events
         for attr, val of data
           @set(attr, val)
 
+        @trigger('sync')
         callback(@, textStatus, jqXHR)
 
     $.ajax(

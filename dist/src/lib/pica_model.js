@@ -12,10 +12,18 @@ Pica.Model = (function(_super) {
   Model.prototype.url = function() {};
 
   Model.prototype.get = function(attribute) {
+    var _ref;
+    if ((_ref = this.attributes) == null) {
+      this.attributes = {};
+    }
     return this.attributes[attribute];
   };
 
   Model.prototype.set = function(attribute, value) {
+    var _ref;
+    if ((_ref = this.attributes) == null) {
+      this.attributes = {};
+    }
     return this.attributes[attribute] = value;
   };
 
@@ -33,6 +41,7 @@ Pica.Model = (function(_super) {
           val = data[attr];
           _this.set(attr, val);
         }
+        _this.trigger('sync');
         return callback(_this, textStatus, jqXHR);
       }
     };

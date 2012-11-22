@@ -99,10 +99,18 @@ Pica.Model = (function(_super) {
   Model.prototype.url = function() {};
 
   Model.prototype.get = function(attribute) {
+    var _ref;
+    if ((_ref = this.attributes) == null) {
+      this.attributes = {};
+    }
     return this.attributes[attribute];
   };
 
   Model.prototype.set = function(attribute, value) {
+    var _ref;
+    if ((_ref = this.attributes) == null) {
+      this.attributes = {};
+    }
     return this.attributes[attribute] = value;
   };
 
@@ -120,6 +128,7 @@ Pica.Model = (function(_super) {
           val = data[attr];
           _this.set(attr, val);
         }
+        _this.trigger('sync');
         return callback(_this, textStatus, jqXHR);
       }
     };
@@ -154,46 +163,14 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-Pica.Models.Workspace = (function(_super) {
-
-  __extends(Workspace, _super);
-
-  function Workspace() {
-    this.save = __bind(this.save, this);
-    this.attributes = {};
-    this.areas = [];
-    this.currentArea = new Pica.Models.Area();
-    this.addArea(this.currentArea);
-  }
-
-  Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
-  };
-
-  Workspace.prototype.addArea = function(area) {
-    area.on('requestWorkspaceId', this.save);
-    return this.areas.push(area);
-  };
-
-  Workspace.prototype.save = function(options) {
-    return Workspace.__super__.save.call(this, options);
-  };
-
-  return Workspace;
-
-})(Pica.Model);
-
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
 Pica.Models.Area = (function(_super) {
 
   __extends(Area, _super);
 
   function Area(options) {
     this.save = __bind(this.save, this);
-    this.attributes = {};
+
+    this.fetchStats = __bind(this.fetchStats, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
   }
@@ -204,6 +181,7 @@ Pica.Models.Area = (function(_super) {
 
   Area.prototype.addPolygon = function(polygon) {
     polygon.on('requestAreaId', this.save);
+    polygon.on('sync', this.fetchStats);
     return this.polygons.push(polygon);
   };
 
@@ -216,18 +194,16 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
-  Area.prototype.stats = function() {
-    if (this.get('results') != null) {
-      this.trigger('area:statsCalculated');
-      return this.get('results');
-    } else {
-      return this.fetchStats(this.stats);
-    }
-  };
-
-  Area.prototype.fetchStats = function(callback) {
+  Area.prototype.fetchStats = function() {
+    var _this = this;
     return this.fetch({
-      success: callback
+      success: function() {
+        return _this.trigger('area:statsCalculated', _this);
+      },
+      error: function() {
+        console.log('GError!');
+        return console.log(arguments);
+      }
     });
   };
 
@@ -293,7 +269,7 @@ Pica.Models.Polygon = (function(_super) {
 
   Polygon.prototype.url = function() {
     return {
-      read: "" + Pica.config.magpieUrl + "/polygons",
+      read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')),
       create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons"
     };
   };
@@ -326,6 +302,39 @@ Pica.Models.Polygon = (function(_super) {
   };
 
   return Polygon;
+
+})(Pica.Model);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Pica.Models.Workspace = (function(_super) {
+
+  __extends(Workspace, _super);
+
+  function Workspace() {
+    this.save = __bind(this.save, this);
+    this.attributes = {};
+    this.areas = [];
+    this.currentArea = new Pica.Models.Area();
+    this.addArea(this.currentArea);
+  }
+
+  Workspace.prototype.url = function() {
+    return "" + Pica.config.magpieUrl + "/workspaces";
+  };
+
+  Workspace.prototype.addArea = function(area) {
+    area.on('requestWorkspaceId', this.save);
+    return this.areas.push(area);
+  };
+
+  Workspace.prototype.save = function(options) {
+    return Workspace.__super__.save.call(this, options);
+  };
+
+  return Workspace;
 
 })(Pica.Model);
 

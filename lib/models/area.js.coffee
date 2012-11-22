@@ -1,6 +1,5 @@
 class Pica.Models.Area extends Pica.Model
   constructor: (options) ->
-    @attributes = {}
     @polygons = []
 
     @set('name', 'My Lovely Area')
@@ -10,6 +9,7 @@ class Pica.Models.Area extends Pica.Model
 
   addPolygon: (polygon) ->
     polygon.on('requestAreaId', @save)
+    polygon.on('sync', @fetchStats)
     @polygons.push(polygon)
 
   drawNewPolygonView: (finishedCallback) ->
@@ -20,16 +20,13 @@ class Pica.Models.Area extends Pica.Model
       polygon: @currentPolygon
     )
 
-  stats: () ->
-    if @get('results')?
-      @trigger('area:statsCalculated')
-      return @get('results')
-    else
-      @fetchStats(@stats)
-
-  fetchStats: (callback) ->
+  fetchStats: () =>
     @fetch
-      success: callback
+      success: () => 
+        @trigger('area:statsCalculated', @)
+      error: () => 
+        console.log('GError!')
+        console.log(arguments)
 
   url: () ->
     create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest/"

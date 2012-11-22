@@ -20,6 +20,13 @@ Running `grunt watch` monitors `lib/` and `example/` for changes and
 auto compiles the Javascript, etc. Point your browser to
 `example/index.html` to view your changes.
 
+Because of the limitations of cross domain behavior when opening files with file:// in a browser,
+you'll probably want to run a super simple python web server
+
+    python -m SimpleHTTPServer
+
+Then hit up http://localhost:8000/example/
+
 ## API Documentation
 
 ## Pica.Application

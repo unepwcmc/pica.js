@@ -28,7 +28,7 @@ Pica.Models.Polygon = (function(_super) {
 
   Polygon.prototype.url = function() {
     return {
-      read: "" + Pica.config.magpieUrl + "/polygons",
+      read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')),
       create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons"
     };
   };

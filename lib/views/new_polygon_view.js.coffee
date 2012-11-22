@@ -16,7 +16,7 @@ class Pica.Views.NewPolygonView
     @polygon.setGeomFromPoints(mapPolygon.getLatLngs())
     @polygon.save(success: () =>
       @close()
-      @finishedCallback()
+      @finishedCallback() if finishedCallback?
     )
 
   close: () ->

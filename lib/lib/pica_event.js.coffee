@@ -19,5 +19,5 @@ class Pica.Events
 
   trigger: (event, args) ->
     if @events? && @events[event]?
-      while callback = @events[event].shift()
+      for callback in @events[event]
         callback.apply(@, [].concat(args))

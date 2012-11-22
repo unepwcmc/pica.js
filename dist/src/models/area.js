@@ -8,6 +8,8 @@ Pica.Models.Area = (function(_super) {
 
   function Area(options) {
     this.save = __bind(this.save, this);
+
+    this.fetch = __bind(this.fetch, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
   }
@@ -17,11 +19,8 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.addPolygon = function(polygon) {
-    var _this = this;
     polygon.on('requestAreaId', this.save);
-    polygon.on('sync', function() {
-      return _this.fetch();
-    });
+    polygon.on('sync', this.fetch);
     return this.polygons.push(polygon);
   };
 
@@ -34,9 +33,9 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
-  Area.prototype.newShowPolygonView = function() {
-    return new Pica.Views.ShowPolygonView({
-      polygons: this.polygons
+  Area.prototype.newShowAreaPolygonsView = function() {
+    return new Pica.Views.ShowAreaPolygonsView({
+      area: this
     });
   };
 
@@ -45,6 +44,11 @@ Pica.Models.Area = (function(_super) {
       create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest/",
       read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id'))
     };
+  };
+
+  Area.prototype.fetch = function() {
+    console.log('fetching area');
+    return Area.__super__.fetch.apply(this, arguments);
   };
 
   Area.prototype.save = function(options) {

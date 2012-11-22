@@ -45,7 +45,6 @@ Pica.Model = (function(_super) {
     if (options.type === 'post') {
       data = JSON.stringify(data);
     }
-    console.log(data);
     return $.ajax($.extend(options, {
       dataType: "json",
       contentType: "application/json",

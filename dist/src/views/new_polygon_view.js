@@ -20,7 +20,9 @@ Pica.Views.NewPolygonView = (function() {
     return this.polygon.save({
       success: function() {
         _this.close();
-        return _this.finishedCallback();
+        if (typeof finishedCallback !== "undefined" && finishedCallback !== null) {
+          return _this.finishedCallback();
+        }
       }
     });
   };

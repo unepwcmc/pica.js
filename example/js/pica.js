@@ -71,10 +71,12 @@ Pica.Events = (function() {
   };
 
   Events.prototype.trigger = function(event, args) {
-    var callback, _results;
+    var callback, _i, _len, _ref, _results;
     if ((this.events != null) && (this.events[event] != null)) {
+      _ref = this.events[event];
       _results = [];
-      while (callback = this.events[event].shift()) {
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        callback = _ref[_i];
         _results.push(callback.apply(this, [].concat(args)));
       }
       return _results;
@@ -132,7 +134,6 @@ Pica.Model = (function(_super) {
     if (options.type === 'post') {
       data = JSON.stringify(data);
     }
-    console.log(data);
     return $.ajax($.extend(options, {
       dataType: "json",
       contentType: "application/json",
@@ -181,6 +182,8 @@ Pica.Models.Area = (function(_super) {
 
   function Area(options) {
     this.save = __bind(this.save, this);
+
+    this.fetch = __bind(this.fetch, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
   }
@@ -190,11 +193,8 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.addPolygon = function(polygon) {
-    var _this = this;
     polygon.on('requestAreaId', this.save);
-    polygon.on('sync', function() {
-      return _this.fetch();
-    });
+    polygon.on('sync', this.fetch);
     return this.polygons.push(polygon);
   };
 
@@ -207,9 +207,9 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
-  Area.prototype.newShowPolygonView = function() {
-    return new Pica.Views.ShowPolygonView({
-      polygons: this.polygons
+  Area.prototype.newShowAreaPolygonsView = function() {
+    return new Pica.Views.ShowAreaPolygonsView({
+      area: this
     });
   };
 
@@ -218,6 +218,11 @@ Pica.Models.Area = (function(_super) {
       create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest/",
       read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id'))
     };
+  };
+
+  Area.prototype.fetch = function() {
+    console.log('fetching area');
+    return Area.__super__.fetch.apply(this, arguments);
   };
 
   Area.prototype.save = function(options) {
@@ -377,7 +382,9 @@ Pica.Views.NewPolygonView = (function() {
     return this.polygon.save({
       success: function() {
         _this.close();
-        return _this.finishedCallback();
+        if (typeof finishedCallback !== "undefined" && finishedCallback !== null) {
+          return _this.finishedCallback();
+        }
       }
     });
   };
@@ -391,18 +398,21 @@ Pica.Views.NewPolygonView = (function() {
 
 })();
 
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-Pica.Views.ShowPolygonView = (function() {
+Pica.Views.ShowAreaPolygonsView = (function() {
 
-  function ShowPolygonView(options) {
-    this.polygons = options.polygons;
+  function ShowAreaPolygonsView(options) {
+    this.render = __bind(this.render, this);
+    this.area = options.area;
     this.mapPolygons = [];
+    this.area.on('sync', this.render);
     this.render();
   }
 
-  ShowPolygonView.prototype.render = function() {
+  ShowAreaPolygonsView.prototype.render = function() {
     var mapPolygon, polygon, _i, _len, _ref, _results;
-    _ref = this.polygons;
+    _ref = this.area.polygons;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       polygon = _ref[_i];
@@ -412,6 +422,6 @@ Pica.Views.ShowPolygonView = (function() {
     return _results;
   };
 
-  return ShowPolygonView;
+  return ShowAreaPolygonsView;
 
 })();

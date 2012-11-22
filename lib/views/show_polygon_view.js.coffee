@@ -1,11 +1,12 @@
-class Pica.Views.ShowPolygonView
+class Pica.Views.ShowAreaPolygonsView
   constructor: (options) ->
-    @polygons = options.polygons
+    @area = options.area
     @mapPolygons = []
+    @area.on('sync', @render)
     @render()
 
-  render: () ->
-    for polygon in @polygons
+  render: () =>
+    for polygon in @area.polygons
       mapPolygon = new L.Polygon(
         polygon.geomAsLatLngArray()
       ).addTo(Pica.config.map)

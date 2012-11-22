@@ -39,10 +39,12 @@ Pica.Events = (function() {
   };
 
   Events.prototype.trigger = function(event, args) {
-    var callback, _results;
+    var callback, _i, _len, _ref, _results;
     if ((this.events != null) && (this.events[event] != null)) {
+      _ref = this.events[event];
       _results = [];
-      while (callback = this.events[event].shift()) {
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        callback = _ref[_i];
         _results.push(callback.apply(this, [].concat(args)));
       }
       return _results;

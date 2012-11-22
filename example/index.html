@@ -29,6 +29,34 @@
   <script>
     $(document).ready(function() {
       var AreaView, map, pica, tileLayer, tileLayerUrl;
+      /* == AreaView.js == 
+      Render an area's stats as they are calculated */
+      var AreaView = (function() {
+
+        AreaView.prototype.render = function(area) {
+          var stat, stats, _i, _len;
+          stats = area.get('results');
+          if (typeof(stats) !== 'undefined') {
+            $(this.targetElement).html('');
+            for (_i = 0, _len = stats.length; _i < _len; _i++) {
+              stat = stats[_i];
+              $(this.targetElement).append(stat.display_name + ": " + stat.value + stat.unit + "<br/>");
+            }
+          }
+        };
+
+        function AreaView(targetElement) {
+          var _this = this;
+          this.targetElement = targetElement;
+          // Listen for the 'sync' event on the area, which is triggered when stats are updated
+          pica.currentWorkspace.currentArea.on("sync", function(area) {
+            _this.render(area);
+          });
+        };
+
+        return AreaView;
+      })();
+
       map = L.map('map').setView([0, 0], 2);
       tileLayerUrl = 'http://carbon-tool.cartodb.com/tiles/ne_countries/{z}/{x}/{y}.png';
       tileLayer = new L.TileLayer(tileLayerUrl, {
@@ -40,31 +68,16 @@
         map: map
       });
       pica.newWorkspace();
-      pica.currentWorkspace.currentArea.drawNewPolygonView(function(polygon) {
-        new AreaView("#side-panel");
-        pica.currentWorkspace.currentArea.newShowPolygonView()
+
+      // Show drawn polygons on the map
+      pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
+      new AreaView("#area-stats");
+
+      // Draw a new polygon view when user clicks add button
+      $('#add-polygon-btn').click(function(){
+        pica.currentWorkspace.currentArea.drawNewPolygonView();
       });
-      var AreaView = (function() {
 
-        AreaView.prototype.render = function(area) {
-          var stat, stats, _i, _len;
-          stats = area.get('results');
-          for (_i = 0, _len = stats.length; _i < _len; _i++) {
-            stat = stats[_i];
-            $(this.targetElement).append(stat.display_name + ": " + stat.value + stat.unit + "<br/>");
-          }
-        };
-
-        function AreaView(targetElement) {
-          var _this = this;
-          this.targetElement = targetElement;
-          pica.currentWorkspace.currentArea.on("sync", function(area) {
-            _this.render(area);
-          });
-        };
-
-        return AreaView;
-      })();
     });
   </script>
 
@@ -81,7 +94,10 @@
       </div>
       <div class="span3 well">
         <!--Sidebar content-->
-        <div id="side-panel"></div>
+        <div id="side-panel">
+          <input id="add-polygon-btn" class="btn" type="submit" value="Add polygon"/>
+          <div id="area-stats"></div>
+        </div>
       </div>
     </div>
   </div>

@@ -9,7 +9,7 @@ class Pica.Models.Area extends Pica.Model
 
   addPolygon: (polygon) ->
     polygon.on('requestAreaId', @save)
-    polygon.on('sync', => @fetch())
+    polygon.on('sync', @fetch)
     @polygons.push(polygon)
 
   drawNewPolygonView: (finishedCallback) ->
@@ -20,14 +20,19 @@ class Pica.Models.Area extends Pica.Model
       polygon: @currentPolygon
     )
 
-  newShowPolygonView: () ->
-    new Pica.Views.ShowPolygonView(
-      polygons: @polygons
+  # spawns a new ShowAreaPolygonsView for this area
+  newShowAreaPolygonsView: () ->
+    new Pica.Views.ShowAreaPolygonsView(
+      area: @
     )
 
   url: () ->
     create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest/"
     read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}"
+
+  fetch: () =>
+    console.log('fetching area')
+    super
 
   save: (options) =>
     options ||= {}

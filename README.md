@@ -104,12 +104,19 @@ sets the name of the area, and persists to magpie
 * area - the area that synced
 triggered whenever the area is synced with the server
 
-## ShowPolysView
+## ShowPolygonView
+Shows given polygons on the map
+#### constructor(options)
+Expects options.polygons to be set with an array of polygons to show
 
 #### close()
 Remove the current polygons from the map
 
-## PolygonEditView
+## NewPolygonView
+#### constructor(options)
+**options:**
+* finishedCallback: optional, 
+
 
 #### close()
 Stops drawing and removes the view from the map
@@ -131,28 +138,32 @@ pica.newWorkspace();
 // Start drawing a polygon for our new workspace
 pica.currentWorkspace().currentArea().drawNewPolygonView(function(polygon){
   AreaView('#pica-content');
+  pica.currentWorkspace.currentArea.newShowPolygonView();
 });
 
 /* == AreaView.js == 
 Render an area's stats as they are calcualted */
-AreaView = (function(targetElement) {
+var AreaView = (function() {
 
-  // Render area's stats
-  var render = function(stats) {
-    var stat, _i, _len;
-
-    $(targetElement).empty();
-
+  AreaView.prototype.render = function(area) {
+    var stat, stats, _i, _len;
+    stats = area.get('results');
     for (_i = 0, _len = stats.length; _i < _len; _i++) {
       stat = stats[_i];
-      $(targetElement).append(stat.name + ': ' + stat.value + stat.unit + '<br/>');
+      $(this.targetElement).append(stat.display_name + ": " + stat.value + stat.unit + "<br/>");
     }
   };
 
-  return function() {
-    // Listen to area:statsCalculated event, and re-render when it happens
-    pica.currentWorkspace().currentArea().bind('area:statsCalculated', render);
+  function AreaView(targetElement) {
+    var _this = this;
+    this.targetElement = targetElement;
+    // Listen for the 'sync' event on the area, which is triggered when stats are updated
+    pica.currentWorkspace.currentArea.on("sync", function(area) {
+      _this.render(area);
+    });
   };
+
+  return AreaView;
 })();
 
 ```

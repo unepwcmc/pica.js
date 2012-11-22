@@ -10,6 +10,12 @@ class Pica.Models.Polygon extends Pica.Model
 
     @set('geometry', [[points]])
 
+  geomAsLatLngArray: () ->
+    latLngs = []
+    for point in @get('geometry')[0][0]
+      latLngs.push(new L.LatLng(point[1], point[0]))
+    return latLngs
+
   url: () ->
     read: "#{Pica.config.magpieUrl}/polygons/#{@get('id')}"
     create: "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('area_id')}/polygons"

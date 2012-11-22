@@ -31,6 +31,11 @@ Then hit up http://localhost:8000/example/
 
 ## Pica.Application
 
+### Attributes
+
+#### currentWorkspace
+The current workspace
+
 ### Methods
 
 #### new(config)
@@ -39,9 +44,6 @@ Creates a new instance of pica, taking in configuration options:
     magpieUrl: Address of your magpie server
     appId: ID of your application
     map: leaflet map object
-
-#### currentWorkspace()
-Returns the current workspace
 
 #### newWorkspace()
 Create a new workspace
@@ -54,10 +56,12 @@ Gets the workspace from the server
 
 ## Workspace
 
-### Methods
+### Attributes 
 
-#### currentArea()
-Returns the current area for the workspace
+#### currentArea
+The current area for the workspace
+
+### Methods
 
 #### setArea(id)
 Returns the current area for the workspace
@@ -70,13 +74,14 @@ Returns an array areas currently in memory for this workspace
 
 Fetch all the areas from the server, pass results to callback
 
-
 ## Areas
 
-### Methods
+### Attributes 
 
-#### polygons()
+#### polygons
 Array of polygon objects currently in memory
+
+### Methods
 
 #### fetchPolygons(callback)
 * callback - called success, passes in areas in format of polygons()

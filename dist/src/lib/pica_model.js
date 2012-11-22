@@ -35,20 +35,27 @@ Pica.Model = (function(_super) {
     }
     callback = options.success || function() {};
     options.success = function(data, textStatus, jqXHR) {
-      var attr, val;
       if (data.id != null) {
-        for (attr in data) {
-          val = data[attr];
-          _this.set(attr, val);
-        }
+        _this.parse(data);
         _this.trigger('sync');
         return callback(_this, textStatus, jqXHR);
       }
     };
     return $.ajax($.extend(options, {
-      dataType: 'json',
-      data: this.attributes
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(this.attributes)
     }));
+  };
+
+  Model.prototype.parse = function(data) {
+    var attr, val, _results;
+    _results = [];
+    for (attr in data) {
+      val = data[attr];
+      _results.push(this.set(attr, val));
+    }
+    return _results;
   };
 
   Model.prototype.save = function(options) {

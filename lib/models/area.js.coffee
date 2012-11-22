@@ -20,6 +20,11 @@ class Pica.Models.Area extends Pica.Model
       polygon: @currentPolygon
     )
 
+  newShowPolygonView: () ->
+    new Pica.Views.ShowPolygonView(
+      polygons: @polygons
+    )
+
   fetchStats: () =>
     @fetch
       success: () => 

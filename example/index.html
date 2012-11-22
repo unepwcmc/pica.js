@@ -42,6 +42,7 @@
       pica.newWorkspace();
       pica.currentWorkspace.currentArea.drawNewPolygonView(function(polygon) {
         AreaView("#side-panel");
+        pica.currentWorkspace.currentArea.newShowPolygonView()
       });
       AreaView = (function(targetElement) {
         var render;
@@ -56,11 +57,9 @@
             $(targetElement).append(stat.name + ": " + stat.value + stat.unit + "<br/>");
             _results.push(_i++);
           }
-          return _results;
         };
         return function() {
           pica.currentWorkspace.currentArea.on("area:statsCalculated", render);
-          return console.log('user AreaView, waiting for area:statsCalculated');
         };
       })();
     });

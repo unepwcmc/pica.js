@@ -26,6 +26,17 @@ Pica.Models.Polygon = (function(_super) {
     return this.set('geometry', [[points]]);
   };
 
+  Polygon.prototype.geomAsLatLngArray = function() {
+    var latLngs, point, _i, _len, _ref;
+    latLngs = [];
+    _ref = this.get('geometry')[0][0];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      point = _ref[_i];
+      latLngs.push(new L.LatLng(point[1], point[0]));
+    }
+    return latLngs;
+  };
+
   Polygon.prototype.url = function() {
     return {
       read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')),

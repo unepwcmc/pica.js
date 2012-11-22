@@ -33,6 +33,12 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
+  Area.prototype.newShowPolygonView = function() {
+    return new Pica.Views.ShowPolygonView({
+      polygons: this.polygons
+    });
+  };
+
   Area.prototype.fetchStats = function() {
     var _this = this;
     return this.fetch({

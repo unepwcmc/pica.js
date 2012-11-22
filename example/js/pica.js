@@ -122,20 +122,27 @@ Pica.Model = (function(_super) {
     }
     callback = options.success || function() {};
     options.success = function(data, textStatus, jqXHR) {
-      var attr, val;
       if (data.id != null) {
-        for (attr in data) {
-          val = data[attr];
-          _this.set(attr, val);
-        }
+        _this.parse(data);
         _this.trigger('sync');
         return callback(_this, textStatus, jqXHR);
       }
     };
     return $.ajax($.extend(options, {
-      dataType: 'json',
-      data: this.attributes
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(this.attributes)
     }));
+  };
+
+  Model.prototype.parse = function(data) {
+    var attr, val, _results;
+    _results = [];
+    for (attr in data) {
+      val = data[attr];
+      _results.push(this.set(attr, val));
+    }
+    return _results;
   };
 
   Model.prototype.save = function(options) {
@@ -191,6 +198,12 @@ Pica.Models.Area = (function(_super) {
     return new Pica.Views.NewPolygonView({
       finishedCallback: finishedCallback,
       polygon: this.currentPolygon
+    });
+  };
+
+  Area.prototype.newShowPolygonView = function() {
+    return new Pica.Views.ShowPolygonView({
+      polygons: this.polygons
     });
   };
 
@@ -265,6 +278,17 @@ Pica.Models.Polygon = (function(_super) {
     })();
     points.push(points[0]);
     return this.set('geometry', [[points]]);
+  };
+
+  Polygon.prototype.geomAsLatLngArray = function() {
+    var latLngs, point, _i, _len, _ref;
+    latLngs = [];
+    _ref = this.get('geometry')[0][0];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      point = _ref[_i];
+      latLngs.push(new L.LatLng(point[1], point[0]));
+    }
+    return latLngs;
   };
 
   Polygon.prototype.url = function() {
@@ -371,5 +395,30 @@ Pica.Views.NewPolygonView = (function() {
   };
 
   return NewPolygonView;
+
+})();
+
+
+Pica.Views.ShowPolygonView = (function() {
+
+  function ShowPolygonView(options) {
+    this.polygons = options.polygons;
+    this.mapPolygons = [];
+    this.render();
+  }
+
+  ShowPolygonView.prototype.render = function() {
+    var mapPolygon, polygon, _i, _len, _ref, _results;
+    _ref = this.polygons;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      polygon = _ref[_i];
+      mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
+      _results.push(this.mapPolygons.push(mapPolygon));
+    }
+    return _results;
+  };
+
+  return ShowPolygonView;
 
 })();

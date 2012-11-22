@@ -17,8 +17,7 @@ class Pica.Model extends Pica.Events
     # Extend callback to add returned data as model attributes
     options.success = (data, textStatus, jqXHR) =>
       if data.id?
-        for attr, val of data
-          @set(attr, val)
+        @parse(data)
 
         @trigger('sync')
         callback(@, textStatus, jqXHR)
@@ -26,10 +25,16 @@ class Pica.Model extends Pica.Events
     $.ajax(
       $.extend(
         options,
-        dataType: 'json'
-        data: @attributes
+        dataType: "json"
+        contentType: "application/json"
+        data: JSON.stringify(@attributes)
       )
     )
+  
+  # Parse the data that is returned from the server
+  parse: (data) ->
+    for attr, val of data
+      @set(attr, val)
 
   save: (options = {}) ->
     options.url = if @url().create? then @url().create else @url()

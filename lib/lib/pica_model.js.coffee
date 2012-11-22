@@ -19,15 +19,18 @@ class Pica.Model extends Pica.Events
       if data.id?
         @parse(data)
 
-        @trigger('sync')
+        @trigger('sync', @)
         callback(@, textStatus, jqXHR)
 
+    data = @attributes
+    data = JSON.stringify(data) if options.type == 'post'
+    console.log data
     $.ajax(
       $.extend(
         options,
         dataType: "json"
         contentType: "application/json"
-        data: JSON.stringify(@attributes)
+        data: data
       )
     )
   

@@ -41,26 +41,29 @@
       });
       pica.newWorkspace();
       pica.currentWorkspace.currentArea.drawNewPolygonView(function(polygon) {
-        AreaView("#side-panel");
+        new AreaView("#side-panel");
         pica.currentWorkspace.currentArea.newShowPolygonView()
       });
-      AreaView = (function(targetElement) {
-        var render;
-        render = function(area) {
-          var stats = area.get('stats'), stat, _i, _len, _results;
-          _i = 0;
-          _len = stats.length;
-          $(targetElement).empty();
-          _results = [];
-          while (_i < _len) {
+      var AreaView = (function() {
+
+        AreaView.prototype.render = function(area) {
+          var stat, stats, _i, _len;
+          stats = area.get('results');
+          for (_i = 0, _len = stats.length; _i < _len; _i++) {
             stat = stats[_i];
-            $(targetElement).append(stat.name + ": " + stat.value + stat.unit + "<br/>");
-            _results.push(_i++);
+            $(this.targetElement).append(stat.display_name + ": " + stat.value + stat.unit + "<br/>");
           }
         };
-        return function() {
-          pica.currentWorkspace.currentArea.on("area:statsCalculated", render);
+
+        function AreaView(targetElement) {
+          var _this = this;
+          this.targetElement = targetElement;
+          pica.currentWorkspace.currentArea.on("sync", function(area) {
+            _this.render(area);
+          });
         };
+
+        return AreaView;
       })();
     });
   </script>

@@ -28,7 +28,7 @@ Pica.Model = (function(_super) {
   };
 
   Model.prototype.sync = function(options) {
-    var callback,
+    var callback, data,
       _this = this;
     if (options == null) {
       options = {};
@@ -37,14 +37,19 @@ Pica.Model = (function(_super) {
     options.success = function(data, textStatus, jqXHR) {
       if (data.id != null) {
         _this.parse(data);
-        _this.trigger('sync');
+        _this.trigger('sync', _this);
         return callback(_this, textStatus, jqXHR);
       }
     };
+    data = this.attributes;
+    if (options.type === 'post') {
+      data = JSON.stringify(data);
+    }
+    console.log(data);
     return $.ajax($.extend(options, {
       dataType: "json",
       contentType: "application/json",
-      data: JSON.stringify(this.attributes)
+      data: data
     }));
   };
 

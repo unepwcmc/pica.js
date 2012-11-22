@@ -9,7 +9,7 @@ class Pica.Models.Area extends Pica.Model
 
   addPolygon: (polygon) ->
     polygon.on('requestAreaId', @save)
-    polygon.on('sync', @fetchStats)
+    polygon.on('sync', => @fetch())
     @polygons.push(polygon)
 
   drawNewPolygonView: (finishedCallback) ->
@@ -24,14 +24,6 @@ class Pica.Models.Area extends Pica.Model
     new Pica.Views.ShowPolygonView(
       polygons: @polygons
     )
-
-  fetchStats: () =>
-    @fetch
-      success: () => 
-        @trigger('area:statsCalculated', @)
-      error: () => 
-        console.log('GError!')
-        console.log(arguments)
 
   url: () ->
     create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest/"

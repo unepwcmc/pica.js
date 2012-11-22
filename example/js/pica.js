@@ -115,7 +115,7 @@ Pica.Model = (function(_super) {
   };
 
   Model.prototype.sync = function(options) {
-    var callback,
+    var callback, data,
       _this = this;
     if (options == null) {
       options = {};
@@ -124,14 +124,19 @@ Pica.Model = (function(_super) {
     options.success = function(data, textStatus, jqXHR) {
       if (data.id != null) {
         _this.parse(data);
-        _this.trigger('sync');
+        _this.trigger('sync', _this);
         return callback(_this, textStatus, jqXHR);
       }
     };
+    data = this.attributes;
+    if (options.type === 'post') {
+      data = JSON.stringify(data);
+    }
+    console.log(data);
     return $.ajax($.extend(options, {
       dataType: "json",
       contentType: "application/json",
-      data: JSON.stringify(this.attributes)
+      data: data
     }));
   };
 
@@ -176,8 +181,6 @@ Pica.Models.Area = (function(_super) {
 
   function Area(options) {
     this.save = __bind(this.save, this);
-
-    this.fetchStats = __bind(this.fetchStats, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
   }
@@ -187,8 +190,11 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.addPolygon = function(polygon) {
+    var _this = this;
     polygon.on('requestAreaId', this.save);
-    polygon.on('sync', this.fetchStats);
+    polygon.on('sync', function() {
+      return _this.fetch();
+    });
     return this.polygons.push(polygon);
   };
 
@@ -204,19 +210,6 @@ Pica.Models.Area = (function(_super) {
   Area.prototype.newShowPolygonView = function() {
     return new Pica.Views.ShowPolygonView({
       polygons: this.polygons
-    });
-  };
-
-  Area.prototype.fetchStats = function() {
-    var _this = this;
-    return this.fetch({
-      success: function() {
-        return _this.trigger('area:statsCalculated', _this);
-      },
-      error: function() {
-        console.log('GError!');
-        return console.log(arguments);
-      }
     });
   };
 

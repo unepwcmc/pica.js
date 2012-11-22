@@ -83,11 +83,6 @@ Array of polygon objects currently in memory
 
 ### Methods
 
-#### fetchPolygons(callback)
-* callback - called success, passes in areas in format of polygons()
-
-Fetch all the polygons from the server, pass results to callback
-
 #### showPolysOnMapView()
 Show current polygons on the map, returns a ShowPolysView
 
@@ -95,14 +90,6 @@ Show current polygons on the map, returns a ShowPolysView
 * successCallback - called after the user has finished drawing
 
 Adds a drawing tool to the map, and returns a PolygonEditView
-
-#### stats()
-Array of calculated_stat objects
-
-#### fetchStats(callback)
-* callback - called success, passes in areas in format of stats()
-
-Fetch all the calculated_stats from the server, pass results to callback
 
 #### setName(name)
 * name - name to set
@@ -112,9 +99,10 @@ sets the name of the area, and persists to magpie
 
 ### Events
 
-#### area:statsCalculated
-* stats - array of calculated_stat objects
-triggered whenever stats are fetched from the server, either on user request, or when polygons change
+#### sync
+**eventParams**
+* area - the area that synced
+triggered whenever the area is synced with the server
 
 ## ShowPolysView
 

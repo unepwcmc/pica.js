@@ -31,7 +31,14 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
-  Area.prototype.stats = function() {};
+  Area.prototype.stats = function() {
+    if (this.get('results') != null) {
+      this.trigger('area:statsCalculated');
+      return this.get('results');
+    } else {
+      return this.fetchStats(this.stats);
+    }
+  };
 
   Area.prototype.fetchStats = function(callback) {
     return this.fetch({

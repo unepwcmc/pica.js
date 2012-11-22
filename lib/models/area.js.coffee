@@ -21,6 +21,11 @@ class Pica.Models.Area extends Pica.Model
     )
 
   stats: () ->
+    if @get('results')?
+      @trigger('area:statsCalculated')
+      return @get('results')
+    else
+      @fetchStats(@stats)
 
   fetchStats: (callback) ->
     @fetch

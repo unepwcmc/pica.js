@@ -8,6 +8,12 @@ A [demo][demo] is available on this repository's Github Page.
 
 [demo]: http://unepwcmc.github.com/pica.js/example/
 
+### Deploying the Demo
+
+The demo application can be deployed to Github Pages by building the
+library using `grunt` then committing and merging the changes with the
+`gh-pages` branch.
+
 ## Development
 
 Running `grunt watch` monitors `lib/` and `example/` for changes and

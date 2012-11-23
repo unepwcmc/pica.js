@@ -34,16 +34,21 @@ Then hit up http://localhost:8000/example/
 ### Attributes
 
 #### currentWorkspace
+
 The current workspace
 
 ### Methods
 
-#### new(config)
-Creates a new instance of pica, taking in configuration options:
+#### new(options)
 
-    magpieUrl: Address of your magpie server
-    appId: ID of your application
-    map: leaflet map object
+options:
+
+* **area**:
+* **magpieUrl**: Address of your magpie server
+* **appId**: ID of your application
+* **map**: leaflet map object
+
+Creates a new instance of pica
 
 #### newWorkspace()
 Create a new workspace
@@ -101,21 +106,37 @@ sets the name of the area, and persists to magpie
 
 #### sync
 **eventParams**
+
 * area - the area that synced
 triggered whenever the area is synced with the server
 
-## ShowPolygonView
-Shows given polygons on the map
+## ShowAreaPolygonsView
+Show current polygons for the given area. Redraws polygons as the polygons related
+to the map change.
+
+### Attributes
+#### area
+The area to show polygons for.
+
+### Methods
 #### constructor(options)
-Expects options.polygons to be set with an array of polygons to show
+
+**options:**
+
+* **area**: The Area to show polygons for
 
 #### close()
-Remove the current polygons from the map
+Remove the polygons from the map, remove all bindings
+
+### Events
+#### polygonClick -> (polygon, event)
+Trigged when a polygon is clicked on, passes the polygon that was clicked and the leaflet event object
 
 ## NewPolygonView
 #### constructor(options)
 **options:**
-* finishedCallback: optional, 
+
+* area: 
 
 
 #### close()

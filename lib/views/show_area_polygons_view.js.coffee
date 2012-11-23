@@ -1,0 +1,31 @@
+class Pica.Views.ShowAreaPolygonsView extends Pica.Events
+  constructor: (options) ->
+    @area = options.area
+    @mapPolygons = []
+    @area.on('sync', @render)
+    @render()
+
+  render: () =>
+    @removePolygonsAndBindings()
+
+    for polygon in @area.polygons
+      continue unless polygon.isComplete()
+
+      mapPolygon = new L.Polygon(
+        polygon.geomAsLatLngArray()
+      ).addTo(Pica.config.map)
+
+      mapPolygon.on('click', (event) => @triggerPolyClick(polygon, event))
+
+      @mapPolygons.push(mapPolygon)
+  
+  close: ->
+    @removePolygonsAndBindings()
+
+  removePolygonsAndBindings: ->
+    while mapPolygon = @mapPolygons.shift()
+      mapPolygon.off('click', @triggerPolyClicked)
+      Pica.config.map.removeLayer mapPolygon
+
+  triggerPolyClick: (polygon, event) =>
+    @trigger('polygonClick', [polygon, event])

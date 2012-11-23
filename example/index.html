@@ -74,7 +74,8 @@
       pica.newWorkspace();
 
       // Show drawn polygons on the map
-      pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
+      var showAreaPolygonsView = pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
+      showAreaPolygonsView.on("polygonClick", function(polygon, event) {alert("You clicked polygon "+polygon.get('id'))})
       new AreaView("#area-stats");
 
       // Draw a new polygon view when user clicks add button

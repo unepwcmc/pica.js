@@ -384,15 +384,11 @@ Pica.Views.ShowAreaPolygonsView = (function() {
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       polygon = _ref[_i];
-      if (!polygon.isComplete()) {
-        continue;
-      }
-      if (polygon.get('isOnMap')) {
-        continue;
+      while (mapPolygon = this.mapPolygons.unshift()) {
+        Pica.config.map.removeLayer(mapPolygon);
       }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
-      this.mapPolygons.push(mapPolygon);
-      _results.push(polygon.set('isOnMap', true));
+      _results.push(this.mapPolygons.push(mapPolygon));
     }
     return _results;
   };

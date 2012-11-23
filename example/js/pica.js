@@ -176,39 +176,6 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-Pica.Models.Workspace = (function(_super) {
-
-  __extends(Workspace, _super);
-
-  function Workspace() {
-    this.save = __bind(this.save, this);
-    this.attributes = {};
-    this.areas = [];
-    this.currentArea = new Pica.Models.Area();
-    this.addArea(this.currentArea);
-  }
-
-  Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
-  };
-
-  Workspace.prototype.addArea = function(area) {
-    area.on('requestWorkspaceId', this.save);
-    return this.areas.push(area);
-  };
-
-  Workspace.prototype.save = function(options) {
-    return Workspace.__super__.save.call(this, options);
-  };
-
-  return Workspace;
-
-})(Pica.Model);
-
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
 Pica.Models.Area = (function(_super) {
 
   __extends(Area, _super);
@@ -254,7 +221,6 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.fetch = function() {
-    console.log('fetching area');
     return Area.__super__.fetch.apply(this, arguments);
   };
 
@@ -366,36 +332,38 @@ Pica.Models.Polygon = (function(_super) {
 
 })(Pica.Model);
 
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-Pica.Views.ShowAreaPolygonsView = (function() {
+Pica.Models.Workspace = (function(_super) {
 
-  function ShowAreaPolygonsView(options) {
-    this.render = __bind(this.render, this);
-    this.area = options.area;
-    this.mapPolygons = [];
-    this.area.on('sync', this.render);
-    this.render();
+  __extends(Workspace, _super);
+
+  function Workspace() {
+    this.save = __bind(this.save, this);
+    this.attributes = {};
+    this.areas = [];
+    this.currentArea = new Pica.Models.Area();
+    this.addArea(this.currentArea);
   }
 
-  ShowAreaPolygonsView.prototype.render = function() {
-    var mapPolygon, polygon, _i, _len, _ref, _results;
-    _ref = this.area.polygons;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      polygon = _ref[_i];
-      while (mapPolygon = this.mapPolygons.unshift()) {
-        Pica.config.map.removeLayer(mapPolygon);
-      }
-      mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
-      _results.push(this.mapPolygons.push(mapPolygon));
-    }
-    return _results;
+  Workspace.prototype.url = function() {
+    return "" + Pica.config.magpieUrl + "/workspaces";
   };
 
-  return ShowAreaPolygonsView;
+  Workspace.prototype.addArea = function(area) {
+    area.on('requestWorkspaceId', this.save);
+    return this.areas.push(area);
+  };
 
-})();
+  Workspace.prototype.save = function(options) {
+    return Workspace.__super__.save.call(this, options);
+  };
+
+  return Workspace;
+
+})(Pica.Model);
 
 
 Pica.Views.NewPolygonView = (function() {
@@ -432,5 +400,39 @@ Pica.Views.NewPolygonView = (function() {
   };
 
   return NewPolygonView;
+
+})();
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+Pica.Views.ShowAreaPolygonsView = (function() {
+
+  function ShowAreaPolygonsView(options) {
+    this.render = __bind(this.render, this);
+    this.area = options.area;
+    this.mapPolygons = [];
+    this.area.on('sync', this.render);
+    this.render();
+  }
+
+  ShowAreaPolygonsView.prototype.render = function() {
+    var mapPolygon, polygon, _i, _len, _ref, _results;
+    while (mapPolygon = this.mapPolygons.shift()) {
+      Pica.config.map.removeLayer(mapPolygon);
+    }
+    _ref = this.area.polygons;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      polygon = _ref[_i];
+      if (!polygon.isComplete()) {
+        continue;
+      }
+      mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
+      _results.push(this.mapPolygons.push(mapPolygon));
+    }
+    return _results;
+  };
+
+  return ShowAreaPolygonsView;
 
 })();

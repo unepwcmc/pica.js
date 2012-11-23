@@ -12,12 +12,15 @@ Pica.Views.ShowAreaPolygonsView = (function() {
 
   ShowAreaPolygonsView.prototype.render = function() {
     var mapPolygon, polygon, _i, _len, _ref, _results;
+    while (mapPolygon = this.mapPolygons.shift()) {
+      Pica.config.map.removeLayer(mapPolygon);
+    }
     _ref = this.area.polygons;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       polygon = _ref[_i];
-      while (mapPolygon = this.mapPolygons.unshift()) {
-        Pica.config.map.removeLayer(mapPolygon);
+      if (!polygon.isComplete()) {
+        continue;
       }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
       _results.push(this.mapPolygons.push(mapPolygon));

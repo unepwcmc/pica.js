@@ -47,7 +47,6 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.fetch = function() {
-    console.log('fetching area');
     return Area.__super__.fetch.apply(this, arguments);
   };
 

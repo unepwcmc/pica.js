@@ -24,6 +24,7 @@ class Pica.Model extends Pica.Events
 
     data = @attributes
     data = JSON.stringify(data) if options.type == 'post'
+
     $.ajax(
       $.extend(
         options,

@@ -31,7 +31,6 @@ class Pica.Models.Area extends Pica.Model
     read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}"
 
   fetch: () =>
-    console.log('fetching area')
     super
 
   save: (options) =>

@@ -8,6 +8,7 @@ class Pica.Views.ShowAreaPolygonsView
   render: () =>
     while mapPolygon = @mapPolygons.shift()
       Pica.config.map.removeLayer mapPolygon
+
     for polygon in @area.polygons
       continue unless polygon.isComplete()
 

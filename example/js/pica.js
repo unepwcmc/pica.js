@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2012-11-22
+/*! pica - v0.1.0 - 2012-11-23
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2012 UNEP-WCMC; */
 
@@ -176,6 +176,39 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+Pica.Models.Workspace = (function(_super) {
+
+  __extends(Workspace, _super);
+
+  function Workspace() {
+    this.save = __bind(this.save, this);
+    this.attributes = {};
+    this.areas = [];
+    this.currentArea = new Pica.Models.Area();
+    this.addArea(this.currentArea);
+  }
+
+  Workspace.prototype.url = function() {
+    return "" + Pica.config.magpieUrl + "/workspaces";
+  };
+
+  Workspace.prototype.addArea = function(area) {
+    area.on('requestWorkspaceId', this.save);
+    return this.areas.push(area);
+  };
+
+  Workspace.prototype.save = function(options) {
+    return Workspace.__super__.save.call(this, options);
+  };
+
+  return Workspace;
+
+})(Pica.Model);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
 Pica.Models.Area = (function(_super) {
 
   __extends(Area, _super);
@@ -263,6 +296,10 @@ Pica.Models.Polygon = (function(_super) {
     this.attributes = {};
   }
 
+  Polygon.prototype.isComplete = function() {
+    return this.get('geometry') != null;
+  };
+
   Polygon.prototype.setGeomFromPoints = function(points) {
     var point;
     points = (function() {
@@ -281,10 +318,12 @@ Pica.Models.Polygon = (function(_super) {
   Polygon.prototype.geomAsLatLngArray = function() {
     var latLngs, point, _i, _len, _ref;
     latLngs = [];
-    _ref = this.get('geometry')[0][0];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      point = _ref[_i];
-      latLngs.push(new L.LatLng(point[1], point[0]));
+    if (this.isComplete()) {
+      _ref = this.get('geometry')[0][0];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        point = _ref[_i];
+        latLngs.push(new L.LatLng(point[1], point[0]));
+      }
     }
     return latLngs;
   };
@@ -315,7 +354,7 @@ Pica.Models.Polygon = (function(_super) {
             }
           }
         },
-        error: function() {
+        error: function(error) {
           console.log("Unable to save polygon:");
           return console.log(error);
         }
@@ -327,38 +366,40 @@ Pica.Models.Polygon = (function(_super) {
 
 })(Pica.Model);
 
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-Pica.Models.Workspace = (function(_super) {
+Pica.Views.ShowAreaPolygonsView = (function() {
 
-  __extends(Workspace, _super);
-
-  function Workspace() {
-    this.save = __bind(this.save, this);
-    this.attributes = {};
-    this.areas = [];
-    this.currentArea = new Pica.Models.Area();
-    this.addArea(this.currentArea);
+  function ShowAreaPolygonsView(options) {
+    this.render = __bind(this.render, this);
+    this.area = options.area;
+    this.mapPolygons = [];
+    this.area.on('sync', this.render);
+    this.render();
   }
 
-  Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
+  ShowAreaPolygonsView.prototype.render = function() {
+    var mapPolygon, polygon, _i, _len, _ref, _results;
+    _ref = this.area.polygons;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      polygon = _ref[_i];
+      if (!polygon.isComplete()) {
+        continue;
+      }
+      if (polygon.get('isOnMap')) {
+        continue;
+      }
+      mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
+      this.mapPolygons.push(mapPolygon);
+      _results.push(polygon.set('isOnMap', true));
+    }
+    return _results;
   };
 
-  Workspace.prototype.addArea = function(area) {
-    area.on('requestWorkspaceId', this.save);
-    return this.areas.push(area);
-  };
+  return ShowAreaPolygonsView;
 
-  Workspace.prototype.save = function(options) {
-    return Workspace.__super__.save.call(this, options);
-  };
-
-  return Workspace;
-
-})(Pica.Model);
+})();
 
 
 Pica.Views.NewPolygonView = (function() {
@@ -395,33 +436,5 @@ Pica.Views.NewPolygonView = (function() {
   };
 
   return NewPolygonView;
-
-})();
-
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-Pica.Views.ShowAreaPolygonsView = (function() {
-
-  function ShowAreaPolygonsView(options) {
-    this.render = __bind(this.render, this);
-    this.area = options.area;
-    this.mapPolygons = [];
-    this.area.on('sync', this.render);
-    this.render();
-  }
-
-  ShowAreaPolygonsView.prototype.render = function() {
-    var mapPolygon, polygon, _i, _len, _ref, _results;
-    _ref = this.area.polygons;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      polygon = _ref[_i];
-      mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
-      _results.push(this.mapPolygons.push(mapPolygon));
-    }
-    return _results;
-  };
-
-  return ShowAreaPolygonsView;
 
 })();

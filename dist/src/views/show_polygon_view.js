@@ -16,8 +16,15 @@ Pica.Views.ShowAreaPolygonsView = (function() {
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       polygon = _ref[_i];
+      if (!polygon.isComplete()) {
+        continue;
+      }
+      if (polygon.get('isOnMap')) {
+        continue;
+      }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
-      _results.push(this.mapPolygons.push(mapPolygon));
+      this.mapPolygons.push(mapPolygon);
+      _results.push(polygon.set('isOnMap', true));
     }
     return _results;
   };

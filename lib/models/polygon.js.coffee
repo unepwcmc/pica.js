@@ -2,6 +2,9 @@ class Pica.Models.Polygon extends Pica.Model
   constructor: () ->
     @attributes = {}
 
+  isComplete: () ->
+    return @get('geometry')?
+
   setGeomFromPoints: (points) ->
     points = for point in points
       [point.lng, point.lat]
@@ -12,8 +15,11 @@ class Pica.Models.Polygon extends Pica.Model
 
   geomAsLatLngArray: () ->
     latLngs = []
-    for point in @get('geometry')[0][0]
-      latLngs.push(new L.LatLng(point[1], point[0]))
+
+    if @isComplete()
+      for point in @get('geometry')[0][0]
+        latLngs.push(new L.LatLng(point[1], point[0]))
+
     return latLngs
 
   url: () ->
@@ -33,7 +39,7 @@ class Pica.Models.Polygon extends Pica.Model
             @save options
           else
             options.error(@, {error: "Could not save area, so cannot save polygon"}, jqXHR) if options.error?
-        error: () =>
+        error: (error) =>
           console.log "Unable to save polygon:"
           console.log error
       )

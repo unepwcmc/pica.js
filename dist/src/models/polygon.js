@@ -11,6 +11,10 @@ Pica.Models.Polygon = (function(_super) {
     this.attributes = {};
   }
 
+  Polygon.prototype.isComplete = function() {
+    return this.get('geometry') != null;
+  };
+
   Polygon.prototype.setGeomFromPoints = function(points) {
     var point;
     points = (function() {
@@ -29,10 +33,12 @@ Pica.Models.Polygon = (function(_super) {
   Polygon.prototype.geomAsLatLngArray = function() {
     var latLngs, point, _i, _len, _ref;
     latLngs = [];
-    _ref = this.get('geometry')[0][0];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      point = _ref[_i];
-      latLngs.push(new L.LatLng(point[1], point[0]));
+    if (this.isComplete()) {
+      _ref = this.get('geometry')[0][0];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        point = _ref[_i];
+        latLngs.push(new L.LatLng(point[1], point[0]));
+      }
     }
     return latLngs;
   };
@@ -63,7 +69,7 @@ Pica.Models.Polygon = (function(_super) {
             }
           }
         },
-        error: function() {
+        error: function(error) {
           console.log("Unable to save polygon:");
           return console.log(error);
         }

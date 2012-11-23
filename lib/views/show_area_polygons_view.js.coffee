@@ -6,7 +6,7 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
     @render()
 
   render: () =>
-    @removePolygonsAndBindings()
+    @removeAllPolygonsAndBindings()
 
     for polygon in @area.polygons
       continue unless polygon.isComplete()
@@ -16,16 +16,20 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
       ).addTo(Pica.config.map)
 
       mapPolygon.on('click', (event) => @triggerPolyClick(polygon, event))
+      polygon.on('delete', => removeMapPolygonAndBindings(mapPolygon))
 
       @mapPolygons.push(mapPolygon)
   
   close: ->
-    @removePolygonsAndBindings()
+    @removeAllPolygonsAndBindings()
 
-  removePolygonsAndBindings: ->
+  removeAllPolygonsAndBindings: ->
     while mapPolygon = @mapPolygons.shift()
-      mapPolygon.off('click', @triggerPolyClicked)
-      Pica.config.map.removeLayer mapPolygon
+      @removeMapPolygonAndBindings(mapPolygon)
+
+  removeMapPolygonAndBindings: (mapPolygon) ->
+    mapPolygon.off('click', @triggerPolyClicked)
+    Pica.config.map.removeLayer mapPolygon
 
   triggerPolyClick: (polygon, event) =>
     @trigger('polygonClick', [polygon, event])

@@ -19,7 +19,7 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
   ShowAreaPolygonsView.prototype.render = function() {
     var mapPolygon, polygon, _i, _len, _ref, _results,
       _this = this;
-    this.removePolygonsAndBindings();
+    this.removeAllPolygonsAndBindings();
     _ref = this.area.polygons;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -31,23 +31,30 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
       mapPolygon.on('click', function(event) {
         return _this.triggerPolyClick(polygon, event);
       });
+      polygon.on('delete', function() {
+        return removeMapPolygonAndBindings(mapPolygon);
+      });
       _results.push(this.mapPolygons.push(mapPolygon));
     }
     return _results;
   };
 
   ShowAreaPolygonsView.prototype.close = function() {
-    return this.removePolygonsAndBindings();
+    return this.removeAllPolygonsAndBindings();
   };
 
-  ShowAreaPolygonsView.prototype.removePolygonsAndBindings = function() {
+  ShowAreaPolygonsView.prototype.removeAllPolygonsAndBindings = function() {
     var mapPolygon, _results;
     _results = [];
     while (mapPolygon = this.mapPolygons.shift()) {
-      mapPolygon.off('click', this.triggerPolyClicked);
-      _results.push(Pica.config.map.removeLayer(mapPolygon));
+      _results.push(this.removeMapPolygonAndBindings(mapPolygon));
     }
     return _results;
+  };
+
+  ShowAreaPolygonsView.prototype.removeMapPolygonAndBindings = function(mapPolygon) {
+    mapPolygon.off('click', this.triggerPolyClicked);
+    return Pica.config.map.removeLayer(mapPolygon);
   };
 
   ShowAreaPolygonsView.prototype.triggerPolyClick = function(polygon, event) {

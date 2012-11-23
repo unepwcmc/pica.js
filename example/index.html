@@ -58,11 +58,11 @@
       })();
 
       map = L.map('map',{
-        center: [25,54],
-        zoom: 8,
-        minZoom: 6
+        center: [24.5,54],
+        minZoom: 7,
+        zoom: 9
       })
-      tileLayerUrl = 'http://carbon-tool.cartodb.com/tiles/ne_countries/{z}/{x}/{y}.png';
+      tileLayerUrl = 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png';
       tileLayer = new L.TileLayer(tileLayerUrl, {
         maxZoom: 18
       }).addTo(map);

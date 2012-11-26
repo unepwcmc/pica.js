@@ -10,7 +10,6 @@ class Pica.Views.NewPolygonView
 
     Pica.config.map.on 'draw:poly-created', (e) =>
       mapPolygon = e.poly
-      mapPolygon.addTo(Pica.config.map)
       @createPolygon mapPolygon
 
   createPolygon: (mapPolygon) ->

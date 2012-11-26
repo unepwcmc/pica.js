@@ -15,11 +15,15 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
         polygon.geomAsLatLngArray()
       ).addTo(Pica.config.map)
 
-      mapPolygon.on('click', (event) => @triggerPolyClick(polygon, event))
+      mapPolygon.on('click', (=>
+        thatPolygon = polygon
+        return (event) =>
+          @triggerPolyClick(thatPolygon, event)
+      )())
       polygon.on('delete', => removeMapPolygonAndBindings(mapPolygon))
 
       @mapPolygons.push(mapPolygon)
-  
+
   close: ->
     @removeAllPolygonsAndBindings()
 

@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2012-11-23
+/*! pica - v0.1.0 - 2012-11-26
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2012 UNEP-WCMC; */
 
@@ -176,6 +176,39 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+Pica.Models.Workspace = (function(_super) {
+
+  __extends(Workspace, _super);
+
+  function Workspace() {
+    this.save = __bind(this.save, this);
+    this.attributes = {};
+    this.areas = [];
+    this.currentArea = new Pica.Models.Area();
+    this.addArea(this.currentArea);
+  }
+
+  Workspace.prototype.url = function() {
+    return "" + Pica.config.magpieUrl + "/workspaces";
+  };
+
+  Workspace.prototype.addArea = function(area) {
+    area.on('requestWorkspaceId', this.save);
+    return this.areas.push(area);
+  };
+
+  Workspace.prototype.save = function(options) {
+    return Workspace.__super__.save.call(this, options);
+  };
+
+  return Workspace;
+
+})(Pica.Model);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
 Pica.Models.Area = (function(_super) {
 
   __extends(Area, _super);
@@ -332,39 +365,6 @@ Pica.Models.Polygon = (function(_super) {
 
 })(Pica.Model);
 
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Pica.Models.Workspace = (function(_super) {
-
-  __extends(Workspace, _super);
-
-  function Workspace() {
-    this.save = __bind(this.save, this);
-    this.attributes = {};
-    this.areas = [];
-    this.currentArea = new Pica.Models.Area();
-    this.addArea(this.currentArea);
-  }
-
-  Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
-  };
-
-  Workspace.prototype.addArea = function(area) {
-    area.on('requestWorkspaceId', this.save);
-    return this.areas.push(area);
-  };
-
-  Workspace.prototype.save = function(options) {
-    return Workspace.__super__.save.call(this, options);
-  };
-
-  return Workspace;
-
-})(Pica.Model);
-
 
 Pica.Views.NewPolygonView = (function() {
 
@@ -377,7 +377,6 @@ Pica.Views.NewPolygonView = (function() {
     Pica.config.map.on('draw:poly-created', function(e) {
       var mapPolygon;
       mapPolygon = e.poly;
-      mapPolygon.addTo(Pica.config.map);
       return _this.createPolygon(mapPolygon);
     });
   }
@@ -434,9 +433,13 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
         continue;
       }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
-      mapPolygon.on('click', function(event) {
-        return _this.triggerPolyClick(polygon, event);
-      });
+      mapPolygon.on('click', (function() {
+        var thatPolygon;
+        thatPolygon = polygon;
+        return function(event) {
+          return _this.triggerPolyClick(thatPolygon, event);
+        };
+      })());
       polygon.on('delete', function() {
         return removeMapPolygonAndBindings(mapPolygon);
       });

@@ -28,9 +28,13 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
         continue;
       }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
-      mapPolygon.on('click', function(event) {
-        return _this.triggerPolyClick(polygon, event);
-      });
+      mapPolygon.on('click', (function() {
+        var thatPolygon;
+        thatPolygon = polygon;
+        return function(event) {
+          return _this.triggerPolyClick(thatPolygon, event);
+        };
+      })());
       polygon.on('delete', function() {
         return removeMapPolygonAndBindings(mapPolygon);
       });

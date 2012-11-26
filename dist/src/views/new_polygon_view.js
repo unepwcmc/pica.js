@@ -10,7 +10,6 @@ Pica.Views.NewPolygonView = (function() {
     Pica.config.map.on('draw:poly-created', function(e) {
       var mapPolygon;
       mapPolygon = e.poly;
-      mapPolygon.addTo(Pica.config.map);
       return _this.createPolygon(mapPolygon);
     });
   }

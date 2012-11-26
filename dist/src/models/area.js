@@ -20,7 +20,9 @@ Pica.Models.Area = (function(_super) {
 
   Area.prototype.addPolygon = function(polygon) {
     polygon.on('requestAreaId', this.save);
-    polygon.on('sync', this.fetch);
+    polygon.on('sync', function() {
+      return this.fetch;
+    });
     return this.polygons.push(polygon);
   };
 

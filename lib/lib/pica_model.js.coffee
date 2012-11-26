@@ -1,7 +1,6 @@
 class Pica.Model extends Pica.Events
   url: () ->
 
-
   get: (attribute) ->
     @attributes ?= {}
     @attributes[attribute]
@@ -9,7 +8,6 @@ class Pica.Model extends Pica.Events
   set: (attribute, value) ->
     @attributes ?= {}
     @attributes[attribute] = value
-
 
   sync: (options = {}) ->
     callback = options.success || () ->
@@ -46,4 +44,13 @@ class Pica.Model extends Pica.Events
 
   fetch: (options = {}) ->
     options.url = if @url().read? then @url().read else @url()
+    @sync(options)
+
+  delete: (options = {}) ->
+    options.url = if @url().read? then @url().read else @url()
+    options.type = 'delete'
+    originalCallback = options.success
+    options.success = () =>
+      @trigger('delete')
+      originalCallback() if originalCallback
     @sync(options)

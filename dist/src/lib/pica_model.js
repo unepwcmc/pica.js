@@ -79,6 +79,24 @@ Pica.Model = (function(_super) {
     return this.sync(options);
   };
 
+  Model.prototype["delete"] = function(options) {
+    var originalCallback,
+      _this = this;
+    if (options == null) {
+      options = {};
+    }
+    options.url = this.url().read != null ? this.url().read : this.url();
+    options.type = 'delete';
+    originalCallback = options.success;
+    options.success = function() {
+      _this.trigger('delete');
+      if (originalCallback) {
+        return originalCallback();
+      }
+    };
+    return this.sync(options);
+  };
+
   return Model;
 
 })(Pica.Events);

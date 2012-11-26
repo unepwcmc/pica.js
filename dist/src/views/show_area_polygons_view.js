@@ -29,14 +29,15 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
       }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
       mapPolygon.on('click', (function() {
-        var thatPolygon;
+        var thatMapPolygon, thatPolygon;
         thatPolygon = polygon;
+        thatMapPolygon = mapPolygon;
         return function(event) {
-          return _this.triggerPolyClick(thatPolygon, event);
+          return _this.triggerPolyClick(thatPolygon, event, thatMapPolygon);
         };
       })());
       polygon.on('delete', function() {
-        return removeMapPolygonAndBindings(mapPolygon);
+        return _this.removeMapPolygonAndBindings(mapPolygon);
       });
       _results.push(this.mapPolygons.push(mapPolygon));
     }
@@ -61,8 +62,8 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
     return Pica.config.map.removeLayer(mapPolygon);
   };
 
-  ShowAreaPolygonsView.prototype.triggerPolyClick = function(polygon, event) {
-    return this.trigger('polygonClick', [polygon, event]);
+  ShowAreaPolygonsView.prototype.triggerPolyClick = function(polygon, event, mapPolygon) {
+    return this.trigger('polygonClick', [polygon, event, mapPolygon]);
   };
 
   return ShowAreaPolygonsView;

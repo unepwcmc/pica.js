@@ -36,6 +36,7 @@ class Pica.Models.Polygon extends Pica.Model
         success: (area, textStatus, jqXHR) =>
           @set('area_id', area.get('id'))
           if @get('area_id')
+            successCallback = options.success
             @save options
           else
             options.error(@, {error: "Could not save area, so cannot save polygon"}, jqXHR) if options.error?

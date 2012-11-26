@@ -58,8 +58,10 @@ Pica.Models.Polygon = (function(_super) {
     } else {
       return this.trigger('requestAreaId', {
         success: function(area, textStatus, jqXHR) {
+          var successCallback;
           _this.set('area_id', area.get('id'));
           if (_this.get('area_id')) {
+            successCallback = options.success;
             return _this.save(options);
           } else {
             if (options.error != null) {

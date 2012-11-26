@@ -168,42 +168,27 @@ Pica.Model = (function(_super) {
     return this.sync(options);
   };
 
+  Model.prototype["delete"] = function(options) {
+    var originalCallback,
+      _this = this;
+    if (options == null) {
+      options = {};
+    }
+    options.url = this.url().read != null ? this.url().read : this.url();
+    options.type = 'delete';
+    originalCallback = options.success;
+    options.success = function() {
+      _this.trigger('delete');
+      if (originalCallback) {
+        return originalCallback();
+      }
+    };
+    return this.sync(options);
+  };
+
   return Model;
 
 })(Pica.Events);
-
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Pica.Models.Workspace = (function(_super) {
-
-  __extends(Workspace, _super);
-
-  function Workspace() {
-    this.save = __bind(this.save, this);
-    this.attributes = {};
-    this.areas = [];
-    this.currentArea = new Pica.Models.Area();
-    this.addArea(this.currentArea);
-  }
-
-  Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
-  };
-
-  Workspace.prototype.addArea = function(area) {
-    area.on('requestWorkspaceId', this.save);
-    return this.areas.push(area);
-  };
-
-  Workspace.prototype.save = function(options) {
-    return Workspace.__super__.save.call(this, options);
-  };
-
-  return Workspace;
-
-})(Pica.Model);
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -227,7 +212,9 @@ Pica.Models.Area = (function(_super) {
 
   Area.prototype.addPolygon = function(polygon) {
     polygon.on('requestAreaId', this.save);
-    polygon.on('sync', this.fetch);
+    polygon.on('sync', function() {
+      return this.fetch;
+    });
     return this.polygons.push(polygon);
   };
 
@@ -342,8 +329,10 @@ Pica.Models.Polygon = (function(_super) {
     } else {
       return this.trigger('requestAreaId', {
         success: function(area, textStatus, jqXHR) {
+          var successCallback;
           _this.set('area_id', area.get('id'));
           if (_this.get('area_id')) {
+            successCallback = options.success;
             return _this.save(options);
           } else {
             if (options.error != null) {
@@ -362,6 +351,39 @@ Pica.Models.Polygon = (function(_super) {
   };
 
   return Polygon;
+
+})(Pica.Model);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Pica.Models.Workspace = (function(_super) {
+
+  __extends(Workspace, _super);
+
+  function Workspace() {
+    this.save = __bind(this.save, this);
+    this.attributes = {};
+    this.areas = [];
+    this.currentArea = new Pica.Models.Area();
+    this.addArea(this.currentArea);
+  }
+
+  Workspace.prototype.url = function() {
+    return "" + Pica.config.magpieUrl + "/workspaces";
+  };
+
+  Workspace.prototype.addArea = function(area) {
+    area.on('requestWorkspaceId', this.save);
+    return this.areas.push(area);
+  };
+
+  Workspace.prototype.save = function(options) {
+    return Workspace.__super__.save.call(this, options);
+  };
+
+  return Workspace;
 
 })(Pica.Model);
 
@@ -434,14 +456,15 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
       }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
       mapPolygon.on('click', (function() {
-        var thatPolygon;
+        var thatMapPolygon, thatPolygon;
         thatPolygon = polygon;
+        thatMapPolygon = mapPolygon;
         return function(event) {
-          return _this.triggerPolyClick(thatPolygon, event);
+          return _this.triggerPolyClick(thatPolygon, event, thatMapPolygon);
         };
       })());
       polygon.on('delete', function() {
-        return removeMapPolygonAndBindings(mapPolygon);
+        return _this.removeMapPolygonAndBindings(mapPolygon);
       });
       _results.push(this.mapPolygons.push(mapPolygon));
     }
@@ -466,8 +489,8 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
     return Pica.config.map.removeLayer(mapPolygon);
   };
 
-  ShowAreaPolygonsView.prototype.triggerPolyClick = function(polygon, event) {
-    return this.trigger('polygonClick', [polygon, event]);
+  ShowAreaPolygonsView.prototype.triggerPolyClick = function(polygon, event, mapPolygon) {
+    return this.trigger('polygonClick', [polygon, event, mapPolygon]);
   };
 
   return ShowAreaPolygonsView;

@@ -28,10 +28,10 @@
 
   <script>
     $(document).ready(function() {
-      var AreaView, map, pica, tileLayer, tileLayerUrl;
+      var AreaView, PolyActionsView, map, pica, tileLayer, tileLayerUrl;
       /* == AreaView.js == 
       Render an area's stats as they are calculated */
-      var AreaView = (function() {
+      AreaView = (function() {
 
         AreaView.prototype.render = function(area) {
           var stat, stats, _i, _len;
@@ -57,6 +57,44 @@
         return AreaView;
       })();
 
+      /* == PolyActionsView.js == 
+      Show options dialog when a polygon is clicked */
+      PolyActionsView = (function() {
+        PolyActionsView.prototype.render = function(area) {
+          this.el = $(document.createElement('div'));
+          this.el.attr('class', 'polyActions');
+          this.el.css('position', 'absolute');
+          this.el.css('left', this.event.containerPoint.x);
+          this.el.css('top', this.event.containerPoint.y);
+          this.el.css('height', '50px');
+          this.el.css('width', '300px');
+          this.el.html('<input type="submit" value="Delete polygon ' + this.polygon.id + '?"/>');
+          $('body').append(this.el);
+        };
+
+        PolyActionsView.prototype.deletePolygon = function(event) {
+          this.polygon.delete();
+        };
+
+        PolyActionsView.prototype.close = function() {
+          this.el.find('input').off('click', _this.deletePolygon);
+          $('body').remove(this.el);
+        };
+
+        function PolyActionsView(polygon, event, mapPolygon) {
+          var _this = this;
+          this.polygon = polygon;
+          this.event = event;
+          this.mapPolygon = mapPolygon;
+          this.render();
+          this.el.find('input').on('click', function(){
+            _this.deletePolygon(arguments);
+          });
+        };
+
+        return PolyActionsView;
+      })();
+
       map = L.map('map',{
         center: [24.5,54],
         minZoom: 7,
@@ -75,8 +113,9 @@
 
       // Show drawn polygons on the map
       var showAreaPolygonsView = pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
-      showAreaPolygonsView.on("polygonClick", function(polygon, event)
-      {alert("You clicked polygon "+polygon.get('id'))})
+      showAreaPolygonsView.on("polygonClick", function(polygon, event) {
+        new PolyActionsView(polygon, event);
+      });
       new AreaView("#area-stats");
 
       // Draw a new polygon view when user clicks add button

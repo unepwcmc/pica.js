@@ -9,7 +9,7 @@ class Pica.Models.Area extends Pica.Model
 
   addPolygon: (polygon) ->
     polygon.on('requestAreaId', @save)
-    polygon.on('sync', @fetch)
+    polygon.on('sync', -> @fetch)
     @polygons.push(polygon)
 
   drawNewPolygonView: (finishedCallback) ->

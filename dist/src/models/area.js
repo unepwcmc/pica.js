@@ -10,6 +10,8 @@ Pica.Models.Area = (function(_super) {
     this.save = __bind(this.save, this);
 
     this.fetch = __bind(this.fetch, this);
+
+    this.removePolygon = __bind(this.removePolygon, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
   }
@@ -23,7 +25,21 @@ Pica.Models.Area = (function(_super) {
     polygon.on('sync', function() {
       return this.fetch;
     });
+    polygon.on('delete', this.removePolygon);
     return this.polygons.push(polygon);
+  };
+
+  Area.prototype.removePolygon = function(deletedPolygon) {
+    var index, indexToRemove, polygon, _i, _len, _ref;
+    indexToRemove = null;
+    _ref = this.polygons;
+    for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+      polygon = _ref[index];
+      if (deletedPolygon === polygon) {
+        indexToRemove = null;
+      }
+    }
+    return this.polygons.splice(indexToRemove, 1);
   };
 
   Area.prototype.drawNewPolygonView = function(finishedCallback) {

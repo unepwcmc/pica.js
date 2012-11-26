@@ -10,7 +10,15 @@ class Pica.Models.Area extends Pica.Model
   addPolygon: (polygon) ->
     polygon.on('requestAreaId', @save)
     polygon.on('sync', -> @fetch)
+    polygon.on('delete', @removePolygon)
     @polygons.push(polygon)
+
+  removePolygon: (deletedPolygon) =>
+    indexToRemove = null
+    for polygon, index in @polygons
+      if deletedPolygon == polygon
+        indexToRemove = null
+    @polygons.splice(indexToRemove, 1)
 
   drawNewPolygonView: (finishedCallback) ->
     @currentPolygon = new Pica.Models.Polygon()

@@ -68,17 +68,20 @@
           this.el.css('top', this.event.containerPoint.y);
           this.el.css('height', '50px');
           this.el.css('width', '300px');
-          this.el.html('<input type="submit" value="Delete polygon ' + this.polygon.id + '?"/>');
+          this.el.html('<input type="submit" value="Delete polygon ' + this.polygon.get('id') + '?"/>');
           $('body').append(this.el);
         };
 
         PolyActionsView.prototype.deletePolygon = function(event) {
-          this.polygon.delete();
+          _this = this
+          this.polygon.delete({
+            success: function() {_this.close();}
+          });
         };
 
         PolyActionsView.prototype.close = function() {
           this.el.find('input').off('click', _this.deletePolygon);
-          $('body').remove(this.el);
+          this.el.remove();
         };
 
         function PolyActionsView(polygon, event, mapPolygon) {

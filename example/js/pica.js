@@ -117,7 +117,7 @@ Pica.Model = (function(_super) {
   };
 
   Model.prototype.sync = function(options) {
-    var callback, data,
+    var callback, data, dataType,
       _this = this;
     if (options == null) {
       options = {};
@@ -127,15 +127,20 @@ Pica.Model = (function(_super) {
       if (data.id != null) {
         _this.parse(data);
         _this.trigger('sync', _this);
-        return callback(_this, textStatus, jqXHR);
       }
+      return callback(_this, textStatus, jqXHR);
     };
+    dataType = "json";
     data = this.attributes;
     if (options.type === 'post') {
       data = JSON.stringify(data);
     }
+    if (options.type === 'delete') {
+      data = null;
+      dataType = "text";
+    }
     return $.ajax($.extend(options, {
-      dataType: "json",
+      dataType: dataType,
       contentType: "application/json",
       data: data
     }));
@@ -202,6 +207,8 @@ Pica.Models.Area = (function(_super) {
     this.save = __bind(this.save, this);
 
     this.fetch = __bind(this.fetch, this);
+
+    this.removePolygon = __bind(this.removePolygon, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
   }
@@ -215,7 +222,21 @@ Pica.Models.Area = (function(_super) {
     polygon.on('sync', function() {
       return this.fetch;
     });
+    polygon.on('delete', this.removePolygon);
     return this.polygons.push(polygon);
+  };
+
+  Area.prototype.removePolygon = function(deletedPolygon) {
+    var index, indexToRemove, polygon, _i, _len, _ref;
+    indexToRemove = null;
+    _ref = this.polygons;
+    for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+      polygon = _ref[index];
+      if (deletedPolygon === polygon) {
+        indexToRemove = null;
+      }
+    }
+    return this.polygons.splice(indexToRemove, 1);
   };
 
   Area.prototype.drawNewPolygonView = function(finishedCallback) {
@@ -463,9 +484,13 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
           return _this.triggerPolyClick(thatPolygon, event, thatMapPolygon);
         };
       })());
-      polygon.on('delete', function() {
-        return _this.removeMapPolygonAndBindings(mapPolygon);
-      });
+      polygon.on('delete', (function() {
+        var thatMapPolygon;
+        thatMapPolygon = mapPolygon;
+        return function() {
+          return _this.removeMapPolygonAndBindings(thatMapPolygon);
+        };
+      })());
       _results.push(this.mapPolygons.push(mapPolygon));
     }
     return _results;

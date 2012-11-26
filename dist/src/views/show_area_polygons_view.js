@@ -36,9 +36,13 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
           return _this.triggerPolyClick(thatPolygon, event, thatMapPolygon);
         };
       })());
-      polygon.on('delete', function() {
-        return _this.removeMapPolygonAndBindings(mapPolygon);
-      });
+      polygon.on('delete', (function() {
+        var thatMapPolygon;
+        thatMapPolygon = mapPolygon;
+        return function() {
+          return _this.removeMapPolygonAndBindings(thatMapPolygon);
+        };
+      })());
       _results.push(this.mapPolygons.push(mapPolygon));
     }
     return _results;

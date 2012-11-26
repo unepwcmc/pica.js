@@ -21,7 +21,11 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
         return (event) =>
           @triggerPolyClick(thatPolygon, event, thatMapPolygon)
       )())
-      polygon.on('delete', => @removeMapPolygonAndBindings(mapPolygon))
+      polygon.on('delete', (=>
+        thatMapPolygon = mapPolygon
+        return =>
+          @removeMapPolygonAndBindings(thatMapPolygon)
+      )())
 
       @mapPolygons.push(mapPolygon)
 

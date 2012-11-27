@@ -220,8 +220,6 @@ Pica.Models.Area = (function(_super) {
 
   function Area(options) {
     this.save = __bind(this.save, this);
-
-    this.removePolygon = __bind(this.removePolygon, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
   }
@@ -248,10 +246,6 @@ Pica.Models.Area = (function(_super) {
     return this.polygons.push(polygon);
   };
 
-  Area.prototype.removePolygon = function(deletedPolygon) {
-    return this.fetch();
-  };
-
   Area.prototype.drawNewPolygonView = function(finishedCallback) {
     this.currentPolygon = new Pica.Models.Polygon();
     this.addPolygon(this.currentPolygon);
@@ -276,8 +270,10 @@ Pica.Models.Area = (function(_super) {
 
   Area.prototype.parse = function(data) {
     var polygon, polygonAttributes, _i, _len, _ref;
-    if (data.polygons != null) {
+    if (this.polygons.length > 0) {
       this.polygons = [];
+    }
+    if (data.polygons != null) {
       _ref = data.polygons;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         polygonAttributes = _ref[_i];
@@ -498,8 +494,6 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
     var mapPolygon, polygon, _i, _len, _ref, _results,
       _this = this;
     this.removeAllPolygonsAndBindings();
-    console.log("Going to render these polys on the map:");
-    console.log(this.area.polygons);
     _ref = this.area.polygons;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {

@@ -18,14 +18,6 @@ class Pica.Models.Area extends Pica.Model
     polygon.on('delete', => @fetch())
     @polygons.push(polygon)
 
-  removePolygon: (deletedPolygon) =>
-    #indexToRemove = null
-    #for polygon, index in @polygons
-    #  if deletedPolygon == polygon
-    #    indexToRemove = null
-    #@polygons.splice(indexToRemove, 1)
-    @fetch()
-
   drawNewPolygonView: (finishedCallback) ->
     @currentPolygon = new Pica.Models.Polygon()
     @addPolygon(@currentPolygon)
@@ -45,9 +37,8 @@ class Pica.Models.Area extends Pica.Model
     read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}"
 
   parse: (data) ->
-    # Reset polygon collection
+    @polygons = [] if @polygons.length > 0
     if data.polygons?
-      @polygons = []
       for polygonAttributes in data.polygons
         polygon = new Pica.Models.Polygon(attributes:polygonAttributes)
         @addPolygon(polygon)

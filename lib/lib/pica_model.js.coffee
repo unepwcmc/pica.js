@@ -44,20 +44,28 @@ class Pica.Model extends Pica.Events
     for attr, val of data
       @set(attr, val)
 
-  save: (options = {}) ->
-    options.url = if @url().create? then @url().create else @url()
-    options.type = 'post'
+  save: (options = {}) =>
+    if @get('id')?
+      options.url = if @url().read? then @url().read else @url()
+      options.type = 'put'
+    else
+      options.url = if @url().create? then @url().create else @url()
+      options.type = 'post'
+    console.log("saving #{@constructor.name} #{@get('id')}")
     @sync(options)
 
-  fetch: (options = {}) ->
+  fetch: (options = {}) =>
     options.url = if @url().read? then @url().read else @url()
+    console.log("fetching #{@constructor.name} #{@get('id')}")
     @sync(options)
 
-  delete: (options = {}) ->
+  delete: (options = {}) =>
     options.url = if @url().read? then @url().read else @url()
     options.type = 'delete'
     originalCallback = options.success
     options.success = =>
       @trigger('delete')
+      console.log("deleted #{@constructor.name} #{@get('id')}")
       originalCallback() if originalCallback
+      @off()
     @sync(options)

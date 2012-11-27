@@ -73,14 +73,26 @@
         };
 
         PolyActionsView.prototype.deletePolygon = function(event) {
-          _this = this
+          _this = this;
           this.polygon.delete({
             success: function() {_this.close();}
           });
         };
 
+        PolyActionsView.prototype.addBindings = function() {
+          var _this = this;
+          this.el.find('input').on('click', function(){
+            _this.deletePolygon(arguments);
+          });
+          // close when clicking elsewhere
+          $('body').click(function() {_this.close();})
+          this.el.click(function(e) {e.stopPropagation();})
+        };
+
         PolyActionsView.prototype.close = function() {
-          this.el.find('input').off('click', _this.deletePolygon);
+          var _this = this;
+          $('body').off('click', function() {_this.close();})
+          this.el.unbind();
           this.el.remove();
         };
 
@@ -90,9 +102,7 @@
           this.event = event;
           this.mapPolygon = mapPolygon;
           this.render();
-          this.el.find('input').on('click', function(){
-            _this.deletePolygon(arguments);
-          });
+          this.addBindings();
         };
 
         return PolyActionsView;
@@ -109,7 +119,7 @@
       }).addTo(map);
       pica = new Pica.Application({
         magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
-        appId: 3,
+        projectId: 4,
         map: map
       });
       pica.newWorkspace();

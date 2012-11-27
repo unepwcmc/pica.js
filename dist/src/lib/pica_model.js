@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 Pica.Model = (function(_super) {
@@ -6,6 +7,11 @@ Pica.Model = (function(_super) {
   __extends(Model, _super);
 
   function Model() {
+    this["delete"] = __bind(this["delete"], this);
+
+    this.fetch = __bind(this.fetch, this);
+
+    this.save = __bind(this.save, this);
     return Model.__super__.constructor.apply(this, arguments);
   }
 
@@ -71,8 +77,14 @@ Pica.Model = (function(_super) {
     if (options == null) {
       options = {};
     }
-    options.url = this.url().create != null ? this.url().create : this.url();
-    options.type = 'post';
+    if (this.get('id') != null) {
+      options.url = this.url().read != null ? this.url().read : this.url();
+      options.type = 'put';
+    } else {
+      options.url = this.url().create != null ? this.url().create : this.url();
+      options.type = 'post';
+    }
+    console.log("saving " + this.constructor.name + " " + (this.get('id')));
     return this.sync(options);
   };
 
@@ -81,6 +93,7 @@ Pica.Model = (function(_super) {
       options = {};
     }
     options.url = this.url().read != null ? this.url().read : this.url();
+    console.log("fetching " + this.constructor.name + " " + (this.get('id')));
     return this.sync(options);
   };
 
@@ -95,9 +108,11 @@ Pica.Model = (function(_super) {
     originalCallback = options.success;
     options.success = function() {
       _this.trigger('delete');
+      console.log("deleted " + _this.constructor.name + " " + (_this.get('id')));
       if (originalCallback) {
-        return originalCallback();
+        originalCallback();
       }
+      return _this.off();
     };
     return this.sync(options);
   };

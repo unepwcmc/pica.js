@@ -8,17 +8,23 @@ class Pica.Models.Area extends Pica.Model
     @set('name', name)
 
   addPolygon: (polygon) ->
-    polygon.on('requestAreaId', @save)
-    polygon.on('sync', -> @fetch)
-    polygon.on('delete', @removePolygon)
+    polygon.on('requestAreaId', (options) =>
+      if @get('id')?
+        options.success(@)
+      else
+        @save(options)
+    )
+    polygon.on('sync', => @fetch())
+    polygon.on('delete', => @fetch())
     @polygons.push(polygon)
 
   removePolygon: (deletedPolygon) =>
-    indexToRemove = null
-    for polygon, index in @polygons
-      if deletedPolygon == polygon
-        indexToRemove = null
-    @polygons.splice(indexToRemove, 1)
+    #indexToRemove = null
+    #for polygon, index in @polygons
+    #  if deletedPolygon == polygon
+    #    indexToRemove = null
+    #@polygons.splice(indexToRemove, 1)
+    @fetch()
 
   drawNewPolygonView: (finishedCallback) ->
     @currentPolygon = new Pica.Models.Polygon()
@@ -38,7 +44,17 @@ class Pica.Models.Area extends Pica.Model
     create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest/"
     read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}"
 
-  fetch: () =>
+  parse: (data) ->
+    # Reset polygon collection
+    if data.polygons?
+      console.log('Resetting polygons to:')
+      console.log(data.polygons)
+      @polygons = []
+      for polygonAttributes in data.polygons
+        polygon = new Pica.Models.Polygon(attributes:polygonAttributes)
+        @addPolygon(polygon)
+      delete data.polygons
+
     super
 
   save: (options) =>

@@ -1,6 +1,6 @@
 class Pica.Models.Polygon extends Pica.Model
-  constructor: () ->
-    @attributes = {}
+  constructor: (options = {}) ->
+    @attributes = if options.attributes? then options.attributes else {}
 
   isComplete: () ->
     return @get('geometry')?

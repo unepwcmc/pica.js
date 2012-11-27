@@ -8,6 +8,8 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
   render: () =>
     @removeAllPolygonsAndBindings()
 
+    console.log "Going to render these polys on the map:"
+    console.log @area.polygons
     for polygon in @area.polygons
       continue unless polygon.isComplete()
 

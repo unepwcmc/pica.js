@@ -17,7 +17,7 @@ class Pica.Application
 
     $.ajaxSetup
       headers:
-        'X-Magpie-AppId': Pica.config.appId
+        'X-Magpie-ProjectId': Pica.config.projectId
 
   newWorkspace: () ->
     @currentWorkspace = new Pica.Models.Workspace()

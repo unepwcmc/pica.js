@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2012-11-26
+/*! pica - v0.1.0 - 2012-11-27
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2012 UNEP-WCMC; */
 
@@ -17,7 +17,7 @@ Pica.Application = (function() {
     $.support.cors = true;
     $.ajaxSetup({
       headers: {
-        'X-Magpie-AppId': Pica.config.appId
+        'X-Magpie-ProjectId': Pica.config.projectId
       }
     });
   }
@@ -87,7 +87,8 @@ Pica.Events = (function() {
 
 })();
 
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 Pica.Model = (function(_super) {
@@ -95,6 +96,11 @@ Pica.Model = (function(_super) {
   __extends(Model, _super);
 
   function Model() {
+    this["delete"] = __bind(this["delete"], this);
+
+    this.fetch = __bind(this.fetch, this);
+
+    this.save = __bind(this.save, this);
     return Model.__super__.constructor.apply(this, arguments);
   }
 
@@ -160,8 +166,14 @@ Pica.Model = (function(_super) {
     if (options == null) {
       options = {};
     }
-    options.url = this.url().create != null ? this.url().create : this.url();
-    options.type = 'post';
+    if (this.get('id') != null) {
+      options.url = this.url().read != null ? this.url().read : this.url();
+      options.type = 'put';
+    } else {
+      options.url = this.url().create != null ? this.url().create : this.url();
+      options.type = 'post';
+    }
+    console.log("saving " + this.constructor.name + " " + (this.get('id')));
     return this.sync(options);
   };
 
@@ -170,6 +182,7 @@ Pica.Model = (function(_super) {
       options = {};
     }
     options.url = this.url().read != null ? this.url().read : this.url();
+    console.log("fetching " + this.constructor.name + " " + (this.get('id')));
     return this.sync(options);
   };
 
@@ -184,9 +197,11 @@ Pica.Model = (function(_super) {
     originalCallback = options.success;
     options.success = function() {
       _this.trigger('delete');
+      console.log("deleted " + _this.constructor.name + " " + (_this.get('id')));
       if (originalCallback) {
-        return originalCallback();
+        originalCallback();
       }
+      return _this.off();
     };
     return this.sync(options);
   };
@@ -206,8 +221,6 @@ Pica.Models.Area = (function(_super) {
   function Area(options) {
     this.save = __bind(this.save, this);
 
-    this.fetch = __bind(this.fetch, this);
-
     this.removePolygon = __bind(this.removePolygon, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
@@ -218,25 +231,25 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.addPolygon = function(polygon) {
-    polygon.on('requestAreaId', this.save);
-    polygon.on('sync', function() {
-      return this.fetch;
+    var _this = this;
+    polygon.on('requestAreaId', function(options) {
+      if (_this.get('id') != null) {
+        return options.success(_this);
+      } else {
+        return _this.save(options);
+      }
     });
-    polygon.on('delete', this.removePolygon);
+    polygon.on('sync', function() {
+      return _this.fetch();
+    });
+    polygon.on('delete', function() {
+      return _this.fetch();
+    });
     return this.polygons.push(polygon);
   };
 
   Area.prototype.removePolygon = function(deletedPolygon) {
-    var index, indexToRemove, polygon, _i, _len, _ref;
-    indexToRemove = null;
-    _ref = this.polygons;
-    for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
-      polygon = _ref[index];
-      if (deletedPolygon === polygon) {
-        indexToRemove = null;
-      }
-    }
-    return this.polygons.splice(indexToRemove, 1);
+    return this.fetch();
   };
 
   Area.prototype.drawNewPolygonView = function(finishedCallback) {
@@ -261,8 +274,23 @@ Pica.Models.Area = (function(_super) {
     };
   };
 
-  Area.prototype.fetch = function() {
-    return Area.__super__.fetch.apply(this, arguments);
+  Area.prototype.parse = function(data) {
+    var polygon, polygonAttributes, _i, _len, _ref;
+    if (data.polygons != null) {
+      console.log('Resetting polygons to:');
+      console.log(data.polygons);
+      this.polygons = [];
+      _ref = data.polygons;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        polygonAttributes = _ref[_i];
+        polygon = new Pica.Models.Polygon({
+          attributes: polygonAttributes
+        });
+        this.addPolygon(polygon);
+      }
+      delete data.polygons;
+    }
+    return Area.__super__.parse.apply(this, arguments);
   };
 
   Area.prototype.save = function(options) {
@@ -298,9 +326,13 @@ Pica.Models.Polygon = (function(_super) {
 
   __extends(Polygon, _super);
 
-  function Polygon() {
+  function Polygon(options) {
+    if (options == null) {
+      options = {};
+    }
     this.save = __bind(this.save, this);
-    this.attributes = {};
+
+    this.attributes = options.attributes != null ? options.attributes : {};
   }
 
   Polygon.prototype.isComplete = function() {
@@ -468,6 +500,8 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
     var mapPolygon, polygon, _i, _len, _ref, _results,
       _this = this;
     this.removeAllPolygonsAndBindings();
+    console.log("Going to render these polys on the map:");
+    console.log(this.area.polygons);
     _ref = this.area.polygons;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {

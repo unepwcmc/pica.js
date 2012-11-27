@@ -6,9 +6,13 @@ Pica.Models.Polygon = (function(_super) {
 
   __extends(Polygon, _super);
 
-  function Polygon() {
+  function Polygon(options) {
+    if (options == null) {
+      options = {};
+    }
     this.save = __bind(this.save, this);
-    this.attributes = {};
+
+    this.attributes = options.attributes != null ? options.attributes : {};
   }
 
   Polygon.prototype.isComplete = function() {

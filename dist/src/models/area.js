@@ -9,8 +9,6 @@ Pica.Models.Area = (function(_super) {
   function Area(options) {
     this.save = __bind(this.save, this);
 
-    this.fetch = __bind(this.fetch, this);
-
     this.removePolygon = __bind(this.removePolygon, this);
     this.polygons = [];
     this.set('name', 'My Lovely Area');
@@ -21,25 +19,25 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.addPolygon = function(polygon) {
-    polygon.on('requestAreaId', this.save);
-    polygon.on('sync', function() {
-      return this.fetch;
+    var _this = this;
+    polygon.on('requestAreaId', function(options) {
+      if (_this.get('id') != null) {
+        return options.success(_this);
+      } else {
+        return _this.save(options);
+      }
     });
-    polygon.on('delete', this.removePolygon);
+    polygon.on('sync', function() {
+      return _this.fetch();
+    });
+    polygon.on('delete', function() {
+      return _this.fetch();
+    });
     return this.polygons.push(polygon);
   };
 
   Area.prototype.removePolygon = function(deletedPolygon) {
-    var index, indexToRemove, polygon, _i, _len, _ref;
-    indexToRemove = null;
-    _ref = this.polygons;
-    for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
-      polygon = _ref[index];
-      if (deletedPolygon === polygon) {
-        indexToRemove = null;
-      }
-    }
-    return this.polygons.splice(indexToRemove, 1);
+    return this.fetch();
   };
 
   Area.prototype.drawNewPolygonView = function(finishedCallback) {
@@ -64,8 +62,23 @@ Pica.Models.Area = (function(_super) {
     };
   };
 
-  Area.prototype.fetch = function() {
-    return Area.__super__.fetch.apply(this, arguments);
+  Area.prototype.parse = function(data) {
+    var polygon, polygonAttributes, _i, _len, _ref;
+    if (data.polygons != null) {
+      console.log('Resetting polygons to:');
+      console.log(data.polygons);
+      this.polygons = [];
+      _ref = data.polygons;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        polygonAttributes = _ref[_i];
+        polygon = new Pica.Models.Polygon({
+          attributes: polygonAttributes
+        });
+        this.addPolygon(polygon);
+      }
+      delete data.polygons;
+    }
+    return Area.__super__.parse.apply(this, arguments);
   };
 
   Area.prototype.save = function(options) {

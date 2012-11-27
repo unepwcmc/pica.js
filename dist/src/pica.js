@@ -13,7 +13,7 @@ Pica.Application = (function() {
     $.support.cors = true;
     $.ajaxSetup({
       headers: {
-        'X-Magpie-AppId': Pica.config.appId
+        'X-Magpie-ProjectId': Pica.config.projectId
       }
     });
   }

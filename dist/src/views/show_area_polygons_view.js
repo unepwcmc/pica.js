@@ -20,6 +20,8 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
     var mapPolygon, polygon, _i, _len, _ref, _results,
       _this = this;
     this.removeAllPolygonsAndBindings();
+    console.log("Going to render these polys on the map:");
+    console.log(this.area.polygons);
     _ref = this.area.polygons;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {

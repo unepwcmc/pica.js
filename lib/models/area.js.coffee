@@ -47,8 +47,6 @@ class Pica.Models.Area extends Pica.Model
   parse: (data) ->
     # Reset polygon collection
     if data.polygons?
-      console.log('Resetting polygons to:')
-      console.log(data.polygons)
       @polygons = []
       for polygonAttributes in data.polygons
         polygon = new Pica.Models.Polygon(attributes:polygonAttributes)

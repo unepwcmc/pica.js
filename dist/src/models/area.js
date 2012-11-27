@@ -65,8 +65,6 @@ Pica.Models.Area = (function(_super) {
   Area.prototype.parse = function(data) {
     var polygon, polygonAttributes, _i, _len, _ref;
     if (data.polygons != null) {
-      console.log('Resetting polygons to:');
-      console.log(data.polygons);
       this.polygons = [];
       _ref = data.polygons;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

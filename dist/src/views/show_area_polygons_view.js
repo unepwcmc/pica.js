@@ -9,10 +9,13 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
   function ShowAreaPolygonsView(options) {
     this.triggerPolyClick = __bind(this.triggerPolyClick, this);
 
+    this.addPolygon = __bind(this.addPolygon, this);
+
     this.render = __bind(this.render, this);
     this.area = options.area;
     this.mapPolygons = [];
     this.area.on('sync', this.render);
+    this.area.on('addedPolygon', this.addPolygon);
     this.render();
   }
 
@@ -28,6 +31,13 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
         continue;
       }
       mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
+      polygon.on('delete', (function() {
+        var thatMapPolygon;
+        thatMapPolygon = mapPolygon;
+        return function() {
+          return _this.removeMapPolygonAndBindings(thatMapPolygon);
+        };
+      })());
       mapPolygon.on('click', (function() {
         var thatMapPolygon, thatPolygon;
         thatPolygon = polygon;
@@ -36,16 +46,13 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
           return _this.triggerPolyClick(thatPolygon, event, thatMapPolygon);
         };
       })());
-      polygon.on('delete', (function() {
-        var thatMapPolygon;
-        thatMapPolygon = mapPolygon;
-        return function() {
-          return _this.removeMapPolygonAndBindings(thatMapPolygon);
-        };
-      })());
       _results.push(this.mapPolygons.push(mapPolygon));
     }
     return _results;
+  };
+
+  ShowAreaPolygonsView.prototype.addPolygon = function(polygon) {
+    return polygon.on('change', this.render);
   };
 
   ShowAreaPolygonsView.prototype.close = function() {

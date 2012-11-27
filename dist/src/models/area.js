@@ -31,7 +31,8 @@ Pica.Models.Area = (function(_super) {
     polygon.on('delete', function() {
       return _this.fetch();
     });
-    return this.polygons.push(polygon);
+    this.polygons.push(polygon);
+    return this.trigger('addedPolygon', polygon);
   };
 
   Area.prototype.drawNewPolygonView = function(finishedCallback) {
@@ -57,11 +58,9 @@ Pica.Models.Area = (function(_super) {
   };
 
   Area.prototype.parse = function(data) {
-    var polygon, polygonAttributes, _i, _len, _ref;
-    if (this.polygons.length > 0) {
-      this.polygons = [];
-    }
+    var index, polygon, polygonAttributes, unPersistedPolygons, _i, _j, _len, _len1, _ref, _ref1;
     if (data.polygons != null) {
+      this.polygons = [];
       _ref = data.polygons;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         polygonAttributes = _ref[_i];
@@ -71,6 +70,16 @@ Pica.Models.Area = (function(_super) {
         this.addPolygon(polygon);
       }
       delete data.polygons;
+    } else {
+      unPersistedPolygons = [];
+      _ref1 = this.polygons;
+      for (index = _j = 0, _len1 = _ref1.length; _j < _len1; index = ++_j) {
+        polygon = _ref1[index];
+        if (polygon.get('id') == null) {
+          unPersistedPolygons.push(polygon);
+        }
+      }
+      this.polygons = unPersistedPolygons;
     }
     return Area.__super__.parse.apply(this, arguments);
   };

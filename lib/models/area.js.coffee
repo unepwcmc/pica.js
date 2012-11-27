@@ -17,6 +17,7 @@ class Pica.Models.Area extends Pica.Model
     polygon.on('sync', => @fetch())
     polygon.on('delete', => @fetch())
     @polygons.push(polygon)
+    @trigger('addedPolygon', polygon)
 
   drawNewPolygonView: (finishedCallback) ->
     @currentPolygon = new Pica.Models.Polygon()
@@ -37,12 +38,19 @@ class Pica.Models.Area extends Pica.Model
     read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}"
 
   parse: (data) ->
-    @polygons = [] if @polygons.length > 0
     if data.polygons?
+      @polygons = [] 
       for polygonAttributes in data.polygons
         polygon = new Pica.Models.Polygon(attributes:polygonAttributes)
         @addPolygon(polygon)
       delete data.polygons
+    else
+      # Remove persisted polygons
+      unPersistedPolygons = []
+      for polygon, index in @polygons
+        unPersistedPolygons.push(polygon) unless polygon.get('id')?
+      @polygons = unPersistedPolygons
+
 
     super
 

@@ -8,6 +8,7 @@ class Pica.Model extends Pica.Events
   set: (attribute, value) ->
     @attributes ?= {}
     @attributes[attribute] = value
+    @trigger('change')
 
   sync: (options = {}) ->
     callback = options.success || () ->

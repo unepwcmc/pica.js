@@ -30,7 +30,8 @@ Pica.Model = (function(_super) {
     if ((_ref = this.attributes) == null) {
       this.attributes = {};
     }
-    return this.attributes[attribute] = value;
+    this.attributes[attribute] = value;
+    return this.trigger('change');
   };
 
   Model.prototype.sync = function(options) {

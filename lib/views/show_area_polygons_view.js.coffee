@@ -3,6 +3,7 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
     @area = options.area
     @mapPolygons = []
     @area.on('sync', @render)
+    @area.on('addedPolygon', @addPolygon)
     @render()
 
   render: () =>
@@ -15,19 +16,23 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
         polygon.geomAsLatLngArray()
       ).addTo(Pica.config.map)
 
-      mapPolygon.on('click', (=>
-        thatPolygon = polygon
-        thatMapPolygon = mapPolygon
-        return (event) =>
-          @triggerPolyClick(thatPolygon, event, thatMapPolygon)
-      )())
       polygon.on('delete', (=>
         thatMapPolygon = mapPolygon
         return =>
           @removeMapPolygonAndBindings(thatMapPolygon)
       )())
 
+      mapPolygon.on('click', (=>
+        thatPolygon = polygon
+        thatMapPolygon = mapPolygon
+        return (event) =>
+          @triggerPolyClick(thatPolygon, event, thatMapPolygon)
+      )())
+
       @mapPolygons.push(mapPolygon)
+  
+  addPolygon: (polygon) =>
+    polygon.on('change', @render)
 
   close: ->
     @removeAllPolygonsAndBindings()

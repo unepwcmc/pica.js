@@ -21,20 +21,16 @@ class Pica.Model extends Pica.Events
 
       callback(@, textStatus, jqXHR)
 
-    dataType = "json"
-
     data = @attributes
     data = JSON.stringify(data) if options.type == 'post'
 
     # Send nothing for delete, and set contentType, otherwise JQuery will try to parse it on return
     if options.type == 'delete'
       data = null
-      dataType = "text"
 
     $.ajax(
       $.extend(
         options,
-        dataType: dataType
         contentType: "application/json"
         data: data
       )

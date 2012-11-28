@@ -124,7 +124,7 @@ Pica.Model = (function(_super) {
   };
 
   Model.prototype.sync = function(options) {
-    var callback, data, dataType,
+    var callback, data,
       _this = this;
     if (options == null) {
       options = {};
@@ -137,17 +137,14 @@ Pica.Model = (function(_super) {
       }
       return callback(_this, textStatus, jqXHR);
     };
-    dataType = "json";
     data = this.attributes;
     if (options.type === 'post') {
       data = JSON.stringify(data);
     }
     if (options.type === 'delete') {
       data = null;
-      dataType = "text";
     }
     return $.ajax($.extend(options, {
-      dataType: dataType,
       contentType: "application/json",
       data: data
     }));

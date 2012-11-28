@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2012-11-27
+/*! pica - v0.1.0 - 2012-11-28
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2012 UNEP-WCMC; */
 

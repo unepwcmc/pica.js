@@ -27,6 +27,11 @@ you'll probably want to run a super simple python web server
 
 Then hit up http://localhost:8000/example/
 
+## Usage example
+The source code for the demo app is in the example folder. It's commented and should be fairly easy to follow. Start in the script tag in example/index.html.
+
+Check the API docs below for reference.
+
 ## API Documentation
 
 ## Pica.Application
@@ -141,53 +146,6 @@ Trigged when a polygon is clicked on, passes the polygon that was clicked and th
 
 #### close()
 Stops drawing and removes the view from the map
-
-## Examples
-
-In this simple example we will create an app which builds a new workspace, allows the user to draw a new polygon, 
-then renders the calculated stats for that polygon
-
-```
-// Initialise Pica and create a new workspace
-pica = new Pica({
-  magpieUrl: '…',
-  appId: 3,
-  map: new L.Map('#map')
-});
-pica.newWorkspace();
-
-// Start drawing a polygon for our new workspace
-pica.currentWorkspace().currentArea().drawNewPolygonView(function(polygon){
-  AreaView('#pica-content');
-  pica.currentWorkspace.currentArea.newShowPolygonView();
-});
-
-/* == AreaView.js == 
-Render an area's stats as they are calcualted */
-var AreaView = (function() {
-
-  AreaView.prototype.render = function(area) {
-    var stat, stats, _i, _len;
-    stats = area.get('results');
-    for (_i = 0, _len = stats.length; _i < _len; _i++) {
-      stat = stats[_i];
-      $(this.targetElement).append(stat.display_name + ": " + stat.value + stat.unit + "<br/>");
-    }
-  };
-
-  function AreaView(targetElement) {
-    var _this = this;
-    this.targetElement = targetElement;
-    // Listen for the 'sync' event on the area, which is triggered when stats are updated
-    pica.currentWorkspace.currentArea.on("sync", function(area) {
-      _this.render(area);
-    });
-  };
-
-  return AreaView;
-})();
-
-```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt](http://gruntjs.com/).

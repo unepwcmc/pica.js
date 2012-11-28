@@ -22,92 +22,16 @@
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.js"></script>
-  <script src="js/leaflet.draw.js"></script>
-
-  <script src="js/pica.js"></script>
+  <script src="js/lib/leaflet.draw.js"></script>
+  <script src="js/lib/pica.js"></script>
+  <script src="js/area_view.js"></script>
+  <script src="js/poly_actions_view.js"></script>
 
   <script>
     $(document).ready(function() {
-      var AreaView, PolyActionsView, map, pica, tileLayer, tileLayerUrl;
-      /* == AreaView.js == 
-      Render an area's stats as they are calculated */
-      AreaView = (function() {
+      var map, tileLayer, tileLayerUrl;
 
-        AreaView.prototype.render = function(area) {
-          var stat, stats, _i, _len;
-          stats = area.get('results');
-          if (typeof(stats) !== 'undefined') {
-            $(this.targetElement).html('');
-            for (_i = 0, _len = stats.length; _i < _len; _i++) {
-              stat = stats[_i];
-              $(this.targetElement).append(stat.display_name + ": " + stat.value + stat.unit + "<br/>");
-            }
-          }
-        };
-
-        function AreaView(targetElement) {
-          var _this = this;
-          this.targetElement = targetElement;
-          // Listen for the 'sync' event on the area, which is triggered when stats are updated
-          pica.currentWorkspace.currentArea.on("sync", function(area) {
-            _this.render(area);
-          });
-        };
-
-        return AreaView;
-      })();
-
-      /* == PolyActionsView.js == 
-      Show options dialog when a polygon is clicked */
-      PolyActionsView = (function() {
-        PolyActionsView.prototype.render = function(area) {
-          this.el = $(document.createElement('div'));
-          this.el.attr('class', 'polyActions');
-          this.el.css('position', 'absolute');
-          this.el.css('left', this.event.containerPoint.x);
-          this.el.css('top', this.event.containerPoint.y);
-          this.el.css('height', '50px');
-          this.el.css('width', '300px');
-          this.el.html('<input type="submit" value="Delete polygon ' + this.polygon.get('id') + '?"/>');
-          $('body').append(this.el);
-        };
-
-        PolyActionsView.prototype.deletePolygon = function(event) {
-          _this = this;
-          this.polygon.delete({
-            success: function() {_this.close();}
-          });
-        };
-
-        PolyActionsView.prototype.addBindings = function() {
-          var _this = this;
-          this.el.find('input').on('click', function(){
-            _this.deletePolygon(arguments);
-          });
-          // close when clicking elsewhere
-          $('body').click(function() {_this.close();})
-          this.el.click(function(e) {e.stopPropagation();})
-        };
-
-        PolyActionsView.prototype.close = function() {
-          var _this = this;
-          $('body').off('click', function() {_this.close();})
-          this.el.unbind();
-          this.el.remove();
-        };
-
-        function PolyActionsView(polygon, event, mapPolygon) {
-          var _this = this;
-          this.polygon = polygon;
-          this.event = event;
-          this.mapPolygon = mapPolygon;
-          this.render();
-          this.addBindings();
-        };
-
-        return PolyActionsView;
-      })();
-
+      // Create a leaflet map to use
       map = L.map('map',{
         center: [24.5,54],
         minZoom: 7,
@@ -117,23 +41,30 @@
       tileLayer = new L.TileLayer(tileLayerUrl, {
         maxZoom: 18
       }).addTo(map);
-      pica = new Pica.Application({
+
+      // Start a new pica application, with the given options
+      window.pica = new Pica.Application({
         magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
         projectId: 4,
         map: map
       });
-      pica.newWorkspace();
+      // Create a new workspace to work in
+      window.pica.newWorkspace();
 
       // Show drawn polygons on the map
-      var showAreaPolygonsView = pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
+      var showAreaPolygonsView = window.pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
+
+      // Show our custom PolyActionsView when any of the polygons are clicked
       showAreaPolygonsView.on("polygonClick", function(polygon, event) {
-        new PolyActionsView(polygon, event);
+        new PicaExample.PolyActionsView(polygon, event);
       });
-      new AreaView("#area-stats");
+
+      // The area view listens for the currentArea 'sync' event, and displays the stats
+      new PicaExample.AreaView("#area-stats");
 
       // Draw a new polygon view when user clicks add button
       $('#add-polygon-btn').click(function(){
-        pica.currentWorkspace.currentArea.drawNewPolygonView();
+        window.pica.currentWorkspace.currentArea.drawNewPolygonView();
       });
 
     });

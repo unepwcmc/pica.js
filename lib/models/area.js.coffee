@@ -51,7 +51,6 @@ class Pica.Models.Area extends Pica.Model
         unPersistedPolygons.push(polygon) unless polygon.get('id')?
       @polygons = unPersistedPolygons
 
-
     super
 
   save: (options) =>

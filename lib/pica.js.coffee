@@ -19,5 +19,19 @@ class Pica.Application
       headers:
         'X-Magpie-ProjectId': Pica.config.projectId
 
+    @layers = []
+    @fetch()
+
   newWorkspace: () ->
     @currentWorkspace = new Pica.Models.Workspace()
+
+  fetch: () ->
+    $.ajax(
+      url: "#{Pica.config.magpieUrl}/projects/#{Pica.config.projectId}.json"
+      type: 'get'
+      success: @parse
+    )
+
+  parse: (data) =>
+    for attr, val of data
+      @[attr] = val

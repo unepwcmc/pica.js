@@ -1,6 +1,6 @@
-/*! pica - v0.1.0 - 2012-11-29
+/*! pica - v0.1.0 - 2013-01-03
 * https://github.com/unepwcmc/pica.js
-* Copyright (c) 2012 UNEP-WCMC; */
+* Copyright (c) 2013 UNEP-WCMC; */
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -486,7 +486,7 @@ Pica.Views.NewPolygonView = (function() {
     return this.polygon.save({
       success: function() {
         _this.close();
-        if (typeof finishedCallback !== "undefined" && finishedCallback !== null) {
+        if (_this.finishedCallback != null) {
           return _this.finishedCallback();
         }
       }

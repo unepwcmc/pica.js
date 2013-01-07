@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-01-03
+/*! pica - v0.1.0 - 2013-01-07
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -454,6 +454,36 @@ Pica.Models.Workspace = (function(_super) {
   Workspace.prototype.addArea = function(area) {
     area.on('requestWorkspaceId', this.save);
     return this.areas.push(area);
+  };
+
+  Workspace.prototype.setCurrentArea = function(theArea) {
+    var area, _i, _len, _ref, _results;
+    _ref = this.areas;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      area = _ref[_i];
+      if (area === theArea) {
+        _results.push(this.currentArea = area);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  Workspace.prototype.setCurrentAreaById = function(areaId) {
+    var area, _i, _len, _ref, _results;
+    _ref = this.areas;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      area = _ref[_i];
+      if (area.get('id') === areaId) {
+        _results.push(this.currentArea = area);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
   };
 
   Workspace.prototype.save = function(options) {

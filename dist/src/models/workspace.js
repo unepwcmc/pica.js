@@ -23,6 +23,36 @@ Pica.Models.Workspace = (function(_super) {
     return this.areas.push(area);
   };
 
+  Workspace.prototype.setCurrentArea = function(theArea) {
+    var area, _i, _len, _ref, _results;
+    _ref = this.areas;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      area = _ref[_i];
+      if (area === theArea) {
+        _results.push(this.currentArea = area);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  Workspace.prototype.setCurrentAreaById = function(areaId) {
+    var area, _i, _len, _ref, _results;
+    _ref = this.areas;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      area = _ref[_i];
+      if (area.get('id') === areaId) {
+        _results.push(this.currentArea = area);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
   Workspace.prototype.save = function(options) {
     return Workspace.__super__.save.call(this, options);
   };

@@ -23,14 +23,14 @@ Pica.Views.NewPolygonView = (function() {
     return this.polygon.save({
       success: function() {
         _this.close();
-        if (typeof successCallback !== "undefined" && successCallback !== null) {
+        if (_this.successCallback != null) {
           return _this.successCallback();
         }
       }
     }, {
       error: function(error) {
         _this.close();
-        if (typeof errorCallback !== "undefined" && errorCallback !== null) {
+        if (_this.errorCallback != null) {
           return _this.errorCallback();
         }
       }

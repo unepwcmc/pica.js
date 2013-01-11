@@ -3,7 +3,10 @@ Pica.Views.NewPolygonView = (function() {
 
   function NewPolygonView(options) {
     var _this = this;
-    this.finishedCallback = options.finishedCallback;
+    if (options.callbacks != null) {
+      this.successCallback = options.callbacks.success;
+      this.errorCallback = options.callbacks.error;
+    }
     this.polygon = options.polygon;
     this.polygonDraw = new L.Polygon.Draw(Pica.config.map, {});
     this.polygonDraw.enable();
@@ -20,8 +23,15 @@ Pica.Views.NewPolygonView = (function() {
     return this.polygon.save({
       success: function() {
         _this.close();
-        if (typeof finishedCallback !== "undefined" && finishedCallback !== null) {
-          return _this.finishedCallback();
+        if (typeof successCallback !== "undefined" && successCallback !== null) {
+          return _this.successCallback();
+        }
+      }
+    }, {
+      error: function(error) {
+        _this.close();
+        if (typeof errorCallback !== "undefined" && errorCallback !== null) {
+          return _this.errorCallback();
         }
       }
     });

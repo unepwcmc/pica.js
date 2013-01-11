@@ -19,11 +19,11 @@ class Pica.Models.Area extends Pica.Model
     @polygons.push(polygon)
     @trigger('addedPolygon', polygon)
 
-  drawNewPolygonView: (finishedCallback) ->
+  drawNewPolygonView: (callbacks) ->
     @currentPolygon = new Pica.Models.Polygon()
     @addPolygon(@currentPolygon)
     new Pica.Views.NewPolygonView(
-      finishedCallback: finishedCallback
+      callbacks: callbacks
       polygon: @currentPolygon
     )
 

@@ -1,6 +1,8 @@
 class Pica.Views.NewPolygonView
   constructor: (options) ->
-    @finishedCallback = options.finishedCallback
+    if options.callbacks?
+      @successCallback = options.callbacks.success
+      @errorCallback = options.callbacks.error
 
     @polygon = options.polygon
 
@@ -16,7 +18,10 @@ class Pica.Views.NewPolygonView
     @polygon.setGeomFromPoints(mapPolygon.getLatLngs())
     @polygon.save(success: () =>
       @close()
-      @finishedCallback() if finishedCallback?
+      @successCallback() if successCallback?
+    error: (error) =>
+      @close()
+      @errorCallback() if errorCallback?
     )
 
   close: () ->

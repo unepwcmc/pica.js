@@ -35,11 +35,11 @@ Pica.Models.Area = (function(_super) {
     return this.trigger('addedPolygon', polygon);
   };
 
-  Area.prototype.drawNewPolygonView = function(finishedCallback) {
+  Area.prototype.drawNewPolygonView = function(callbacks) {
     this.currentPolygon = new Pica.Models.Polygon();
     this.addPolygon(this.currentPolygon);
     return new Pica.Views.NewPolygonView({
-      finishedCallback: finishedCallback,
+      callbacks: callbacks,
       polygon: this.currentPolygon
     });
   };

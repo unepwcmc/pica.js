@@ -1,6 +1,6 @@
-/*! pica - v0.1.0 - 2012-11-29
+/*! pica - v0.1.0 - 2013-01-11
 * https://github.com/unepwcmc/pica.js
-* Copyright (c) 2012 UNEP-WCMC; */
+* Copyright (c) 2013 UNEP-WCMC; */
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -268,11 +268,11 @@ Pica.Models.Area = (function(_super) {
     return this.trigger('addedPolygon', polygon);
   };
 
-  Area.prototype.drawNewPolygonView = function(finishedCallback) {
+  Area.prototype.drawNewPolygonView = function(callbacks) {
     this.currentPolygon = new Pica.Models.Polygon();
     this.addPolygon(this.currentPolygon);
     return new Pica.Views.NewPolygonView({
-      finishedCallback: finishedCallback,
+      callbacks: callbacks,
       polygon: this.currentPolygon
     });
   };
@@ -469,7 +469,10 @@ Pica.Views.NewPolygonView = (function() {
 
   function NewPolygonView(options) {
     var _this = this;
-    this.finishedCallback = options.finishedCallback;
+    if (options.callbacks != null) {
+      this.successCallback = options.callbacks.success;
+      this.errorCallback = options.callbacks.error;
+    }
     this.polygon = options.polygon;
     this.polygonDraw = new L.Polygon.Draw(Pica.config.map, {});
     this.polygonDraw.enable();
@@ -486,8 +489,15 @@ Pica.Views.NewPolygonView = (function() {
     return this.polygon.save({
       success: function() {
         _this.close();
-        if (typeof finishedCallback !== "undefined" && finishedCallback !== null) {
-          return _this.finishedCallback();
+        if (typeof successCallback !== "undefined" && successCallback !== null) {
+          return _this.successCallback();
+        }
+      }
+    }, {
+      error: function(error) {
+        _this.close();
+        if (typeof errorCallback !== "undefined" && errorCallback !== null) {
+          return _this.errorCallback();
         }
       }
     });

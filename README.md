@@ -42,6 +42,10 @@ Check the API docs below for reference.
 
 The current workspace
 
+#### layers
+
+List of tile layers used in the application
+
 ### Methods
 
 #### new(options)
@@ -62,6 +66,14 @@ Create a new workspace
 * id - id of the workspace
 
 Gets the workspace from the server
+
+### Events
+#### layersFetched
+**eventParams**
+
+* pica - the pica object, with the synced data
+
+Triggered when the layers are fetched from the server
 
 
 ## Workspace
@@ -96,8 +108,11 @@ Array of polygon objects currently in memory
 #### showPolysOnMapView()
 Show current polygons on the map, returns a ShowPolysView
 
-#### drawNewPolygonView(successCallback)
-* successCallback - called after the user has finished drawing
+#### drawNewPolygonView(callbacks)
+* callbacks -
+    optional object with keys:
+      * success - function which will be called when new polygon is saved
+      * error - function which will be called if polygon fails to save, passing the error to the callback
 
 Adds a drawing tool to the map, and returns a PolygonEditView
 

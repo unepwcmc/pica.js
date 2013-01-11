@@ -19,7 +19,14 @@ Pica.Models.Workspace = (function(_super) {
   };
 
   Workspace.prototype.addArea = function(area) {
-    area.on('requestWorkspaceId', this.save);
+    var _this = this;
+    area.on('requestWorkspaceId', function(options) {
+      if (_this.get('id') != null) {
+        return options.success(_this);
+      } else {
+        return _this.save(options);
+      }
+    });
     return this.areas.push(area);
   };
 

@@ -26,12 +26,11 @@ Pica.Views.NewPolygonView = (function() {
         if (_this.successCallback != null) {
           return _this.successCallback();
         }
-      }
-    }, {
-      error: function(error) {
+      },
+      error: function(xhr, textStatus, errorThrown) {
         _this.close();
         if (_this.errorCallback != null) {
-          return _this.errorCallback();
+          return _this.errorCallback.apply(_this, arguments);
         }
       }
     });

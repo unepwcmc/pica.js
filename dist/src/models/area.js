@@ -100,6 +100,16 @@ Pica.Models.Area = (function(_super) {
               error: "Could not save workspace, so cannot save area"
             }, jqXHR);
           }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log("Unable to save area:");
+          console.log(arguments);
+          if (options.error != null) {
+            return options.error(jqXHR, textStatus, {
+              error: "Unable to obtain workspaceId, cannot save area",
+              parentError: errorThrown
+            });
+          }
         }
       });
     }

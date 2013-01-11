@@ -66,4 +66,8 @@ class Pica.Models.Area extends Pica.Model
             @save options
           else
             options.error(@, {error: "Could not save workspace, so cannot save area"}, jqXHR)
+        error: (jqXHR, textStatus, errorThrown) =>
+          console.log "Unable to save area:"
+          console.log arguments
+          options.error(jqXHR, textStatus, {error: "Unable to obtain workspaceId, cannot save area", parentError: errorThrown}) if options.error?
       )

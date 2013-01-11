@@ -16,12 +16,13 @@ class Pica.Views.NewPolygonView
 
   createPolygon: (mapPolygon) ->
     @polygon.setGeomFromPoints(mapPolygon.getLatLngs())
-    @polygon.save(success: () =>
-      @close()
-      @successCallback() if @successCallback?
-    error: (error) =>
-      @close()
-      @errorCallback() if @errorCallback?
+    @polygon.save(
+      success: () =>
+        @close()
+        @successCallback() if @successCallback?
+      error: (xhr, textStatus, errorThrown) =>
+        @close()
+        @errorCallback.apply(@, arguments) if @errorCallback?
     )
 
   close: () ->

@@ -333,6 +333,16 @@ Pica.Models.Area = (function(_super) {
               error: "Could not save workspace, so cannot save area"
             }, jqXHR);
           }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log("Unable to save area:");
+          console.log(arguments);
+          if (options.error != null) {
+            return options.error(jqXHR, textStatus, {
+              error: "Unable to obtain workspaceId, cannot save area",
+              parentError: errorThrown
+            });
+          }
         }
       });
     }
@@ -406,22 +416,26 @@ Pica.Models.Polygon = (function(_super) {
     } else {
       return this.trigger('requestAreaId', {
         success: function(area, textStatus, jqXHR) {
-          var successCallback;
           _this.set('area_id', area.get('id'));
           if (_this.get('area_id')) {
-            successCallback = options.success;
             return _this.save(options);
           } else {
             if (options.error != null) {
               return options.error(_this, {
-                error: "Could not save area, so cannot save polygon"
+                error: "Unable to get area id, so cannot save polygon"
               }, jqXHR);
             }
           }
         },
-        error: function(error) {
+        error: function(jqXHR, textStatus, errorThrown) {
           console.log("Unable to save polygon:");
-          return console.log(error);
+          console.log(arguments);
+          if (options.error != null) {
+            return options.error(jqXHR, textStatus, {
+              error: "Unable to obtain areaId, cannot save polygon",
+              parentError: errorThrown
+            });
+          }
         }
       });
     }
@@ -452,7 +466,14 @@ Pica.Models.Workspace = (function(_super) {
   };
 
   Workspace.prototype.addArea = function(area) {
-    area.on('requestWorkspaceId', this.save);
+    var _this = this;
+    area.on('requestWorkspaceId', function(options) {
+      if (_this.get('id') != null) {
+        return options.success(_this);
+      } else {
+        return _this.save(options);
+      }
+    });
     return this.areas.push(area);
   };
 
@@ -522,12 +543,11 @@ Pica.Views.NewPolygonView = (function() {
         if (_this.successCallback != null) {
           return _this.successCallback();
         }
-      }
-    }, {
-      error: function(error) {
+      },
+      error: function(xhr, textStatus, errorThrown) {
         _this.close();
         if (_this.errorCallback != null) {
-          return _this.errorCallback();
+          return _this.errorCallback.apply(_this, arguments);
         }
       }
     });

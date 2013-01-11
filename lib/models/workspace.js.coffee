@@ -10,7 +10,12 @@ class Pica.Models.Workspace extends Pica.Model
     "#{Pica.config.magpieUrl}/workspaces"
 
   addArea: (area) ->
-    area.on('requestWorkspaceId', @save)
+    area.on('requestWorkspaceId', (options) =>
+      if @get('id')?
+        options.success(@)
+      else
+        @save(options)
+    )
     @areas.push(area)
 
   setCurrentArea: (theArea) ->

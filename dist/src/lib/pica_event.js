@@ -20,10 +20,11 @@ Pica.Events = (function() {
         if (callback != null) {
           _ref = this.events[event];
           _results = [];
-          for (eventCallback = _i = 0, _len = _ref.length; _i < _len; eventCallback = ++_i) {
-            index = _ref[eventCallback];
+          for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+            eventCallback = _ref[index];
             if (eventCallback === callback) {
-              _results.push(delete this.events[event][index]);
+              this.events[event].splice(index, 1);
+              _results.push(index -= 1);
             } else {
               _results.push(void 0);
             }

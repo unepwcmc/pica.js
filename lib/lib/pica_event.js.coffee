@@ -10,8 +10,10 @@ class Pica.Events
     if event?
       if @events[event]?
         if callback?
-          for index, eventCallback in @events[event]
-            delete @events[event][index] if eventCallback == callback
+          for eventCallback, index in @events[event]
+            if eventCallback == callback
+              @events[event].splice(index, 1)
+              index -= 1
         else
           delete @events[event]
     else

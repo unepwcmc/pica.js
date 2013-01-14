@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-01-11
+/*! pica - v0.1.0 - 2013-01-14
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -75,10 +75,11 @@ Pica.Events = (function() {
         if (callback != null) {
           _ref = this.events[event];
           _results = [];
-          for (eventCallback = _i = 0, _len = _ref.length; _i < _len; eventCallback = ++_i) {
-            index = _ref[eventCallback];
+          for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+            eventCallback = _ref[index];
             if (eventCallback === callback) {
-              _results.push(delete this.events[event][index]);
+              this.events[event].splice(index, 1);
+              _results.push(index -= 1);
             } else {
               _results.push(void 0);
             }
@@ -577,6 +578,7 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
 
     this.render = __bind(this.render, this);
     this.area = options.area;
+    this.polysObserved = [];
     this.mapPolygons = [];
     this.area.on('sync', this.render);
     this.area.on('addedPolygon', this.addPolygon);
@@ -616,11 +618,22 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
   };
 
   ShowAreaPolygonsView.prototype.addPolygon = function(polygon) {
-    return polygon.on('change', this.render);
+    polygon.on('change', this.render);
+    return this.polysObserved.push(polygon);
   };
 
   ShowAreaPolygonsView.prototype.close = function() {
-    return this.removeAllPolygonsAndBindings();
+    var polygon, _i, _len, _ref, _results;
+    this.removeAllPolygonsAndBindings();
+    this.area.off('sync', this.render);
+    this.area.off('addedPolygon', this.addPolygon);
+    _ref = this.polysObserved;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      polygon = _ref[_i];
+      _results.push(polygon.off('change', this.render));
+    }
+    return _results;
   };
 
   ShowAreaPolygonsView.prototype.removeAllPolygonsAndBindings = function() {

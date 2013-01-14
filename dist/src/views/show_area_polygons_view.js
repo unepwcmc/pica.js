@@ -13,6 +13,7 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
 
     this.render = __bind(this.render, this);
     this.area = options.area;
+    this.polysObserved = [];
     this.mapPolygons = [];
     this.area.on('sync', this.render);
     this.area.on('addedPolygon', this.addPolygon);
@@ -52,11 +53,22 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
   };
 
   ShowAreaPolygonsView.prototype.addPolygon = function(polygon) {
-    return polygon.on('change', this.render);
+    polygon.on('change', this.render);
+    return this.polysObserved.push(polygon);
   };
 
   ShowAreaPolygonsView.prototype.close = function() {
-    return this.removeAllPolygonsAndBindings();
+    var polygon, _i, _len, _ref, _results;
+    this.removeAllPolygonsAndBindings();
+    this.area.off('sync', this.render);
+    this.area.off('addedPolygon', this.addPolygon);
+    _ref = this.polysObserved;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      polygon = _ref[_i];
+      _results.push(polygon.off('change', this.render));
+    }
+    return _results;
   };
 
   ShowAreaPolygonsView.prototype.removeAllPolygonsAndBindings = function() {

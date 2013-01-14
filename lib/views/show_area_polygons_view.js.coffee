@@ -1,6 +1,7 @@
 class Pica.Views.ShowAreaPolygonsView extends Pica.Events
   constructor: (options) ->
     @area = options.area
+    @polysObserved = []
     @mapPolygons = []
     @area.on('sync', @render)
     @area.on('addedPolygon', @addPolygon)
@@ -33,9 +34,14 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
   
   addPolygon: (polygon) =>
     polygon.on('change', @render)
+    @polysObserved.push(polygon)
 
   close: ->
     @removeAllPolygonsAndBindings()
+    @area.off('sync', @render)
+    @area.off('addedPolygon', @addPolygon)
+    for polygon in @polysObserved
+      polygon.off('change', @render)
 
   removeAllPolygonsAndBindings: ->
     while mapPolygon = @mapPolygons.shift()

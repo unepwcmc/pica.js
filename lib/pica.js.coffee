@@ -5,11 +5,11 @@
 # * Copyright (c) 2012 UNEP-WCMC
 #
 
-window.Pica = {}
+window.Pica ||= {}
 Pica.Models = {}
 Pica.Views = {}
 
-class Pica.Application
+class Pica.Application extends Pica.Events
   constructor: (@config) ->
     Pica.config = @config
 
@@ -22,8 +22,11 @@ class Pica.Application
     @layers = []
     @fetch()
 
-  newWorkspace: () ->
+  newWorkspace: ->
     @currentWorkspace = new Pica.Models.Workspace()
+
+  showTileLayers: ->
+    new Pica.Views.ShowLayersView(app:@)
 
   fetch: () ->
     $.ajax(
@@ -35,3 +38,4 @@ class Pica.Application
   parse: (data) =>
     for attr, val of data
       @[attr] = val
+    @trigger('sync')

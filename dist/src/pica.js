@@ -1,12 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-window.Pica = {};
+window.Pica || (window.Pica = {});
 
 Pica.Models = {};
 
 Pica.Views = {};
 
-Pica.Application = (function() {
+Pica.Application = (function(_super) {
+
+  __extends(Application, _super);
 
   function Application(config) {
     this.config = config;
@@ -27,6 +31,12 @@ Pica.Application = (function() {
     return this.currentWorkspace = new Pica.Models.Workspace();
   };
 
+  Application.prototype.showTileLayers = function() {
+    return new Pica.Views.ShowLayersView({
+      app: this
+    });
+  };
+
   Application.prototype.fetch = function() {
     return $.ajax({
       url: "" + Pica.config.magpieUrl + "/projects/" + Pica.config.projectId + ".json",
@@ -36,15 +46,14 @@ Pica.Application = (function() {
   };
 
   Application.prototype.parse = function(data) {
-    var attr, val, _results;
-    _results = [];
+    var attr, val;
     for (attr in data) {
       val = data[attr];
-      _results.push(this[attr] = val);
+      this[attr] = val;
     }
-    return _results;
+    return this.trigger('sync');
   };
 
   return Application;
 
-})();
+})(Pica.Events);

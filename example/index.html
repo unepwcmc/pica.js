@@ -51,6 +51,9 @@
       // Create a new workspace to work in
       window.pica.newWorkspace();
 
+      // Show tile layers for app
+      var tileLayerView = window.pica.showTileLayers();
+
       // Show drawn polygons on the map
       var showAreaPolygonsView = window.pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
 

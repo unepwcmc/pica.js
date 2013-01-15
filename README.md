@@ -67,11 +67,12 @@ Create a new workspace
 
 Gets the workspace from the server
 
-### Events
-#### layersFetched
-**eventParams**
+#### showTileLayers()
 
-* pica - the pica object, with the synced data
+Returns a new Pica.Views.ShowLayersView for the app
+
+### Events
+#### sync
 
 Triggered when the layers are fetched from the server
 
@@ -130,7 +131,7 @@ sets the name of the area, and persists to magpie
 * area - the area that synced
 triggered whenever the area is synced with the server
 
-## ShowAreaPolygonsView
+## Pica.Views.ShowAreaPolygonsView
 Show current polygons for the given area. Redraws polygons as the polygons related
 to the map change.
 
@@ -152,7 +153,8 @@ Remove the polygons from the map, remove all bindings
 #### polygonClick -> (polygon, event)
 Trigged when a polygon is clicked on, passes the polygon that was clicked and the leaflet event object
 
-## NewPolygonView
+## Pica.Views.NewPolygonView
+### Methods
 #### constructor(options)
 **options:**
 
@@ -161,6 +163,13 @@ Trigged when a polygon is clicked on, passes the polygon that was clicked and th
 
 #### close()
 Stops drawing and removes the view from the map
+
+## Pica.Views.ShowLayersView
+Adds the app's tile layers to the map. Create one using app.showTileLayers()
+### Methods
+
+#### close()
+Remove the tile layers from the map
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt](http://gruntjs.com/).

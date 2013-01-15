@@ -1,58 +1,9 @@
-/*! pica - v0.1.0 - 2013-01-14
+/*! pica - v0.1.0 - 2013-01-15
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-window.Pica = {};
-
-Pica.Models = {};
-
-Pica.Views = {};
-
-Pica.Application = (function() {
-
-  function Application(config) {
-    this.config = config;
-    this.parse = __bind(this.parse, this);
-
-    Pica.config = this.config;
-    $.support.cors = true;
-    $.ajaxSetup({
-      headers: {
-        'X-Magpie-ProjectId': Pica.config.projectId
-      }
-    });
-    this.layers = [];
-    this.fetch();
-  }
-
-  Application.prototype.newWorkspace = function() {
-    return this.currentWorkspace = new Pica.Models.Workspace();
-  };
-
-  Application.prototype.fetch = function() {
-    return $.ajax({
-      url: "" + Pica.config.magpieUrl + "/projects/" + Pica.config.projectId + ".json",
-      type: 'get',
-      success: this.parse
-    });
-  };
-
-  Application.prototype.parse = function(data) {
-    var attr, val, _results;
-    _results = [];
-    for (attr in data) {
-      val = data[attr];
-      _results.push(this[attr] = val);
-    }
-    return _results;
-  };
-
-  return Application;
-
-})();
-
+window.Pica || (window.Pica = {});
 
 Pica.Events = (function() {
 
@@ -229,6 +180,66 @@ Pica.Model = (function(_super) {
   };
 
   return Model;
+
+})(Pica.Events);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+window.Pica || (window.Pica = {});
+
+Pica.Models = {};
+
+Pica.Views = {};
+
+Pica.Application = (function(_super) {
+
+  __extends(Application, _super);
+
+  function Application(config) {
+    this.config = config;
+    this.parse = __bind(this.parse, this);
+
+    Pica.config = this.config;
+    $.support.cors = true;
+    $.ajaxSetup({
+      headers: {
+        'X-Magpie-ProjectId': Pica.config.projectId
+      }
+    });
+    this.layers = [];
+    this.fetch();
+  }
+
+  Application.prototype.newWorkspace = function() {
+    return this.currentWorkspace = new Pica.Models.Workspace();
+  };
+
+  Application.prototype.showTileLayers = function() {
+    return new Pica.Views.ShowLayersView({
+      app: this
+    });
+  };
+
+  Application.prototype.fetch = function() {
+    return $.ajax({
+      url: "" + Pica.config.magpieUrl + "/projects/" + Pica.config.projectId + ".json",
+      type: 'get',
+      success: this.parse
+    });
+  };
+
+  Application.prototype.parse = function(data) {
+    var attr, val;
+    for (attr in data) {
+      val = data[attr];
+      this[attr] = val;
+    }
+    return this.trigger('sync');
+  };
+
+  return Application;
 
 })(Pica.Events);
 
@@ -657,3 +668,51 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
   return ShowAreaPolygonsView;
 
 })(Pica.Events);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+Pica.Views.ShowLayersView = (function() {
+
+  function ShowLayersView(options) {
+    this.removeTileLayers = __bind(this.removeTileLayers, this);
+
+    this.render = __bind(this.render, this);
+    this.app = options.app;
+    this.app.on('sync', this.render);
+    this.tileLayers = [];
+    this.render();
+  }
+
+  ShowLayersView.prototype.render = function() {
+    var layer, tileLayer, _i, _len, _ref, _results;
+    this.removeTileLayers();
+    _ref = this.app.layers;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      layer = _ref[_i];
+      tileLayer = new L.TileLayer(layer.tile_url);
+      this.tileLayers.push(tileLayer);
+      _results.push(tileLayer.addTo(this.app.config.map));
+    }
+    return _results;
+  };
+
+  ShowLayersView.prototype.removeTileLayers = function() {
+    var tileLayer, _i, _len, _ref, _results;
+    _ref = this.tileLayers;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      tileLayer = _ref[_i];
+      _results.push(this.app.map.removeLayer(tileLayer));
+    }
+    return _results;
+  };
+
+  ShowLayersView.prototype.close = function() {
+    this.removeTileLayers();
+    return this.app.off('sync', this.render);
+  };
+
+  return ShowLayersView;
+
+})();

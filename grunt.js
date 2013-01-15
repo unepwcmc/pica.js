@@ -23,8 +23,8 @@ module.exports = function(grunt) {
       dist: {
         src: [
                '<banner:meta.banner>',
-               'dist/src/<%= pkg.name %>.js',
                'dist/src/lib/**/*.js',
+               'dist/src/<%= pkg.name %>.js',
                'dist/src/models/**/*.js',
                'dist/src/views/**/*.js'
              ],

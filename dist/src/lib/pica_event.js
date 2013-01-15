@@ -1,4 +1,6 @@
 
+window.Pica || (window.Pica = {});
+
 Pica.Events = (function() {
 
   function Events() {}

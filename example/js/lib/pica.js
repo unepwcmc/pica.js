@@ -439,7 +439,8 @@ Pica.Models.Polygon = (function(_super) {
       args.push(latLngs);
     } else {
       if (this.isComplete()) {
-        args = [this.get('geometry').coordinates, this.get('geometry').radius];
+        point = this.get('geometry').coordinates;
+        args = [new L.LatLng(point[1], point[0]), this.get('geometry').radius];
       } else {
         args = [[], 0];
       }
@@ -577,9 +578,7 @@ Pica.Views.NewCircleView = (function() {
     this.polygonDraw = new L.Circle.Draw(Pica.config.map, {});
     this.polygonDraw.enable();
     Pica.config.map.on('draw:circle-created', function(e) {
-      var mapCircle;
-      mapCircle = e.circ;
-      return _this.createPolygon(mapCircle);
+      return _this.createPolygon(e.circ);
     });
   }
 

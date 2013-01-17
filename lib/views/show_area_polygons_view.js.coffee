@@ -7,7 +7,7 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
     @area.on('addedPolygon', @addPolygon)
     @render()
 
-  render: () =>
+  render: =>
     @removeAllPolygonsAndBindings()
 
     for polygon in @area.polygons

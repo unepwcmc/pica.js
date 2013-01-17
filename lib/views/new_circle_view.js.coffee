@@ -12,8 +12,7 @@ class Pica.Views.NewCircleView
     @polygonDraw.enable()
 
     Pica.config.map.on 'draw:circle-created', (e) =>
-      mapCircle = e.circ
-      @createPolygon mapCircle
+      @createPolygon e.circ
 
   createPolygon: (mapCircle) ->
     @polygon.setGeomFromCircle(mapCircle.getLatLng(), mapCircle.getRadius())

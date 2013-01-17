@@ -14,9 +14,7 @@ Pica.Views.NewCircleView = (function() {
     this.polygonDraw = new L.Circle.Draw(Pica.config.map, {});
     this.polygonDraw.enable();
     Pica.config.map.on('draw:circle-created', function(e) {
-      var mapCircle;
-      mapCircle = e.circ;
-      return _this.createPolygon(mapCircle);
+      return _this.createPolygon(e.circ);
     });
   }
 

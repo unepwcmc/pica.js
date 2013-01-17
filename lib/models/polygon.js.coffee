@@ -35,7 +35,8 @@ class Pica.Models.Polygon extends Pica.Model
       args.push latLngs
     else
       if @isComplete()
-        args = [@get('geometry').coordinates, @get('geometry').radius]
+        point = @get('geometry').coordinates
+        args = [new L.LatLng(point[1], point[0]), @get('geometry').radius]
       else
         args = [[], 0]
 

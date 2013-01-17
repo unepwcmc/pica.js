@@ -64,7 +64,8 @@ Pica.Models.Polygon = (function(_super) {
       args.push(latLngs);
     } else {
       if (this.isComplete()) {
-        args = [this.get('geometry').coordinates, this.get('geometry').radius];
+        point = this.get('geometry').coordinates;
+        args = [new L.LatLng(point[1], point[0]), this.get('geometry').radius];
       } else {
         args = [[], 0];
       }

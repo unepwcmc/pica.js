@@ -27,6 +27,14 @@ class Pica.Models.Area extends Pica.Model
       polygon: @currentPolygon
     )
 
+  drawNewCircleView: (callbacks) ->
+    @currentPolygon = new Pica.Models.Polygon()
+    @addPolygon(@currentPolygon)
+    new Pica.Views.NewCircleView(
+      callbacks: callbacks
+      polygon: @currentPolygon
+    )
+
   # spawns a new ShowAreaPolygonsView for this area
   newShowAreaPolygonsView: () ->
     new Pica.Views.ShowAreaPolygonsView(

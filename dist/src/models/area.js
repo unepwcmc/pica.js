@@ -44,6 +44,15 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
+  Area.prototype.drawNewCircleView = function(callbacks) {
+    this.currentPolygon = new Pica.Models.Polygon();
+    this.addPolygon(this.currentPolygon);
+    return new Pica.Views.NewCircleView({
+      callbacks: callbacks,
+      polygon: this.currentPolygon
+    });
+  };
+
   Area.prototype.newShowAreaPolygonsView = function() {
     return new Pica.Views.ShowAreaPolygonsView({
       area: this

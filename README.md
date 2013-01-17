@@ -117,6 +117,14 @@ Show current polygons on the map, returns a ShowPolysView
 
 Adds a drawing tool to the map, and returns a PolygonEditView
 
+#### drawNewCircleView(callbacks)
+* callbacks -
+    optional object with keys:
+      * success - function which will be called when new polygon is saved
+      * error - function which will be called if polygon fails to save, passing the error to the callback
+
+Adds a drawing tool to the map, and returns a CircleEditView
+
 #### setName(name)
 * name - name to set
 

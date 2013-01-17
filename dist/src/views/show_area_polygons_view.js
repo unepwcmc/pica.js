@@ -21,7 +21,7 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
   }
 
   ShowAreaPolygonsView.prototype.render = function() {
-    var mapPolygon, polygon, _i, _len, _ref, _results,
+    var mapPolygon, newObject, polygon, _i, _len, _ref, _results,
       _this = this;
     this.removeAllPolygonsAndBindings();
     _ref = this.area.polygons;
@@ -31,7 +31,15 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
       if (!polygon.isComplete()) {
         continue;
       }
-      mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
+      newObject = function(theConstructor, args) {
+        var Wrapper;
+        Wrapper = function(args) {
+          return theConstructor.apply(this, args);
+        };
+        Wrapper.prototype = theConstructor.prototype;
+        return new Wrapper(args);
+      };
+      mapPolygon = newObject(L[polygon.get('geometry').type], polygon.asLeafletArguments()).addTo(Pica.config.map);
       polygon.on('delete', (function() {
         var thatMapPolygon;
         thatMapPolygon = mapPolygon;

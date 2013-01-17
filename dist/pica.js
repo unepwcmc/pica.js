@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-01-15
+/*! pica - v0.1.0 - 2013-01-17
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -289,6 +289,15 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
+  Area.prototype.drawNewCircleView = function(callbacks) {
+    this.currentPolygon = new Pica.Models.Polygon();
+    this.addPolygon(this.currentPolygon);
+    return new Pica.Views.NewCircleView({
+      callbacks: callbacks,
+      polygon: this.currentPolygon
+    });
+  };
+
   Area.prototype.newShowAreaPolygonsView = function() {
     return new Pica.Views.ShowAreaPolygonsView({
       area: this
@@ -373,16 +382,20 @@ Pica.Models.Polygon = (function(_super) {
   __extends(Polygon, _super);
 
   function Polygon(options) {
+    var _base;
     if (options == null) {
       options = {};
     }
     this.save = __bind(this.save, this);
 
     this.attributes = options.attributes != null ? options.attributes : {};
+    (_base = this.attributes)['geometry'] || (_base['geometry'] = {
+      type: 'Polygon'
+    });
   }
 
   Polygon.prototype.isComplete = function() {
-    return this.get('geometry') != null;
+    return this.get('geometry').coordinates != null;
   };
 
   Polygon.prototype.setGeomFromPoints = function(points) {
@@ -397,20 +410,41 @@ Pica.Models.Polygon = (function(_super) {
       return _results;
     })();
     points.push(points[0]);
-    return this.set('geometry', [[points]]);
+    return this.set('geometry', {
+      type: 'Polygon',
+      coordinates: [points]
+    });
   };
 
-  Polygon.prototype.geomAsLatLngArray = function() {
-    var latLngs, point, _i, _len, _ref;
-    latLngs = [];
-    if (this.isComplete()) {
-      _ref = this.get('geometry')[0][0];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        point = _ref[_i];
-        latLngs.push(new L.LatLng(point[1], point[0]));
+  Polygon.prototype.setGeomFromCircle = function(latLng, radius) {
+    return this.set('geometry', {
+      type: 'Circle',
+      coordinates: [latLng.lng, latLng.lat],
+      radius: radius
+    });
+  };
+
+  Polygon.prototype.asLeafletArguments = function() {
+    var args, latLngs, point, _i, _len, _ref;
+    args = [];
+    if (this.get('geometry').type === 'Polygon') {
+      latLngs = [];
+      if (this.isComplete()) {
+        _ref = this.get('geometry').coordinates[0];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          point = _ref[_i];
+          latLngs.push(new L.LatLng(point[1], point[0]));
+        }
+      }
+      args.push(latLngs);
+    } else {
+      if (this.isComplete()) {
+        args = [this.get('geometry').coordinates, this.get('geometry').radius];
+      } else {
+        args = [[], 0];
       }
     }
-    return latLngs;
+    return args;
   };
 
   Polygon.prototype.url = function() {
@@ -528,6 +562,56 @@ Pica.Models.Workspace = (function(_super) {
 })(Pica.Model);
 
 
+Pica.Views.NewCircleView = (function() {
+
+  function NewCircleView(options) {
+    var _this = this;
+    if (options.callbacks != null) {
+      this.successCallback = options.callbacks.success;
+      this.errorCallback = options.callbacks.error;
+    }
+    this.polygon = options.polygon;
+    this.polygon.set('geometry', {
+      type: 'Circle'
+    });
+    this.polygonDraw = new L.Circle.Draw(Pica.config.map, {});
+    this.polygonDraw.enable();
+    Pica.config.map.on('draw:circle-created', function(e) {
+      var mapCircle;
+      mapCircle = e.circ;
+      return _this.createPolygon(mapCircle);
+    });
+  }
+
+  NewCircleView.prototype.createPolygon = function(mapCircle) {
+    var _this = this;
+    this.polygon.setGeomFromCircle(mapCircle.getLatLng(), mapCircle.getRadius());
+    return this.polygon.save({
+      success: function() {
+        _this.close();
+        if (_this.successCallback != null) {
+          return _this.successCallback();
+        }
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        _this.close();
+        if (_this.errorCallback != null) {
+          return _this.errorCallback.apply(_this, arguments);
+        }
+      }
+    });
+  };
+
+  NewCircleView.prototype.close = function() {
+    this.polygonDraw.disable();
+    return Pica.config.map.off('draw:poly-created');
+  };
+
+  return NewCircleView;
+
+})();
+
+
 Pica.Views.NewPolygonView = (function() {
 
   function NewPolygonView(options) {
@@ -597,7 +681,7 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
   }
 
   ShowAreaPolygonsView.prototype.render = function() {
-    var mapPolygon, polygon, _i, _len, _ref, _results,
+    var mapPolygon, newObject, polygon, _i, _len, _ref, _results,
       _this = this;
     this.removeAllPolygonsAndBindings();
     _ref = this.area.polygons;
@@ -607,7 +691,15 @@ Pica.Views.ShowAreaPolygonsView = (function(_super) {
       if (!polygon.isComplete()) {
         continue;
       }
-      mapPolygon = new L.Polygon(polygon.geomAsLatLngArray()).addTo(Pica.config.map);
+      newObject = function(theConstructor, args) {
+        var Wrapper;
+        Wrapper = function(args) {
+          return theConstructor.apply(this, args);
+        };
+        Wrapper.prototype = theConstructor.prototype;
+        return new Wrapper(args);
+      };
+      mapPolygon = newObject(L[polygon.get('geometry').type], polygon.asLeafletArguments()).addTo(Pica.config.map);
       polygon.on('delete', (function() {
         var thatMapPolygon;
         thatMapPolygon = mapPolygon;

@@ -70,6 +70,11 @@
         window.pica.currentWorkspace.currentArea.drawNewPolygonView();
       });
 
+      // Draw a new polygon view when user clicks add button
+      $('#add-circle-btn').click(function(){
+        window.pica.currentWorkspace.currentArea.drawNewCircleView();
+      });
+
     });
   </script>
 
@@ -88,6 +93,7 @@
         <!--Sidebar content-->
         <div id="side-panel">
           <input id="add-polygon-btn" class="btn" type="submit" value="Add polygon"/>
+          <input id="add-circle-btn" class="btn" type="submit" value="Add circle"/>
           <div id="area-stats"></div>
         </div>
       </div>

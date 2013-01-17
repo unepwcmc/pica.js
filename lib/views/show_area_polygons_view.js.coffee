@@ -13,9 +13,14 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
     for polygon in @area.polygons
       continue unless polygon.isComplete()
 
-      mapPolygon = new L.Polygon(
-        polygon.geomAsLatLngArray()
-      ).addTo(Pica.config.map)
+      # Method which emulates calling 'new theConstructor.apply(@, args)'
+      newObject = (theConstructor, args)->
+        Wrapper = (args) ->
+          return theConstructor.apply(@, args)
+        Wrapper:: = theConstructor::
+
+        return new Wrapper(args)
+      mapPolygon = newObject(L[polygon.get('geometry').type], polygon.asLeafletArguments()).addTo(Pica.config.map)
 
       polygon.on('delete', (=>
         thatMapPolygon = mapPolygon

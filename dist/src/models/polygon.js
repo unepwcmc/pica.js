@@ -7,16 +7,20 @@ Pica.Models.Polygon = (function(_super) {
   __extends(Polygon, _super);
 
   function Polygon(options) {
+    var _base;
     if (options == null) {
       options = {};
     }
     this.save = __bind(this.save, this);
 
     this.attributes = options.attributes != null ? options.attributes : {};
+    (_base = this.attributes)['geometry'] || (_base['geometry'] = {
+      type: 'Polygon'
+    });
   }
 
   Polygon.prototype.isComplete = function() {
-    return this.get('geometry') != null;
+    return this.get('geometry').coordinates != null;
   };
 
   Polygon.prototype.setGeomFromPoints = function(points) {
@@ -31,20 +35,41 @@ Pica.Models.Polygon = (function(_super) {
       return _results;
     })();
     points.push(points[0]);
-    return this.set('geometry', [[points]]);
+    return this.set('geometry', {
+      type: 'Polygon',
+      coordinates: [points]
+    });
   };
 
-  Polygon.prototype.geomAsLatLngArray = function() {
-    var latLngs, point, _i, _len, _ref;
-    latLngs = [];
-    if (this.isComplete()) {
-      _ref = this.get('geometry')[0][0];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        point = _ref[_i];
-        latLngs.push(new L.LatLng(point[1], point[0]));
+  Polygon.prototype.setGeomFromCircle = function(latLng, radius) {
+    return this.set('geometry', {
+      type: 'Circle',
+      coordinates: [latLng.lng, latLng.lat],
+      radius: radius
+    });
+  };
+
+  Polygon.prototype.asLeafletArguments = function() {
+    var args, latLngs, point, _i, _len, _ref;
+    args = [];
+    if (this.get('geometry').type === 'Polygon') {
+      latLngs = [];
+      if (this.isComplete()) {
+        _ref = this.get('geometry').coordinates[0];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          point = _ref[_i];
+          latLngs.push(new L.LatLng(point[1], point[0]));
+        }
+      }
+      args.push(latLngs);
+    } else {
+      if (this.isComplete()) {
+        args = [this.get('geometry').coordinates, this.get('geometry').radius];
+      } else {
+        args = [[], 0];
       }
     }
-    return latLngs;
+    return args;
   };
 
   Polygon.prototype.url = function() {

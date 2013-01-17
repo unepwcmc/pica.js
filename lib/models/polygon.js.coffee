@@ -1,9 +1,10 @@
 class Pica.Models.Polygon extends Pica.Model
   constructor: (options = {}) ->
     @attributes = if options.attributes? then options.attributes else {}
+    @attributes['geometry'] ||= {type: 'Polygon'}
 
   isComplete: () ->
-    return @get('geometry')?
+    return @get('geometry').coordinates?
 
   setGeomFromPoints: (points) ->
     points = for point in points
@@ -11,16 +12,34 @@ class Pica.Models.Polygon extends Pica.Model
 
     points.push points[0]
 
-    @set('geometry', [[points]])
+    @set('geometry',
+      type: 'Polygon'
+      coordinates: [points]
+    )
 
-  geomAsLatLngArray: () ->
-    latLngs = []
+  setGeomFromCircle: (latLng, radius) ->
+    @set('geometry',
+      type: 'Circle'
+      coordinates: [latLng.lng, latLng.lat]
+      radius: radius
+    )
 
-    if @isComplete()
-      for point in @get('geometry')[0][0]
-        latLngs.push(new L.LatLng(point[1], point[0]))
+  asLeafletArguments: () ->
+    args = []
 
-    return latLngs
+    if (@get('geometry').type == 'Polygon')
+      latLngs = []
+      if @isComplete()
+        for point in @get('geometry').coordinates[0]
+          latLngs.push(new L.LatLng(point[1], point[0]))
+      args.push latLngs
+    else
+      if @isComplete()
+        args = [@get('geometry').coordinates, @get('geometry').radius]
+      else
+        args = [[], 0]
+
+    return args
 
   url: () ->
     read: "#{Pica.config.magpieUrl}/polygons/#{@get('id')}"

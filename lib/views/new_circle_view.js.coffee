@@ -27,4 +27,4 @@ class Pica.Views.NewCircleView
 
   close: () ->
     @polygonDraw.disable()
-    Pica.config.map.off('draw:poly-created')
+    Pica.config.map.off('draw:circle-created')

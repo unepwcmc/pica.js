@@ -605,7 +605,7 @@ Pica.Views.NewCircleView = (function() {
 
   NewCircleView.prototype.close = function() {
     this.polygonDraw.disable();
-    return Pica.config.map.off('draw:poly-created');
+    return Pica.config.map.off('draw:circle-created');
   };
 
   return NewCircleView;

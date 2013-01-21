@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-01-17
+/*! pica - v0.1.0 - 2013-01-21
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -112,9 +112,11 @@ Pica.Model = (function(_super) {
       }
       return callback(_this, textStatus, jqXHR);
     };
-    data = this.attributes;
-    if (options.type === 'post') {
-      data = JSON.stringify(data);
+    if (options.type === 'post' || options.type === 'put') {
+      data = this.attributes;
+      if (options.type === 'post') {
+        data = JSON.stringify(data);
+      }
     }
     if (options.type === 'delete') {
       data = null;

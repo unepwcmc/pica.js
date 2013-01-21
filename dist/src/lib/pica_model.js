@@ -48,9 +48,11 @@ Pica.Model = (function(_super) {
       }
       return callback(_this, textStatus, jqXHR);
     };
-    data = this.attributes;
-    if (options.type === 'post') {
-      data = JSON.stringify(data);
+    if (options.type === 'post' || options.type === 'put') {
+      data = this.attributes;
+      if (options.type === 'post') {
+        data = JSON.stringify(data);
+      }
     }
     if (options.type === 'delete') {
       data = null;

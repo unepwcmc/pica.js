@@ -19,6 +19,7 @@ class Pica.Models.Area extends Pica.Model
     @polygons.push(polygon)
     @trigger('addedPolygon', polygon)
 
+  # Create a new Pica.Views.NewPolygonView for this area
   drawNewPolygonView: (callbacks) ->
     @currentPolygon = new Pica.Models.Polygon()
     @addPolygon(@currentPolygon)
@@ -27,12 +28,20 @@ class Pica.Models.Area extends Pica.Model
       polygon: @currentPolygon
     )
 
+  # Create a new Pica.Views.NewCircleView for this area
   drawNewCircleView: (callbacks) ->
     @currentPolygon = new Pica.Models.Polygon()
     @addPolygon(@currentPolygon)
     new Pica.Views.NewCircleView(
       callbacks: callbacks
       polygon: @currentPolygon
+    )
+
+  # Create a new Pica.Views.UploadPolygonView for this area
+  newUploadFileView: (callbacks) ->
+    new Pica.Views.UploadFileView(
+      callbacks: callbacks
+      area: @
     )
 
   # spawns a new ShowAreaPolygonsView for this area
@@ -77,5 +86,8 @@ class Pica.Models.Area extends Pica.Model
         error: (jqXHR, textStatus, errorThrown) =>
           console.log "Unable to save area:"
           console.log arguments
+          console.log jqXHR.status
+          console.log jqXHR.statusText
+          console.log jqXHR.responseText
           options.error(jqXHR, textStatus, {error: "Unable to obtain workspaceId, cannot save area", parentError: errorThrown}) if options.error?
       )

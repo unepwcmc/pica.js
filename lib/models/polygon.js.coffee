@@ -62,5 +62,8 @@ class Pica.Models.Polygon extends Pica.Model
         error: (jqXHR, textStatus, errorThrown) =>
           console.log "Unable to save polygon:"
           console.log arguments
+          console.log jqXHR.status
+          console.log jqXHR.statusText
+          console.log jqXHR.responseText
           options.error(jqXHR, textStatus, {error: "Unable to obtain areaId, cannot save polygon", parentError: errorThrown}) if options.error?
       )

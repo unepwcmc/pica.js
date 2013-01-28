@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-01-21
+/*! pica - v0.1.0 - 2013-01-28
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -300,6 +300,13 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
+  Area.prototype.newUploadFileView = function(callbacks) {
+    return new Pica.Views.UploadFileView({
+      callbacks: callbacks,
+      area: this
+    });
+  };
+
   Area.prototype.newShowAreaPolygonsView = function() {
     return new Pica.Views.ShowAreaPolygonsView({
       area: this
@@ -360,6 +367,9 @@ Pica.Models.Area = (function(_super) {
         error: function(jqXHR, textStatus, errorThrown) {
           console.log("Unable to save area:");
           console.log(arguments);
+          console.log(jqXHR.status);
+          console.log(jqXHR.statusText);
+          console.log(jqXHR.responseText);
           if (options.error != null) {
             return options.error(jqXHR, textStatus, {
               error: "Unable to obtain workspaceId, cannot save area",
@@ -479,6 +489,9 @@ Pica.Models.Polygon = (function(_super) {
         error: function(jqXHR, textStatus, errorThrown) {
           console.log("Unable to save polygon:");
           console.log(arguments);
+          console.log(jqXHR.status);
+          console.log(jqXHR.statusText);
+          console.log(jqXHR.responseText);
           if (options.error != null) {
             return options.error(jqXHR, textStatus, {
               error: "Unable to obtain areaId, cannot save polygon",
@@ -807,5 +820,34 @@ Pica.Views.ShowLayersView = (function() {
   };
 
   return ShowLayersView;
+
+})();
+
+
+Pica.Views.UploadFileView = (function() {
+
+  function UploadFileView(options) {
+    if (options.callbacks != null) {
+      this.successCallback = options.callbacks.success;
+      this.errorCallback = options.callbacks.error;
+    }
+    this.area = options.area;
+    this.el = document.createElement("div");
+    this.render();
+  }
+
+  UploadFileView.prototype.render = function() {
+    var formFrame;
+    formFrame = document.createElement('iframe');
+    formFrame.src = "" + Pica.config.magpieUrl + "/workspaces/" + (this.area.get('workspace_id')) + "/areas_of_interest/" + (this.area.get('id')) + "/polygons/upload_file_url";
+    return this.el.appendChild(formFrame);
+  };
+
+  UploadFileView.prototype.close = function() {
+    this.polygonDraw.disable();
+    return Pica.config.map.off('draw:circle-created');
+  };
+
+  return UploadFileView;
 
 })();

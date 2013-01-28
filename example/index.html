@@ -75,6 +75,12 @@
         window.pica.currentWorkspace.currentArea.drawNewCircleView();
       });
 
+      // Draw an upload file view when user clicks upload file
+      $('#upload-file-btn').click(function(){
+        fileView = window.pica.currentWorkspace.currentArea.newUploadFileView();
+        $('#side-panel').prepend(fileView.el)
+      });
+
     });
   </script>
 
@@ -94,6 +100,7 @@
         <div id="side-panel">
           <input id="add-polygon-btn" class="btn" type="submit" value="Add polygon"/>
           <input id="add-circle-btn" class="btn" type="submit" value="Add circle"/>
+          <input id="upload-file-btn" class="btn" type="submit" value="Upload a file"/>
           <div id="area-stats"></div>
         </div>
       </div>

@@ -115,21 +115,28 @@ Show current polygons on the map, returns a ShowPolysView
       * success - function which will be called when new polygon is saved
       * error - function which will be called if polygon fails to save, passing the error to the callback
 
-Adds a drawing tool to the map, and returns a PolygonEditView
+Adds a drawing tool to the map, and returns a Pica.Views.PolygonEditView
 
 #### drawNewCircleView(callbacks)
 * callbacks -
     optional object with keys:
-      * success - function which will be called when new polygon is saved
+      * success - function which will be called when new polygons is saved
       * error - function which will be called if polygon fails to save, passing the error to the callback
 
-Adds a drawing tool to the map, and returns a CircleEditView
+Adds a drawing tool to the map, and returns a Pica.Views.CircleEditView
+
+#### newUploadFileView(callbacks)
+* callbacks -
+    optional object with keys:
+      * success - function which will be called when polygons are generated
+      * error - function which will be called if polygon fails to save, passing the error to the callback
+
+Returns an Pica.Views.UploadFileView
 
 #### setName(name)
 * name - name to set
 
 sets the name of the area, and persists to magpie
-
 
 ### Events
 
@@ -162,15 +169,34 @@ Remove the polygons from the map, remove all bindings
 Trigged when a polygon is clicked on, passes the polygon that was clicked and the leaflet event object
 
 ## Pica.Views.NewPolygonView
+Adds a polygon draw tool to the map, 
 ### Methods
 #### constructor(options)
 **options:**
 
-* area: 
+* polygon: the polygon to draw the geometry for
+* callbacks: takes an error and success callback options
 
 
 #### close()
 Stops drawing and removes the view from the map
+
+## Pica.Views.UploadFileView
+Generates a DOM element with an upload form for supported geometry files. Build one of these for your
+area with area.newUploadFileView
+### Attributes
+#### el
+The DOM element containing the upload file form
+
+### Methods
+#### constructor(options)
+**options:**
+
+* area: The area the polygons will be drawn for
+* callback: The area the polygons will be drawn for
+
+#### close()
+Destroy this.el and remove all bindings
 
 ## Pica.Views.ShowLayersView
 Adds the app's tile layers to the map. Create one using app.showTileLayers()

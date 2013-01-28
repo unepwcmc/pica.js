@@ -53,6 +53,13 @@ Pica.Models.Area = (function(_super) {
     });
   };
 
+  Area.prototype.newUploadFileView = function(callbacks) {
+    return new Pica.Views.UploadFileView({
+      callbacks: callbacks,
+      area: this
+    });
+  };
+
   Area.prototype.newShowAreaPolygonsView = function() {
     return new Pica.Views.ShowAreaPolygonsView({
       area: this
@@ -113,6 +120,9 @@ Pica.Models.Area = (function(_super) {
         error: function(jqXHR, textStatus, errorThrown) {
           console.log("Unable to save area:");
           console.log(arguments);
+          console.log(jqXHR.status);
+          console.log(jqXHR.statusText);
+          console.log(jqXHR.responseText);
           if (options.error != null) {
             return options.error(jqXHR, textStatus, {
               error: "Unable to obtain workspaceId, cannot save area",

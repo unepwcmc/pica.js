@@ -8,16 +8,19 @@ class Pica.Models.Area extends Pica.Model
     @set('name', name)
 
   addPolygon: (polygon) ->
-    polygon.on('requestAreaId', (options) =>
-      if @get('id')?
-        options.success(@)
-      else
-        @save(options)
-    )
+    polygon.on('requestAreaId', @getAreaId)
     polygon.on('sync', => @fetch())
     polygon.on('delete', => @fetch())
     @polygons.push(polygon)
     @trigger('addedPolygon', polygon)
+
+  # Passes the area with an ID to success option
+  # or passes an error
+  getAreaId: (options) =>
+    if @get('id')?
+      options.success(@)
+    else
+      @save(options)
 
   # Create a new Pica.Views.NewPolygonView for this area
   drawNewPolygonView: (callbacks) ->

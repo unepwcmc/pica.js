@@ -6,13 +6,21 @@ class Pica.Views.UploadFileView
     @area = options.area
     @el = document.createElement("div")
 
-    @render()
+    @area.getAreaId(success:@render)
 
-  render: ->
+  render: =>
     formFrame = document.createElement('iframe')
-    formFrame.src = "#{Pica.config.magpieUrl}/workspaces/#{@area.get('workspace_id')}/areas_of_interest/#{@area.get('id')}/polygons/upload_file_url"
+    formFrame.src = "#{Pica.config.magpieUrl}/areas_of_interest/#{@area.get('id')}/polygons/new_upload_form/"
     @el.appendChild(formFrame)
+    window.addEventListener("message", @onUploadComplete, false)
+
+  onUploadComplete: (event) =>
+    if event.origin == Pica.config.magpieUrl
+      for polygonAttributes in event.data.createdPolygons
+        @area.addPolygon(new Pica.Models.Polygon(polygonAttributes))
+      @close()
 
   close: ->
-    @polygonDraw.disable()
-    Pica.config.map.off('draw:circle-created')
+    window.removeEventListener("message", @onUploadComplete)
+    if @el.parentNode?
+      @el.parentNode.removeChild(@el)

@@ -16,7 +16,7 @@ class Pica.Views.UploadFileView extends Pica.Events
 
   onUploadComplete: (event) =>
     if event.origin == Pica.config.magpieUrl and event.data.polygonImportStatus?
-      @successCallback(event.data.polygonImportStatus, event.data.importMessages)
+      @successCallback(event.data.polygonImportStatus, event.data.importMessages) if @successCallback?
       @close()
 
   close: ->

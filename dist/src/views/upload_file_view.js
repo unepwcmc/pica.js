@@ -31,7 +31,9 @@ Pica.Views.UploadFileView = (function(_super) {
 
   UploadFileView.prototype.onUploadComplete = function(event) {
     if (event.origin === Pica.config.magpieUrl && (event.data.polygonImportStatus != null)) {
-      this.successCallback(event.data.polygonImportStatus, event.data.importMessages);
+      if (this.successCallback != null) {
+        this.successCallback(event.data.polygonImportStatus, event.data.importMessages);
+      }
       return this.close();
     }
   };

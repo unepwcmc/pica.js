@@ -25,6 +25,7 @@ Pica.Views.UploadFileView = (function(_super) {
     var formFrame;
     formFrame = document.createElement('iframe');
     formFrame.src = "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.area.get('id')) + "/polygons/new_upload_form/";
+    formFrame.className = "pica-upload-form";
     this.el.appendChild(formFrame);
     return window.addEventListener("message", this.onUploadComplete, false);
   };

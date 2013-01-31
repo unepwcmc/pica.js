@@ -11,6 +11,7 @@ class Pica.Views.UploadFileView extends Pica.Events
   render: =>
     formFrame = document.createElement('iframe')
     formFrame.src = "#{Pica.config.magpieUrl}/areas_of_interest/#{@area.get('id')}/polygons/new_upload_form/"
+    formFrame.className = "pica-upload-form"
     @el.appendChild(formFrame)
     window.addEventListener("message", @onUploadComplete, false)
 

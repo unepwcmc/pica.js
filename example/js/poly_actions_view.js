@@ -16,8 +16,10 @@ window.PicaExample.PolyActionsView = (function() {
   };
 
   PolyActionsView.prototype.deletePolygon = function(event) {
-    _this = this;
-    this.polygon.delete({
+    var _this = this;
+    console.log(this.polygon)
+    console.log(this.polygon.destroy)
+    this.polygon.destroy({
       success: function() {_this.close();}
     });
   };

@@ -1,6 +1,10 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-Pica.Views.UploadFileView = (function() {
+Pica.Views.UploadFileView = (function(_super) {
+
+  __extends(UploadFileView, _super);
 
   function UploadFileView(options) {
     this.onUploadComplete = __bind(this.onUploadComplete, this);
@@ -26,24 +30,17 @@ Pica.Views.UploadFileView = (function() {
   };
 
   UploadFileView.prototype.onUploadComplete = function(event) {
-    var polygonAttributes, _i, _len, _ref;
-    if (event.origin === Pica.config.magpieUrl) {
-      _ref = event.data.createdPolygons;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        polygonAttributes = _ref[_i];
-        this.area.addPolygon(new Pica.Models.Polygon(polygonAttributes));
-      }
+    if (event.origin === Pica.config.magpieUrl && (event.data.polygonImportStatus != null)) {
+      this.successCallback(event.data.polygonImportStatus, event.data.importMessages);
       return this.close();
     }
   };
 
   UploadFileView.prototype.close = function() {
     window.removeEventListener("message", this.onUploadComplete);
-    if (this.el.parentNode != null) {
-      return this.el.parentNode.removeChild(this.el);
-    }
+    return $(this.el).remove();
   };
 
   return UploadFileView;
 
-})();
+})(Pica.Events);

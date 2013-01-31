@@ -7,7 +7,7 @@ Pica.Model = (function(_super) {
   __extends(Model, _super);
 
   function Model() {
-    this["delete"] = __bind(this["delete"], this);
+    this.destroy = __bind(this.destroy, this);
 
     this.fetch = __bind(this.fetch, this);
 
@@ -97,7 +97,7 @@ Pica.Model = (function(_super) {
     return this.sync(options);
   };
 
-  Model.prototype["delete"] = function(options) {
+  Model.prototype.destroy = function(options) {
     var originalCallback,
       _this = this;
     if (options == null) {

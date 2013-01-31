@@ -1,4 +1,4 @@
-class Pica.Views.UploadFileView
+class Pica.Views.UploadFileView extends Pica.Events
   constructor: (options) ->
     if options.callbacks?
       @successCallback = options.callbacks.success
@@ -15,12 +15,10 @@ class Pica.Views.UploadFileView
     window.addEventListener("message", @onUploadComplete, false)
 
   onUploadComplete: (event) =>
-    if event.origin == Pica.config.magpieUrl
-      for polygonAttributes in event.data.createdPolygons
-        @area.addPolygon(new Pica.Models.Polygon(polygonAttributes))
+    if event.origin == Pica.config.magpieUrl and event.data.polygonImportStatus?
+      @successCallback(event.data.polygonImportStatus, event.data.importMessages)
       @close()
 
   close: ->
     window.removeEventListener("message", @onUploadComplete)
-    if @el.parentNode?
-      @el.parentNode.removeChild(@el)
+    $(@el).remove()

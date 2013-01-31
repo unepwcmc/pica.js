@@ -57,7 +57,7 @@ class Pica.Model extends Pica.Events
     console.log("fetching #{@constructor.name} #{@get('id')}")
     @sync(options)
 
-  delete: (options = {}) =>
+  destroy: (options = {}) =>
     options.url = if @url().read? then @url().read else @url()
     options.type = 'delete'
     originalCallback = options.success

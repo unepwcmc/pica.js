@@ -1,5 +1,6 @@
 describe('Pica.Views.UploadFileView', function(){
-  describe('create', function(){
+  describe('when a view exists and has been rendered', function(){
+
     before(function(){
       // TODO put in mapExistsHelper
       var map = L.map('map',{
@@ -21,8 +22,15 @@ describe('Pica.Views.UploadFileView', function(){
       $('#side-panel').prepend(fileView.el);
       fileView.render();
     });
-    it('renders an iframe for the file upload', function(){
+    it('creates an iframe for the file upload', function(){
       $('#side-panel iframe').length.should.equal(1);
+    });
+
+    describe('when an upload complete message is triggered', function(){
+      before(function(){
+        window.postMessage({polygonImportStatus: 'Complete', importMessages: 'Something goes here'}, '*');
+      });
+      it('fires the callback');
     });
   });
 });

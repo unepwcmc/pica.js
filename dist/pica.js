@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-01-31
+/*! pica - v0.1.0 - 2013-03-20
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -106,6 +106,9 @@ Pica.Model = (function(_super) {
     }
     callback = options.success || function() {};
     options.success = function(data, textStatus, jqXHR) {
+      if ('object' !== typeof data) {
+        data = JSON.parse(data);
+      }
       if (data.id != null) {
         _this.parse(data);
         _this.trigger('sync', _this);
@@ -861,8 +864,10 @@ Pica.Views.UploadFileView = (function(_super) {
 
   UploadFileView.prototype.onUploadComplete = function(event) {
     if (event.origin === Pica.config.magpieUrl && (event.data.polygonImportStatus != null)) {
-      if (this.successCallback != null) {
+      if (event.data.polygonImportStatus === 'Successful import' && (this.successCallback != null)) {
         this.successCallback(event.data.polygonImportStatus, event.data.importMessages);
+      } else if (this.errorCallback != null) {
+        this.errorCallback(event.data.polygonImportStatus, event.data.importMessages);
       }
       return this.close();
     }

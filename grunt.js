@@ -37,11 +37,8 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
-    test: {
-      files: ['test/**/*.js']
-    },
     lint: {
-      files: ['grunt.js', 'dist/src/**/*.js', 'test/**/*.js']
+      files: ['grunt.js', 'dist/src/**/*.js']
     },
     watch: {
       files: ['lib/**/*.coffee', 'example/**'],
@@ -86,6 +83,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task.
-  grunt.registerTask('default', 'clean lint coffee test concat min copy');
+  grunt.registerTask('default', 'clean lint coffee concat min copy');
 
 };

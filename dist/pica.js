@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-03-20
+/*! pica - v0.1.0 - 2013-03-21
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -106,9 +106,6 @@ Pica.Model = (function(_super) {
     }
     callback = options.success || function() {};
     options.success = function(data, textStatus, jqXHR) {
-      if ('object' !== typeof data) {
-        data = JSON.parse(data);
-      }
       if (data.id != null) {
         _this.parse(data);
         _this.trigger('sync', _this);
@@ -126,6 +123,7 @@ Pica.Model = (function(_super) {
     }
     return $.ajax($.extend(options, {
       contentType: "application/json",
+      dataType: "json",
       data: data
     }));
   };
@@ -322,8 +320,8 @@ Pica.Models.Area = (function(_super) {
 
   Area.prototype.url = function() {
     return {
-      create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest/",
-      read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id'))
+      create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest.json",
+      read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id')) + ".json"
     };
   };
 
@@ -469,8 +467,8 @@ Pica.Models.Polygon = (function(_super) {
 
   Polygon.prototype.url = function() {
     return {
-      read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')),
-      create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons"
+      read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')) + ".json",
+      create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons.json"
     };
   };
 
@@ -531,7 +529,7 @@ Pica.Models.Workspace = (function(_super) {
   }
 
   Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
+    return "" + Pica.config.magpieUrl + "/workspaces.json";
   };
 
   Workspace.prototype.addArea = function(area) {

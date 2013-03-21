@@ -33,6 +33,7 @@ class Pica.Model extends Pica.Events
       $.extend(
         options,
         contentType: "application/json"
+        dataType: "json"
         data: data
       )
     )

@@ -1,4 +1,4 @@
-/*! pica - v0.1.0 - 2013-01-31
+/*! pica - v0.1.0 - 2013-03-21
 * https://github.com/unepwcmc/pica.js
 * Copyright (c) 2013 UNEP-WCMC; */
 
@@ -123,6 +123,7 @@ Pica.Model = (function(_super) {
     }
     return $.ajax($.extend(options, {
       contentType: "application/json",
+      dataType: "json",
       data: data
     }));
   };
@@ -319,8 +320,8 @@ Pica.Models.Area = (function(_super) {
 
   Area.prototype.url = function() {
     return {
-      create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest/",
-      read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id'))
+      create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest.json",
+      read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id')) + ".json"
     };
   };
 
@@ -466,8 +467,8 @@ Pica.Models.Polygon = (function(_super) {
 
   Polygon.prototype.url = function() {
     return {
-      read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')),
-      create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons"
+      read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')) + ".json",
+      create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons.json"
     };
   };
 
@@ -528,7 +529,7 @@ Pica.Models.Workspace = (function(_super) {
   }
 
   Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
+    return "" + Pica.config.magpieUrl + "/workspaces.json";
   };
 
   Workspace.prototype.addArea = function(area) {
@@ -861,8 +862,10 @@ Pica.Views.UploadFileView = (function(_super) {
 
   UploadFileView.prototype.onUploadComplete = function(event) {
     if (event.origin === Pica.config.magpieUrl && (event.data.polygonImportStatus != null)) {
-      if (this.successCallback != null) {
+      if (event.data.polygonImportStatus === 'Successful import' && (this.successCallback != null)) {
         this.successCallback(event.data.polygonImportStatus, event.data.importMessages);
+      } else if (this.errorCallback != null) {
+        this.errorCallback(event.data.polygonImportStatus, event.data.importMessages);
       }
       return this.close();
     }

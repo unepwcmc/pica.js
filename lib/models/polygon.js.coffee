@@ -43,8 +43,8 @@ class Pica.Models.Polygon extends Pica.Model
     return args
 
   url: () ->
-    read: "#{Pica.config.magpieUrl}/polygons/#{@get('id')}"
-    create: "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('area_id')}/polygons"
+    read: "#{Pica.config.magpieUrl}/polygons/#{@get('id')}.json"
+    create: "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('area_id')}/polygons.json"
 
   save: (options) =>
     options ||= {}

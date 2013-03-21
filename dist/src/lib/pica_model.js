@@ -42,9 +42,6 @@ Pica.Model = (function(_super) {
     }
     callback = options.success || function() {};
     options.success = function(data, textStatus, jqXHR) {
-      if ('object' !== typeof data) {
-        data = JSON.parse(data);
-      }
       if (data.id != null) {
         _this.parse(data);
         _this.trigger('sync', _this);
@@ -62,6 +59,7 @@ Pica.Model = (function(_super) {
     }
     return $.ajax($.extend(options, {
       contentType: "application/json",
+      dataType: "json",
       data: data
     }));
   };

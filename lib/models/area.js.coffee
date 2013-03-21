@@ -54,8 +54,8 @@ class Pica.Models.Area extends Pica.Model
     )
 
   url: () ->
-    create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest/"
-    read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}"
+    create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest.json"
+    read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}.json"
 
   parse: (data) ->
     if data.polygons?

@@ -72,8 +72,8 @@ Pica.Models.Area = (function(_super) {
 
   Area.prototype.url = function() {
     return {
-      create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest/",
-      read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id'))
+      create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest.json",
+      read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id')) + ".json"
     };
   };
 

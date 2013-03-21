@@ -7,7 +7,7 @@ class Pica.Models.Workspace extends Pica.Model
     @addArea(@currentArea)
 
   url: () ->
-    "#{Pica.config.magpieUrl}/workspaces"
+    "#{Pica.config.magpieUrl}/workspaces.json"
 
   addArea: (area) ->
     area.on('requestWorkspaceId', (options) =>

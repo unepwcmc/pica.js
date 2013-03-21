@@ -10,7 +10,7 @@ describe('Pica.Models.Workspace', function(){
 
       // TODO application exists
       var pica = new Pica.Application({
-        magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
+        magpieUrl: window.TESTS.magpieServer,
         projectId: 5,
         map: map
       });
@@ -20,7 +20,7 @@ describe('Pica.Models.Workspace', function(){
       success = sinon.spy(function(){
         done();
       });
-      error = sinon.spy(function(){
+      error = sinon.spy(function(a,b,theError){
         done();
       });
 

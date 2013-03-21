@@ -15,7 +15,7 @@ Pica.Models.Workspace = (function(_super) {
   }
 
   Workspace.prototype.url = function() {
-    return "" + Pica.config.magpieUrl + "/workspaces";
+    return "" + Pica.config.magpieUrl + "/workspaces.json";
   };
 
   Workspace.prototype.addArea = function(area) {

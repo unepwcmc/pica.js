@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">   
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Mocha Spec Runner</title>
+    <title>Pica Tests which require a magpie server</title>
     <link rel="stylesheet" href="lib/mocha/mocha.css">
   </head>                    
   <body>                     
@@ -16,11 +16,17 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.js"></script>
     <script src="../example/js/lib/leaflet.draw.js"></script>
+    <script src="../example/js/lib/jQuery.XDomainRequest.js"></script>
+    <script type="text/javascript">
+      // Test variables
+      window.TESTS = {};
+      window.TESTS.magpieServer = "http://magpie.unepwcmc-005.vm.brightbox.net";
+    </script>
     <script>
       mocha.setup({    
         ui: 'bdd',
         globals: ['$', 'jQuery*', '_leaflet_resize13', '_leaflet_resize14', "addEventListener"]
-      })
+      });
     </script>                
 
     <!-- include source files here... -->

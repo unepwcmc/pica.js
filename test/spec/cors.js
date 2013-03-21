@@ -1,5 +1,6 @@
 describe('Pica.Models.Workspace', function(){
   describe('when saving to a working magpie server', function(){
+    var success, error;
     before(function(done){
       // TODO put in mapExistsHelper
       var map = L.map('map',{
@@ -24,7 +25,7 @@ describe('Pica.Models.Workspace', function(){
       });
 
       // create a file view
-      fileView = pica.currentWorkspace.save({
+      var fileView = pica.currentWorkspace.save({
         success: success,
         error: error
       });

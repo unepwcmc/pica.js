@@ -13,9 +13,10 @@ module.exports = function(grunt) {
     coffee: {
       test: {
         src: ['test/**/*.coffee'],
-        dest: 'test/spec/compiled',
+        dest: 'test/js',
         options: {
-          base_path: 'test'
+          base_path: 'test',
+          preserve_dirs: true
         }
       },
       src: {
@@ -53,7 +54,7 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: ['lib/**/*.coffee', 'example/**'],
+      files: ['lib/**/*.coffee', 'example/**', 'test/**/*.coffee'],
       tasks: 'default'
     },
 

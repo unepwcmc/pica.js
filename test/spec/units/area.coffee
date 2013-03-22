@@ -1,7 +1,7 @@
 describe('Pica.Models.Area', ->
   describe('creating a new area', ->
     before(->
-      pica = buildPicaApplication()
+      pica = window.TestHelpers.buildPicaApplication()
       pica.newWorkspace()
     )
     it('saves the parent workspace and sets the area.workspace_id attribute')

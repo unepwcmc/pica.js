@@ -9,7 +9,15 @@ module.exports = function(grunt) {
         '<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>' +
         '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; */'
     },
+
     coffee: {
+      test: {
+        src: ['test/**/*.coffee'],
+        dest: 'test/spec/compiled',
+        options: {
+          base_path: 'test'
+        }
+      },
       src: {
         src: ['lib/**/*.js.coffee'],
         dest: 'dist/src',
@@ -19,6 +27,7 @@ module.exports = function(grunt) {
         }
       }
     },
+
     concat: {
       dist: {
         src: [
@@ -31,19 +40,23 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
+
     min: {
       dist: {
         src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
+
     lint: {
       files: ['grunt.js', 'dist/src/**/*.js']
     },
+
     watch: {
       files: ['lib/**/*.coffee', 'example/**'],
       tasks: 'default'
     },
+
     jshint: {
       options: {
         curly: true,
@@ -62,7 +75,9 @@ module.exports = function(grunt) {
         module: false
       }
     },
+
     uglify: {},
+
     clean: {
       folder: 'dist/'
     },

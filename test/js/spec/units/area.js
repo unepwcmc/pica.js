@@ -1,13 +1,14 @@
 
 describe('Pica.Models.Area', function() {
-  return describe('creating a new area', function() {
-    var error, pica, success;
-    success = void 0;
-    error = void 0;
+  return describe('saving a new area', function() {
+    var error, pica, server, success;
+    success = error = server = null;
+    server = sinon.fakeServer.create();
     pica = window.TestHelpers.buildPicaApplication();
+    pica.newWorkspace();
+    TestHelpers.MagpieRespond.getProjects(server);
     before(function(done) {
       var newArea;
-      pica.newWorkspace();
       newArea = new Pica.Models.Area;
       pica.currentWorkspace.addArea(newArea);
       pica.currentWorkspace.setCurrentArea(newArea);
@@ -17,23 +18,37 @@ describe('Pica.Models.Area', function() {
       error = sinon.spy(function() {
         return done();
       });
-      return newArea.save({
+      newArea.save({
         success: success,
         error: error
       });
+      return done();
     });
-    it('saves the parent workspace and sets the area.workspace_id attribute', function() {
-      expect(pica.currentWorkspace.get('id')).to.be.a('number');
-      return expect(pica.currentWorkspace.currentArea.get('workspace_id')).to.equal(pica.currentWorkspace.get('id'));
+    it('should send a workspace save request to magpie', function() {
+      debugger;      return server.request;
     });
-    it('saves the area', function() {
-      return expect(pica.currentWorkspace.currentArea.get('id')).to.be.a('number');
+    describe('when magpie responds with a workspace id', function() {
+      it('saves the parent workspace and sets the area.workspace_id attribute', function() {
+        return expect(pica.currentWorkspace.get('id')).to.be.a('number');
+      });
+      it('should send an area save request to magpie');
+      return describe('when magpie responds with an area id', function() {
+        it('sets the area.workspace_id attribute', function() {
+          return expect(pica.currentWorkspace.currentArea.get('workspace_id')).to.equal(pica.currentWorkspace.get('id'));
+        });
+        it('saves the area', function() {
+          return expect(pica.currentWorkspace.currentArea.get('id')).to.be.a('number');
+        });
+        it('calls the success callback', function() {
+          return expect(success.calledOnce).to.equal(true);
+        });
+        return it('does not call the error callback', function() {
+          return expect(error.calledOnce).to.equal(false);
+        });
+      });
     });
-    it('calls the success callback', function() {
-      return expect(success.calledOnce).to.equal(true);
-    });
-    return it('does not call the error callback', function() {
-      return expect(error.calledOnce).to.equal(false);
+    return after(function() {
+      return server.restore();
     });
   });
 });

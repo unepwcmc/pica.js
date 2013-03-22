@@ -12,6 +12,8 @@ TestHelpers.buildPicaApplication = function() {
 TestHelpers.MagpieRespond = {};
 
 TestHelpers.MagpieRespond.getProjects = function(server) {
+  console.log("about to handle first request of ");
+  console.log(server.requests.length);
   if (server.requests[0].url.match(/.*projects\/\d+\.json/)) {
     server.requests[0].respond(200, {
       "Content-Type": "application/json"
@@ -30,5 +32,7 @@ TestHelpers.MagpieRespond.getProjects = function(server) {
   } else {
     throw "server hasn't received a projects request";
   }
-  return server.requests.splice(0, 1);
+  server.requests.splice(0, 1);
+  console.log("handled request, remaining:");
+  return console.log(server.requests.length);
 };

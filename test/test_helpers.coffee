@@ -10,6 +10,8 @@ TestHelpers.buildPicaApplication = ->
 TestHelpers.MagpieRespond = {}
 
 TestHelpers.MagpieRespond.getProjects = (server) ->
+  console.log "about to handle first request of "
+  console.log server.requests.length
   if server.requests[0].url.match(/.*projects\/\d+\.json/)
     server.requests[0].respond(
       200,
@@ -19,3 +21,5 @@ TestHelpers.MagpieRespond.getProjects = (server) ->
   else
     throw "server hasn't received a projects request"
   server.requests.splice(0,1)
+  console.log "handled request, remaining:"
+  console.log server.requests.length

@@ -9,8 +9,14 @@ describe('Pica.Models.Area', ->
     before((done) ->
       
       newArea = new Pica.Models.Area
+      console.log "built area"
+      console.log server.requests.length
       pica.currentWorkspace.addArea(newArea)
+      console.log "added to workspace"
+      console.log server.requests.length
       pica.currentWorkspace.setCurrentArea(newArea)
+      console.log "set as current"
+      console.log server.requests.length
 
       success = sinon.spy(->
         done()
@@ -26,7 +32,8 @@ describe('Pica.Models.Area', ->
     )
 
     it('should send a workspace save request to magpie', ->
-      debugger
+      console.log "saved, remaining: "
+      console.log server.requests.length
       server.request
     )
 

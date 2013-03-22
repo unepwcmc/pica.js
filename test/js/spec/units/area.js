@@ -10,8 +10,14 @@ describe('Pica.Models.Area', function() {
     before(function(done) {
       var newArea;
       newArea = new Pica.Models.Area;
+      console.log("built area");
+      console.log(server.requests.length);
       pica.currentWorkspace.addArea(newArea);
+      console.log("added to workspace");
+      console.log(server.requests.length);
       pica.currentWorkspace.setCurrentArea(newArea);
+      console.log("set as current");
+      console.log(server.requests.length);
       success = sinon.spy(function() {
         return done();
       });
@@ -25,7 +31,9 @@ describe('Pica.Models.Area', function() {
       return done();
     });
     it('should send a workspace save request to magpie', function() {
-      debugger;      return server.request;
+      console.log("saved, remaining: ");
+      console.log(server.requests.length);
+      return server.request;
     });
     describe('when magpie responds with a workspace id', function() {
       it('saves the parent workspace and sets the area.workspace_id attribute', function() {

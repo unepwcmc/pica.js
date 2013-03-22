@@ -28,7 +28,7 @@ class Pica.Application extends Pica.Events
   showTileLayers: ->
     new Pica.Views.ShowLayersView(app:@)
 
-  fetch: () ->
+  fetch: ->
     $.ajax(
       url: "#{Pica.config.magpieUrl}/projects/#{Pica.config.projectId}.json"
       type: 'get'

@@ -9,12 +9,18 @@ TestHelpers.buildPicaApplication = function() {
   });
 };
 
-TestHelpers.MagpieRespond = {};
+TestHelpers.Magpie = {};
 
-TestHelpers.MagpieRespond.getProjects = function(server) {
-  console.log("about to handle first request of ");
-  console.log(server.requests.length);
-  if (server.requests[0].url.match(/.*projects\/\d+\.json/)) {
+TestHelpers.Magpie.UrlMatchers = {};
+
+TestHelpers.Magpie.UrlMatchers.projectIndex = /.*projects\/\d+\.json/;
+
+TestHelpers.Magpie.UrlMatchers.workspaceIndex = /.*workspaces.json/;
+
+TestHelpers.Magpie.Respond = {};
+
+TestHelpers.Magpie.Respond.getProjects = function(server) {
+  if (server.requests[0].url.match(TestHelpers.Magpie.UrlMatchers.projectIndex)) {
     server.requests[0].respond(200, {
       "Content-Type": "application/json"
     }, JSON.stringify({
@@ -32,7 +38,19 @@ TestHelpers.MagpieRespond.getProjects = function(server) {
   } else {
     throw "server hasn't received a projects request";
   }
-  server.requests.splice(0, 1);
-  console.log("handled request, remaining:");
-  return console.log(server.requests.length);
+  return server.requests.splice(0, 1);
+};
+
+TestHelpers.Magpie.Respond.saveWorkspace = function(server) {
+  if (server.requests[0].url.match(TestHelpers.Magpie.UrlMatchers.workspaceIndex)) {
+    server.requests[0].respond(200, {
+      "Content-Type": "application/json"
+    }, JSON.stringify({
+      areas_of_interest: [],
+      id: 590
+    }));
+  } else {
+    throw "server hasn't received a projects request";
+  }
+  return server.requests.splice(0, 1);
 };

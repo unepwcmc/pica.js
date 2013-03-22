@@ -1,43 +1,34 @@
 describe('Pica.Models.Area', ->
   describe('saving a new area', ->
-    success = error = server = null
-    server = sinon.fakeServer.create()
-    pica = window.TestHelpers.buildPicaApplication()
-    pica.newWorkspace()
-    TestHelpers.MagpieRespond.getProjects(server)
+    success = error = server = pica = null
 
-    before((done) ->
-      
-      newArea = new Pica.Models.Area
-      console.log "built area"
-      console.log server.requests.length
-      pica.currentWorkspace.addArea(newArea)
-      console.log "added to workspace"
-      console.log server.requests.length
-      pica.currentWorkspace.setCurrentArea(newArea)
-      console.log "set as current"
-      console.log server.requests.length
+    before( ->
+      server = sinon.fakeServer.create()
+      pica = window.TestHelpers.buildPicaApplication()
+      pica.newWorkspace()
+      TestHelpers.Magpie.Respond.getProjects(server)
 
       success = sinon.spy(->
-        done()
       )
       error = sinon.spy(->
-        done()
       )
-      newArea.save(
+      pica.currentWorkspace.currentArea.save(
         success: success
         error: error
       )
-      done()
     )
 
     it('should send a workspace save request to magpie', ->
-      console.log "saved, remaining: "
-      console.log server.requests.length
-      server.request
+      expect(server.requests[0].url).to.match(
+        TestHelpers.Magpie.UrlMatchers.workspaceIndex
+      )
     )
 
     describe('when magpie responds with a workspace id', ->
+
+      before(->
+        TestHelpers.Magpie.Respond.saveWorkspace(server)
+      )
 
       it('saves the parent workspace and sets the area.workspace_id attribute', ->
         expect(pica.currentWorkspace.get('id')).to.be.a('number')

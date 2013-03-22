@@ -2,40 +2,26 @@
 describe('Pica.Models.Area', function() {
   return describe('saving a new area', function() {
     var error, pica, server, success;
-    success = error = server = null;
-    server = sinon.fakeServer.create();
-    pica = window.TestHelpers.buildPicaApplication();
-    pica.newWorkspace();
-    TestHelpers.MagpieRespond.getProjects(server);
-    before(function(done) {
-      var newArea;
-      newArea = new Pica.Models.Area;
-      console.log("built area");
-      console.log(server.requests.length);
-      pica.currentWorkspace.addArea(newArea);
-      console.log("added to workspace");
-      console.log(server.requests.length);
-      pica.currentWorkspace.setCurrentArea(newArea);
-      console.log("set as current");
-      console.log(server.requests.length);
-      success = sinon.spy(function() {
-        return done();
-      });
-      error = sinon.spy(function() {
-        return done();
-      });
-      newArea.save({
+    success = error = server = pica = null;
+    before(function() {
+      server = sinon.fakeServer.create();
+      pica = window.TestHelpers.buildPicaApplication();
+      pica.newWorkspace();
+      TestHelpers.Magpie.Respond.getProjects(server);
+      success = sinon.spy(function() {});
+      error = sinon.spy(function() {});
+      return pica.currentWorkspace.currentArea.save({
         success: success,
         error: error
       });
-      return done();
     });
     it('should send a workspace save request to magpie', function() {
-      console.log("saved, remaining: ");
-      console.log(server.requests.length);
-      return server.request;
+      return expect(server.requests[0].url).to.match(TestHelpers.Magpie.UrlMatchers.workspaceIndex);
     });
     describe('when magpie responds with a workspace id', function() {
+      before(function() {
+        return TestHelpers.Magpie.Respond.saveWorkspace(server);
+      });
       it('saves the parent workspace and sets the area.workspace_id attribute', function() {
         return expect(pica.currentWorkspace.get('id')).to.be.a('number');
       });

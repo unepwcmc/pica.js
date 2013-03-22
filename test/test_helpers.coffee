@@ -7,12 +7,17 @@ TestHelpers.buildPicaApplication = ->
     map: map
   )
 
-TestHelpers.MagpieRespond = {}
+TestHelpers.Magpie = {}
 
-TestHelpers.MagpieRespond.getProjects = (server) ->
-  console.log "about to handle first request of "
-  console.log server.requests.length
-  if server.requests[0].url.match(/.*projects\/\d+\.json/)
+TestHelpers.Magpie.UrlMatchers = {}
+
+TestHelpers.Magpie.UrlMatchers.projectIndex = /.*projects\/\d+\.json/
+TestHelpers.Magpie.UrlMatchers.workspaceIndex = /.*workspaces.json/
+
+TestHelpers.Magpie.Respond = {}
+
+TestHelpers.Magpie.Respond.getProjects = (server) ->
+  if server.requests[0].url.match(TestHelpers.Magpie.UrlMatchers.projectIndex)
     server.requests[0].respond(
       200,
       { "Content-Type": "application/json" },
@@ -21,5 +26,14 @@ TestHelpers.MagpieRespond.getProjects = (server) ->
   else
     throw "server hasn't received a projects request"
   server.requests.splice(0,1)
-  console.log "handled request, remaining:"
-  console.log server.requests.length
+
+TestHelpers.Magpie.Respond.saveWorkspace = (server) ->
+  if server.requests[0].url.match(TestHelpers.Magpie.UrlMatchers.workspaceIndex)
+    server.requests[0].respond(
+      200,
+      { "Content-Type": "application/json" },
+      JSON.stringify({areas_of_interest: [], id: 590})
+    )
+  else
+    throw "server hasn't received a projects request"
+  server.requests.splice(0,1)

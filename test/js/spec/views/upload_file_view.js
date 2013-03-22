@@ -25,10 +25,10 @@ describe("Pica.Views.UploadFileView", function() {
       return fileView.render();
     });
     it("creates an iframe for the file upload", function() {
-      return $("#side-panel iframe").length.should.equal(1);
+      return expect($("#side-panel iframe").length).to.equal(1);
     });
     it("listens for window events", function() {
-      return addEventListenerSpy.calledOnce.should.equal(true);
+      return expect(addEventListenerSpy.calledOnce).to.equal(true);
     });
     describe("onUploadComplete is called with a success event", function() {
       before(function() {
@@ -45,10 +45,10 @@ describe("Pica.Views.UploadFileView", function() {
         return fileView.onUploadComplete(event);
       });
       it("calls the success callback", function() {
-        return fileView.successCallback.calledOnce.should.equal(true);
+        return expect(fileView.successCallback.calledOnce).to.equal(true);
       });
       it("does not call the error callback", function() {
-        return fileView.errorCallback.calledOnce.should.equal(false);
+        return expect(fileView.errorCallback.calledOnce).to.equal(false);
       });
       return after(function() {
         fileView.successCallback.restore();
@@ -70,10 +70,10 @@ describe("Pica.Views.UploadFileView", function() {
         return fileView.onUploadComplete(event);
       });
       it("calls the error callback", function() {
-        return fileView.errorCallback.calledOnce.should.equal(true);
+        return expect(fileView.errorCallback.calledOnce).to.equal(true);
       });
       it("does not call the success callback", function() {
-        return fileView.successCallback.calledOnce.should.equal(false);
+        return expect(fileView.successCallback.calledOnce).to.equal(false);
       });
       return after(function() {
         fileView.errorCallback.restore();
@@ -91,10 +91,10 @@ describe("Pica.Views.UploadFileView", function() {
         return fileView.onUploadComplete(event);
       });
       it("does not call the error callback", function() {
-        return fileView.errorCallback.calledOnce.should.equal(false);
+        return expect(fileView.errorCallback.calledOnce).to.equal(false);
       });
       it("does not call the success callbacks", function() {
-        return fileView.successCallback.calledOnce.should.equal(false);
+        return expect(fileView.successCallback.calledOnce).to.equal(false);
       });
       return after(function() {
         fileView.errorCallback.restore();

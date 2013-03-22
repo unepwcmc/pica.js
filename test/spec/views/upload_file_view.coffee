@@ -31,10 +31,10 @@ describe "Pica.Views.UploadFileView", ->
       fileView.render()
 
     it "creates an iframe for the file upload", ->
-      $("#side-panel iframe").length.should.equal 1
+      expect($("#side-panel iframe").length).to.equal 1
 
     it "listens for window events", ->
-      addEventListenerSpy.calledOnce.should.equal true
+      expect(addEventListenerSpy.calledOnce).to.equal true
 
     describe "onUploadComplete is called with a success event", ->
       before ->
@@ -49,10 +49,10 @@ describe "Pica.Views.UploadFileView", ->
         fileView.onUploadComplete event
 
       it "calls the success callback", ->
-        fileView.successCallback.calledOnce.should.equal true
+        expect(fileView.successCallback.calledOnce).to.equal true
 
       it "does not call the error callback", ->
-        fileView.errorCallback.calledOnce.should.equal false
+        expect(fileView.errorCallback.calledOnce).to.equal false
 
       after ->
         fileView.successCallback.restore()
@@ -72,10 +72,10 @@ describe "Pica.Views.UploadFileView", ->
         fileView.onUploadComplete event
 
       it "calls the error callback", ->
-        fileView.errorCallback.calledOnce.should.equal true
+        expect(fileView.errorCallback.calledOnce).to.equal true
 
       it "does not call the success callback", ->
-        fileView.successCallback.calledOnce.should.equal false
+        expect(fileView.successCallback.calledOnce).to.equal false
 
       after ->
         fileView.errorCallback.restore()
@@ -90,10 +90,10 @@ describe "Pica.Views.UploadFileView", ->
         fileView.onUploadComplete event
 
       it "does not call the error callback", ->
-        fileView.errorCallback.calledOnce.should.equal false
+        expect(fileView.errorCallback.calledOnce).to.equal false
 
       it "does not call the success callbacks", ->
-        fileView.successCallback.calledOnce.should.equal false
+        expect(fileView.successCallback.calledOnce).to.equal false
 
       after ->
         fileView.errorCallback.restore()

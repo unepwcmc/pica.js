@@ -30,6 +30,15 @@ Pica.Models.Workspace = (function(_super) {
     return this.areas.push(area);
   };
 
+  Workspace.prototype.removeArea = function(theArea) {
+    var area, id;
+    id = this.areas.indexOf(theArea);
+    area = this.areas.splice(id, 1)[0];
+    if (area.get('id') != null) {
+      return area.destroy();
+    }
+  };
+
   Workspace.prototype.setCurrentArea = function(theArea) {
     var area, _i, _len, _ref, _results;
     _ref = this.areas;

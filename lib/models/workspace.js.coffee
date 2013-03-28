@@ -18,6 +18,12 @@ class Pica.Models.Workspace extends Pica.Model
     )
     @areas.push(area)
 
+  removeArea: (theArea) ->
+    id = @areas.indexOf(theArea)
+    area = @areas.splice(id, 1)[0]
+    if area.get('id')?
+      area.destroy()
+
   setCurrentArea: (theArea) ->
     for area in @areas
       if area == theArea

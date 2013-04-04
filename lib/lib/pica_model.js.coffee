@@ -51,8 +51,10 @@ class Pica.Model extends Pica.Events
     else
       options.url = if @url().create? then @url().create else @url()
       options.type = 'post'
-    console.log("saving #{@constructor.name} #{@get('id')}")
-    @sync(options)
+    sync = @sync(options)
+    sync.done => console.log("saving #{@constructor.name} #{@get('id')}")
+    sync
+    
 
   fetch: (options = {}) =>
     options.url = if @url().read? then @url().read else @url()

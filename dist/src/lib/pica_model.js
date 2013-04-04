@@ -75,6 +75,8 @@ Pica.Model = (function(_super) {
   };
 
   Model.prototype.save = function(options) {
+    var sync,
+      _this = this;
     if (options == null) {
       options = {};
     }
@@ -85,8 +87,11 @@ Pica.Model = (function(_super) {
       options.url = this.url().create != null ? this.url().create : this.url();
       options.type = 'post';
     }
-    console.log("saving " + this.constructor.name + " " + (this.get('id')));
-    return this.sync(options);
+    sync = this.sync(options);
+    sync.done(function() {
+      return console.log("saving " + _this.constructor.name + " " + (_this.get('id')));
+    });
+    return sync;
   };
 
   Model.prototype.fetch = function(options) {

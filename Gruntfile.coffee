@@ -46,8 +46,7 @@ module.exports = (grunt) ->
     copy:
       dist:
         files:
-          src: ["dist/pica.js"]
-          dest: "example/js/lib/"
+          "example/js/lib/pica.js": "dist/pica.js"
 
     watch:
       files: ['lib/**/*.coffee', 'example/**', 'test/**/*.coffee'],
@@ -59,7 +58,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-uglify')
-  grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
   grunt.registerTask('default', ['clean', 'coffee', 'concat', 'uglify', 'copy'])

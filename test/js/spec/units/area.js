@@ -8,8 +8,8 @@ describe('Pica.Models.Area', function() {
       pica = window.TestHelpers.buildPicaApplication();
       pica.newWorkspace();
       TestHelpers.Magpie.Respond.getProjects(server);
-      success = sinon.spy(function() {});
-      error = sinon.spy(function() {});
+      success = sinon.spy();
+      error = sinon.spy();
       return pica.currentWorkspace.currentArea.save({
         success: success,
         error: error
@@ -25,8 +25,13 @@ describe('Pica.Models.Area', function() {
       it('saves the parent workspace and sets the area.workspace_id attribute', function() {
         return expect(pica.currentWorkspace.get('id')).to.be.a('number');
       });
-      it('should send an area save request to magpie');
+      it('should send an area save request to magpie', function() {
+        return expect(server.requests[0].url).to.match(TestHelpers.Magpie.UrlMatchers.areasIndex);
+      });
       return describe('when magpie responds with an area id', function() {
+        before(function() {
+          return TestHelpers.Magpie.Respond.saveArea(server);
+        });
         it('sets the area.workspace_id attribute', function() {
           return expect(pica.currentWorkspace.currentArea.get('workspace_id')).to.equal(pica.currentWorkspace.get('id'));
         });

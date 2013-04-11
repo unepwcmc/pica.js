@@ -8,10 +8,8 @@ describe('Pica.Models.Area', ->
       pica.newWorkspace()
       TestHelpers.Magpie.Respond.getProjects(server)
 
-      success = sinon.spy(->
-      )
-      error = sinon.spy(->
-      )
+      success = sinon.spy()
+      error = sinon.spy()
       pica.currentWorkspace.currentArea.save(
         success: success
         error: error
@@ -34,9 +32,17 @@ describe('Pica.Models.Area', ->
         expect(pica.currentWorkspace.get('id')).to.be.a('number')
       )
 
-      it('should send an area save request to magpie')
+      it('should send an area save request to magpie', ->
+        expect(server.requests[0].url).to.match(
+          TestHelpers.Magpie.UrlMatchers.areasIndex
+        )
+      )
 
       describe('when magpie responds with an area id', ->
+
+        before(->
+          TestHelpers.Magpie.Respond.saveArea(server)
+        )
 
         it('sets the area.workspace_id attribute', ->
           expect(pica.currentWorkspace.currentArea.get('workspace_id')).to.equal(pica.currentWorkspace.get('id'))

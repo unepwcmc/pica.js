@@ -9,10 +9,6 @@ TestHelpers.buildPicaApplication = function() {
   });
 };
 
-TestHelpers.Magpie = {};
-
-TestHelpers.Magpie.Respond = {};
-
 TestHelpers.FakeMagpieServer = (function() {
 
   function FakeMagpieServer() {

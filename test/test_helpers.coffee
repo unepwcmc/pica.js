@@ -7,10 +7,6 @@ TestHelpers.buildPicaApplication = ->
     map: map
   )
 
-TestHelpers.Magpie = {}
-
-TestHelpers.Magpie.Respond = {}
-
 class TestHelpers.FakeMagpieServer
   constructor: ->
     @server = sinon.fakeServer.create()

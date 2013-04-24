@@ -9,43 +9,46 @@ TestHelpers.buildPicaApplication = ->
 
 TestHelpers.Magpie = {}
 
-TestHelpers.Magpie.UrlMatchers = {}
-
-TestHelpers.Magpie.UrlMatchers.projectIndex = /.*projects\/\d+\.json/
-TestHelpers.Magpie.UrlMatchers.workspaceIndex = /.*workspaces.json/
-TestHelpers.Magpie.UrlMatchers.areasIndex = /.*areas_of_interest.json/
-
 TestHelpers.Magpie.Respond = {}
 
-TestHelpers.Magpie.Respond.getProjects = (server) ->
-  if server.requests[0].url.match(TestHelpers.Magpie.UrlMatchers.projectIndex)
-    server.requests[0].respond(
-      200,
-      { "Content-Type": "application/json" },
-      JSON.stringify({"id":5,"name":"my_polygon","layers":[{"id":1,"display_name":"Protected Areas","tile_url":"http://184.73.201.235/blue/{z}/{x}/{y}","is_displayed":true}]})
-    )
-  else
-    throw "server hasn't received a projects request"
-  server.requests.splice(0,1)
+class TestHelpers.FakeMagpieServer
+  constructor: ->
+    @server = sinon.fakeServer.create()
 
-TestHelpers.Magpie.Respond.saveWorkspace = (server) ->
-  if server.requests[0].url.match(TestHelpers.Magpie.UrlMatchers.workspaceIndex)
-    server.requests[0].respond(
-      200,
-      { "Content-Type": "application/json" },
-      JSON.stringify({areas_of_interest: [], id: 590})
-    )
-  else
-    throw "server hasn't received a projects request"
-  server.requests.splice(0,1)
+  routes:
+    projectIndex:
+      method: 'GET'
+      matcher: /.*projects\/\d+\.json/
+      response: {"id":5,"name":"my_polygon","layers":[{"id":1,"display_name":"Protected Areas","tile_url":"http://184.73.201.235/blue/{z}/{x}/{y}","is_displayed":true}]}
+    workspaceIndex:
+      method: 'GET'
+      matcher: /.*workspaces.json/
+    workspaceSave:
+      method: 'POST'
+      matcher: /.*workspaces.json/
+      response: {areas_of_interest: [], id: 590}
+    areasIndex:
+      method: 'GET'
+      matcher: /.*areas_of_interest.json/
+    areaSave:
+      method: 'POST'
+      matcher: /.*areas_of_interest.json/
+      response: {id: 5, name: ""}
 
-TestHelpers.Magpie.Respond.saveArea = (server) ->
-  if server.requests[0].url.match(TestHelpers.Magpie.UrlMatchers.areaIndex)
-    server.requests[0].respond(
-      200,
-      { "Content-Type": "application/json" },
-      JSON.stringify({id: 5, name: ""})
-    )
-  else
-    throw "server hasn't received an area request"
-  server.requests.splice(0,1)
+  respondTo: (routeName) ->
+    if @hasReceivedRequest(routeName)
+      @server.requests[0].respond(
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify(@routes[routeName].response)
+      )
+      @server.requests.splice(0,1)
+    else
+      throw "server hasn't received a #{routeName} request"
+
+  hasReceivedRequest: (routeName) ->
+    routeDetails = @routes[routeName]
+    console.log @server.requests[0].url
+    console.log "#{routeDetails.method} == #{@server.requests[0].method}"
+    @server.requests[0].url.match(routeDetails.matcher) and
+      routeDetails.method == @server.requests[0].method

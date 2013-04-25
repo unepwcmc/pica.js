@@ -2,9 +2,9 @@
 describe('Pica.Models.Area', function() {
   return describe('saving a new area', function() {
     var error, magpieServer, pica, server, success;
-    success = error = server = pica = null;
-    magpieServer = new TestHelpers.FakeMagpieServer();
+    success = error = server = pica = magpieServer = null;
     before(function() {
+      magpieServer = new window.TestHelpers.FakeMagpieServer();
       pica = window.TestHelpers.buildPicaApplication();
       pica.newWorkspace();
       magpieServer.respondTo('projectIndex');
@@ -15,18 +15,22 @@ describe('Pica.Models.Area', function() {
         error: error
       });
     });
+    after(function() {
+      return magpieServer.server.restore();
+    });
     it('should send a workspace save request to magpie', function() {
       return expect(magpieServer.hasReceivedRequest('workspaceSave')).to.be.ok();
     });
+    it('should have received 2 requests', function() {
+      return expect(magpieServer.server.requests.length).to.be(2);
+    });
     describe('when magpie responds with a workspace id', function() {
       before(function() {
-        console.log("Reponding to save workspace");
         magpieServer.respondTo('workspaceSave');
         magpieServer.respondTo('projectIndex');
         return magpieServer.respondTo('workspaceSave');
       });
       it('saves the parent workspace and sets the area.workspace_id attribute', function() {
-        console.log("gon' check if workspace id is a number");
         return expect(pica.currentWorkspace.get('id')).to.be.a('number');
       });
       it('should send an area save request to magpie', function() {

@@ -1,22 +1,11 @@
 describe "Pica.Views.UploadFileView", ->
+
   describe "a view exists and has been rendered", ->
     fileView = undefined
     addEventListenerSpy = undefined
     before ->
       
-      # TODO put in mapExistsHelper
-      map = L.map("map",
-        center: [24.5, 54]
-        zoom: 9
-      )
-      
-      # TODO application exists
-      pica = new Pica.Application(
-        magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net"
-        projectId: 5
-        map: map
-      )
-      
+      pica = window.TestHelpers.buildPicaApplication()
       # Create a new workspace to work in
       pica.newWorkspace()
       
@@ -30,6 +19,7 @@ describe "Pica.Views.UploadFileView", ->
       addEventListenerSpy = sinon.spy(window, "addEventListener")
       fileView.render()
 
+
     it "creates an iframe for the file upload", ->
       expect($("#side-panel iframe").length).to.equal 1
 
@@ -38,8 +28,10 @@ describe "Pica.Views.UploadFileView", ->
 
     describe "onUploadComplete is called with a success event", ->
       before ->
+
         sinon.spy fileView, "successCallback"
         sinon.spy fileView, "errorCallback"
+
         event =
           origin: Pica.config.magpieUrl
           data:

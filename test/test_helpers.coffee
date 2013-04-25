@@ -1,13 +1,24 @@
 window.TestHelpers = {}
 
+TestHelpers.map = no
+
 TestHelpers.buildPicaApplication = ->
+
+  if not TestHelpers.map
+    TestHelpers.map = L.map("map",
+      center: [24.5, 54]
+      zoom: 9
+    )
+
   new Pica.Application(
     magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
     projectId: 5,
-    map: map
+    map: TestHelpers.map
   )
 
+
 class TestHelpers.FakeMagpieServer
+
   constructor: ->
     @server = sinon.fakeServer.create()
 
@@ -32,19 +43,25 @@ class TestHelpers.FakeMagpieServer
       response: {id: 5, name: ""}
 
   respondTo: (routeName) ->
-    if @hasReceivedRequest(routeName)
-      @server.requests[0].respond(
+    request = @hasReceivedRequest(routeName)
+    if request
+      request.respond(
         200,
         { "Content-Type": "application/json" },
         JSON.stringify(@routes[routeName].response)
       )
-      @server.requests.splice(0,1)
+      #@server.requests.splice(0,1)
     else
       throw "server hasn't received a #{routeName} request"
 
+  # We loop through all fake requests.
+  # If the `routeDetails` checks pass in the loop, 
+  # we return the current request.
   hasReceivedRequest: (routeName) ->
     routeDetails = @routes[routeName]
-    console.log @server.requests[0].url
-    console.log "#{routeDetails.method} == #{@server.requests[0].method}"
-    @server.requests[0].url.match(routeDetails.matcher) and
-      routeDetails.method == @server.requests[0].method
+    requests = @server.requests
+    for request in requests
+      if request.url.match(routeDetails.matcher) and
+       routeDetails.method == request.method
+        return request
+    no

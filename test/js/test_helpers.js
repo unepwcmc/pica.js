@@ -1,11 +1,19 @@
 
 window.TestHelpers = {};
 
+TestHelpers.map = false;
+
 TestHelpers.buildPicaApplication = function() {
+  if (!TestHelpers.map) {
+    TestHelpers.map = L.map("map", {
+      center: [24.5, 54],
+      zoom: 9
+    });
+  }
   return new Pica.Application({
     magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
     projectId: 5,
-    map: map
+    map: TestHelpers.map
   });
 };
 
@@ -59,22 +67,28 @@ TestHelpers.FakeMagpieServer = (function() {
   };
 
   FakeMagpieServer.prototype.respondTo = function(routeName) {
-    if (this.hasReceivedRequest(routeName)) {
-      this.server.requests[0].respond(200, {
+    var request;
+    request = this.hasReceivedRequest(routeName);
+    if (request) {
+      return request.respond(200, {
         "Content-Type": "application/json"
       }, JSON.stringify(this.routes[routeName].response));
-      return this.server.requests.splice(0, 1);
     } else {
       throw "server hasn't received a " + routeName + " request";
     }
   };
 
   FakeMagpieServer.prototype.hasReceivedRequest = function(routeName) {
-    var routeDetails;
+    var request, requests, routeDetails, _i, _len;
     routeDetails = this.routes[routeName];
-    console.log(this.server.requests[0].url);
-    console.log("" + routeDetails.method + " == " + this.server.requests[0].method);
-    return this.server.requests[0].url.match(routeDetails.matcher) && routeDetails.method === this.server.requests[0].method;
+    requests = this.server.requests;
+    for (_i = 0, _len = requests.length; _i < _len; _i++) {
+      request = requests[_i];
+      if (request.url.match(routeDetails.matcher) && routeDetails.method === request.method) {
+        return request;
+      }
+    }
+    return false;
   };
 
   return FakeMagpieServer;

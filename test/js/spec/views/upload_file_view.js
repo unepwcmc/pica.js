@@ -5,16 +5,8 @@ describe("Pica.Views.UploadFileView", function() {
     fileView = void 0;
     addEventListenerSpy = void 0;
     before(function() {
-      var map, pica;
-      map = L.map("map", {
-        center: [24.5, 54],
-        zoom: 9
-      });
-      pica = new Pica.Application({
-        magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
-        projectId: 5,
-        map: map
-      });
+      var pica;
+      pica = window.TestHelpers.buildPicaApplication();
       pica.newWorkspace();
       fileView = pica.currentWorkspace.currentArea.newUploadFileView({
         success: function() {},

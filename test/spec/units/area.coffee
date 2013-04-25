@@ -13,6 +13,7 @@ describe 'Pica.Models.Area', ->
       pica.newWorkspace()
       # Forcing a response from our fake magpie server.
       magpieServer.respondTo('projectIndex')
+      # At this point `magpieServer.server.requests.length == 0`
       success = sinon.spy()
       error = sinon.spy()
       # Here a new request is getting fired.
@@ -21,7 +22,7 @@ describe 'Pica.Models.Area', ->
         success: success
         error: error
       )
-      # At this point `magpieServer.server.requests.length == 2`
+      # At this point `magpieServer.server.requests.length == 1`
 
     after ->
       # We need to restore the server or it will interfere with tests 
@@ -34,14 +35,12 @@ describe 'Pica.Models.Area', ->
     )
 
     it('should have received 2 requests', ->
-      expect(magpieServer.server.requests.length).to.be(2)
+      expect(magpieServer.server.requests.length).to.be(1)
     )
 
     describe('when magpie responds with a workspace id', ->
 
       before(->
-        magpieServer.respondTo('workspaceSave')
-        magpieServer.respondTo('projectIndex')
         magpieServer.respondTo('workspaceSave')
       )
 
@@ -56,7 +55,6 @@ describe 'Pica.Models.Area', ->
       describe('when magpie responds with an area id', ->
 
         before(->
-          magpieServer.respondTo('areaSave')
           magpieServer.respondTo('areaSave')
         )
 

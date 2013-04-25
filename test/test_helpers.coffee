@@ -4,11 +4,10 @@ TestHelpers.map = no
 
 TestHelpers.buildPicaApplication = ->
 
-  if not TestHelpers.map
-    TestHelpers.map = L.map("map",
-      center: [24.5, 54]
-      zoom: 9
-    )
+  TestHelpers.map ||= L.map("map",
+    center: [24.5, 54]
+    zoom: 9
+  )
 
   new Pica.Application(
     magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",

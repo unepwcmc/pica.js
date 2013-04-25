@@ -4,12 +4,10 @@ window.TestHelpers = {};
 TestHelpers.map = false;
 
 TestHelpers.buildPicaApplication = function() {
-  if (!TestHelpers.map) {
-    TestHelpers.map = L.map("map", {
-      center: [24.5, 54],
-      zoom: 9
-    });
-  }
+  TestHelpers.map || (TestHelpers.map = L.map("map", {
+    center: [24.5, 54],
+    zoom: 9
+  }));
   return new Pica.Application({
     magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
     projectId: 5,

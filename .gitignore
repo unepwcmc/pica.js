@@ -15,5 +15,6 @@
 /tmp
 /nbproject/private/
 
+
 # Ignore node_modules folder because it gets built every time
 node_modules/

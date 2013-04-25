@@ -3,12 +3,13 @@ describe "Pica.Views.UploadFileView", ->
   describe "a view exists and has been rendered", ->
     fileView = undefined
     addEventListenerSpy = undefined
+    magpieServer = undefined
+
     before ->
-      
+      magpieServer = new window.TestHelpers.FakeMagpieServer()
       pica = window.TestHelpers.buildPicaApplication()
       # Create a new workspace to work in
       pica.newWorkspace()
-      
       # create a file view
       fileView = pica.currentWorkspace.currentArea.newUploadFileView(
         success: ->
@@ -18,6 +19,9 @@ describe "Pica.Views.UploadFileView", ->
       $("#side-panel").prepend fileView.el
       addEventListenerSpy = sinon.spy(window, "addEventListener")
       fileView.render()
+
+    after ->
+      magpieServer.server.restore()
 
 
     it "creates an iframe for the file upload", ->

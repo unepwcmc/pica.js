@@ -129,7 +129,7 @@ class Pica.Application extends Pica.Events
   showTileLayers: ->
     new Pica.Views.ShowLayersView(app:@)
 
-  fetch: () ->
+  fetch: ->
     $.ajax(
       url: "#{Pica.config.magpieUrl}/projects/#{Pica.config.projectId}.json"
       type: 'get'
@@ -167,8 +167,7 @@ class Pica.Models.Area extends Pica.Model
 
   # Create a new Pica.Views.NewPolygonView for this area
   drawNewPolygonView: (callbacks) ->
-    @currentPolygon = new Pica.Models.Polygon()
-    @addPolygon(@currentPolygon)
+    @createPolygon()
     new Pica.Views.NewPolygonView(
       callbacks: callbacks
       polygon: @currentPolygon
@@ -176,12 +175,15 @@ class Pica.Models.Area extends Pica.Model
 
   # Create a new Pica.Views.NewCircleView for this area
   drawNewCircleView: (callbacks) ->
-    @currentPolygon = new Pica.Models.Polygon()
-    @addPolygon(@currentPolygon)
+    @createPolygon()
     new Pica.Views.NewCircleView(
       callbacks: callbacks
       polygon: @currentPolygon
     )
+
+  createPolygon: ->
+    @currentPolygon = new Pica.Models.Polygon()
+    @addPolygon(@currentPolygon)
 
   # Create a new Pica.Views.UploadPolygonView for this area
   newUploadFileView: (callbacks) ->

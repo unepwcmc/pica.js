@@ -1,13 +1,15 @@
 (function() {
   describe("Pica.Views.UploadFileView", function() {
     return describe("a view exists and has been rendered", function() {
-      var addEventListenerSpy, fileView;
+      var addEventListenerSpy, fileView, magpieServer;
 
       fileView = void 0;
       addEventListenerSpy = void 0;
+      magpieServer = void 0;
       before(function() {
         var pica;
 
+        magpieServer = new window.TestHelpers.FakeMagpieServer();
         pica = window.TestHelpers.buildPicaApplication();
         pica.newWorkspace();
         fileView = pica.currentWorkspace.currentArea.newUploadFileView({
@@ -17,6 +19,9 @@
         $("#side-panel").prepend(fileView.el);
         addEventListenerSpy = sinon.spy(window, "addEventListener");
         return fileView.render();
+      });
+      after(function() {
+        return magpieServer.server.restore();
       });
       it("creates an iframe for the file upload", function() {
         return expect($("#side-panel iframe").length).to.equal(1);

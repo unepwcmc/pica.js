@@ -1,6 +1,6 @@
-describe 'Pica.Models.Area', ->
+describe 'Pica.Models.Polygon', ->
 
-  describe 'saving a new area', ->
+  describe 'saving a new polygon', ->
 
     success = error = server = pica = magpieServer = null
 
@@ -17,61 +17,79 @@ describe 'Pica.Models.Area', ->
       # At this point `magpieServer.server.requests.length == 0`
       success = sinon.spy()
       error = sinon.spy()
-      # Here a new request is getting fired.
-      # See Pica.Model.sync in pica_model.js.coffee
-      pica.currentWorkspace.currentArea.save(
+      currentArea = pica.currentWorkspace.currentArea
+      currentArea.createPolygon()
+      currentArea.currentPolygon.save(
         success: success
-        error: error 
+        error: error
       )
-      # At this point `magpieServer.server.requests.length == 1`
-
+      
     after ->
       # We need to restore the server or it will interfere with tests 
       # in different modules.
       magpieServer.server.restore()
 
-
-    it('should send a workspace save request to magpie', ->
+    it('sends a workspace save request to magpie', ->
       expect(magpieServer.hasReceivedRequest('workspaceSave')).to.be.ok()
     )
 
-    it('should have received 1 requests', ->
+    it('receives 1 request', ->
       expect(magpieServer.server.requests.length).to.be(1)
     )
 
     describe('when magpie responds with a workspace id', ->
-
+    
       before(->
         magpieServer.respondTo('workspaceSave')
       )
-
+    
       it('saves the parent workspace and sets the area.workspace_id attribute', ->
         expect(pica.currentWorkspace.get('id')).to.be.a('number')
       )
-
+    
       it('should send an area save request to magpie', ->
         expect(magpieServer.hasReceivedRequest('areaSave')).to.be.ok()
       )
-
+    
       describe('when magpie responds with an area id', ->
-
+    
         before(->
           magpieServer.respondTo('areaSave')
         )
-
-        it('sets the area.workspace_id attribute', ->
-          expect(pica.currentWorkspace.currentArea.get('workspace_id'))
-            .to.equal(pica.currentWorkspace.get('id'))
+    
+        it('sets the polygon.area_id attribute', ->
+          expect(pica.currentWorkspace.currentArea.currentPolygon.get('area_id'))
+            .to.equal(pica.currentWorkspace.currentArea.get('id'))
         )
         it('saves the area', ->
           expect(pica.currentWorkspace.currentArea.get('id')).to.be.a('number')
         )
-        it('calls the success callback', ->
-          expect(success.calledOnce).to.equal(true)
+
+        it('should send polygon save request to magpie', ->
+          expect(magpieServer.hasReceivedRequest('polygonSave')).to.be.ok()
         )
-        it('does not call the error callback', ->
-          expect(error.calledOnce).to.equal(false)
+
+
+        describe('when magpie responds with an area id', ->
+
+          before(->
+            magpieServer.respondTo('polygonSave')
+          )
+
+          it('saves the polygon', ->
+            expect(pica.currentWorkspace.currentArea.currentPolygon
+              .get('id')).to.be.a('number')
+          )
+
+          it('calls the success callback', ->
+            expect(success.calledOnce).to.equal(true)
+          )
+          it('does not call the error callback', ->
+            expect(error.calledOnce).to.equal(false)
+          )
+  
         )
+       
       )
     )
 

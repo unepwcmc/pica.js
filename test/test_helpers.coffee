@@ -5,6 +5,38 @@ TestHelpers.map ||= L.map("map",
   zoom: 9
 )
 
+TestHelpers.FakePolygonResponse = {
+  "id":98,
+  "area_of_interest_id":5,
+  "geometry":{
+    "type":"Polygon",
+    "coordinates":[
+      [
+        [
+          53.63250732421874,
+          24.599577462003484
+        ],
+        [
+          53.69293212890625,
+          24.12920858513251
+        ],
+        [
+          54.3878173828125,
+          24.241955877694206
+        ],
+        [
+          54.2779541015625,
+          24.80169495167004
+        ],
+        [
+          53.63250732421874,
+          24.599577462003484
+        ]
+      ]
+    ]
+  }
+}
+
 TestHelpers.buildPicaApplication = ->
 
   new Pica.Application(
@@ -36,6 +68,10 @@ class TestHelpers.FakeMagpieServer
       method: 'POST'
       matcher: /.*areas_of_interest.json/
       response: {id: 5, name: ""}
+    polygonSave:
+      method: 'POST'
+      matcher: /.*polygons.json/
+      response: TestHelpers.FakePolygonResponse
 
   respondTo: (routeName) ->
     if @hasReceivedRequest(routeName)

@@ -39,8 +39,7 @@
     };
 
     Area.prototype.drawNewPolygonView = function(callbacks) {
-      this.currentPolygon = new Pica.Models.Polygon();
-      this.addPolygon(this.currentPolygon);
+      this.createPolygon();
       return new Pica.Views.NewPolygonView({
         callbacks: callbacks,
         polygon: this.currentPolygon
@@ -48,12 +47,16 @@
     };
 
     Area.prototype.drawNewCircleView = function(callbacks) {
-      this.currentPolygon = new Pica.Models.Polygon();
-      this.addPolygon(this.currentPolygon);
+      this.createPolygon();
       return new Pica.Views.NewCircleView({
         callbacks: callbacks,
         polygon: this.currentPolygon
       });
+    };
+
+    Area.prototype.createPolygon = function() {
+      this.currentPolygon = new Pica.Models.Polygon();
+      return this.addPolygon(this.currentPolygon);
     };
 
     Area.prototype.newUploadFileView = function(callbacks) {

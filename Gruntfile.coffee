@@ -51,6 +51,14 @@ module.exports = (grunt) ->
     watch:
       files: ['lib/**/*.coffee', 'example/**/*.coffee', 'test/**/*.coffee'],
       tasks: 'default'
+
+    coffeelint:
+      files: ['lib/**/*.coffee', 'example/**/*.coffee', 'test/**/*.coffee'],
+      options:
+        'no_trailing_whitespace': {'level': 'error'},
+        'no_empty_param_list': {'level': 'warning'},
+        'cyclomatic_complexity' : {'level' : 'warn', 'value' : 11},
+        'max_line_length': {'level': 'warn'}
   )
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
@@ -59,6 +67,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-coffeelint')
 
   grunt.registerTask('default', ['clean', 'coffee', 'concat', 'uglify', 'copy'])
 

@@ -56,12 +56,13 @@ class Pica.Models.Area extends Pica.Model
     )
 
   url: () ->
-    create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest.json"
-    read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}.json"
+    url = Pica.config.magpieUrl
+    create: "#{url}/workspaces/#{@get('workspace_id')}/areas_of_interest.json"
+    read:   "#{url}/areas_of_interest/#{@get('id')}.json"
 
   parse: (data) ->
     if data.polygons?
-      @polygons = [] 
+      @polygons = []
       for polygonAttributes in data.polygons
         polygon = new Pica.Models.Polygon(attributes:polygonAttributes)
         @addPolygon(polygon)
@@ -87,12 +88,23 @@ class Pica.Models.Area extends Pica.Model
           if @get('workspace_id')
             @save options
           else
-            options.error(@, {error: "Could not save workspace, so cannot save area"}, jqXHR)
+            options.error(
+              @,
+              {error: "Could not save workspace, so cannot save area"},
+              jqXHR
+            )
         error: (jqXHR, textStatus, errorThrown) =>
           console.log "Unable to save area:"
           console.log arguments
           console.log jqXHR.status
           console.log jqXHR.statusText
           console.log jqXHR.responseText
-          options.error(jqXHR, textStatus, {error: "Unable to obtain workspaceId, cannot save area", parentError: errorThrown}) if options.error?
+          options.error(
+            jqXHR,
+            textStatus,
+            {
+              error: "Unable to obtain workspaceId, cannot save area",
+              parentError: errorThrown
+            }
+          ) if options.error?
       )

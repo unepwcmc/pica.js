@@ -43,8 +43,9 @@ class Pica.Models.Polygon extends Pica.Model
     return args
 
   url: () ->
-    read: "#{Pica.config.magpieUrl}/polygons/#{@get('id')}.json"
-    create: "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('area_id')}/polygons.json"
+    url = Pica.config.magpieUrl
+    read: "#{url}/polygons/#{@get('id')}.json"
+    create: "#{url}/areas_of_interest/#{@get('area_id')}/polygons.json"
 
   save: (options) =>
     options ||= {}
@@ -58,12 +59,23 @@ class Pica.Models.Polygon extends Pica.Model
           if @get('area_id')
             @save options
           else
-            options.error(@, {error: "Unable to get area id, so cannot save polygon"}, jqXHR) if options.error?
+            options.error(
+              @,
+              {error: "Unable to get area id, so cannot save polygon"},
+              jqXHR
+            ) if options.error?
         error: (jqXHR, textStatus, errorThrown) =>
           console.log "Unable to save polygon:"
           console.log arguments
           console.log jqXHR.status
           console.log jqXHR.statusText
           console.log jqXHR.responseText
-          options.error(jqXHR, textStatus, {error: "Unable to obtain areaId, cannot save polygon", parentError: errorThrown}) if options.error?
+          options.error(
+            jqXHR,
+            textStatus,
+            {
+              error: "Unable to obtain areaId, cannot save polygon",
+              parentError: errorThrown
+            }
+          ) if options.error?
       )

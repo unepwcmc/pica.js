@@ -21,12 +21,12 @@ describe 'Pica.Models.Area', ->
       # See Pica.Model.sync in pica_model.js.coffee
       pica.currentWorkspace.currentArea.save(
         success: success
-        error: error 
+        error: error
       )
       # At this point `magpieServer.server.requests.length == 1`
 
     after ->
-      # We need to restore the server or it will interfere with tests 
+      # We need to restore the server or it will interfere with tests
       # in different modules.
       magpieServer.server.restore()
 
@@ -64,7 +64,8 @@ describe 'Pica.Models.Area', ->
             .to.equal(pica.currentWorkspace.get('id'))
         )
         it('saves the area', ->
-          expect(pica.currentWorkspace.currentArea.get('id')).to.be.a('number')
+          expect(pica.currentWorkspace.currentArea.get('id'))
+            .to.be.a('number')
         )
         it('calls the success callback', ->
           expect(success.calledOnce).to.equal(true)

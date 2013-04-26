@@ -13,9 +13,9 @@ class Pica.Model extends Pica.Events
   sync: (options = {}) ->
     callback = options.success || () ->
 
-    # Extend callback to add returned data as model attributes
+    # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
-      #data = JSON.parse(data) unless 'object' == typeof data 
+      #data = JSON.parse(data) unless 'object' == typeof data
       if data.id?
         @parse(data)
         @trigger('sync', @)
@@ -26,7 +26,8 @@ class Pica.Model extends Pica.Events
       data = @attributes
       data = JSON.stringify(data) if options.type == 'post'
 
-    # Send nothing for delete, and set contentType, otherwise JQuery will try to parse it on return
+    # Send nothing for delete, and set contentType,
+    # otherwise JQuery will try to parse it on return.
     if options.type == 'delete'
       data = null
 
@@ -39,7 +40,7 @@ class Pica.Model extends Pica.Events
       )
     )
   
-  # Parse the data that is returned from the server
+  # Parse the data that is returned from the server.
   parse: (data) ->
     for attr, val of data
       @set(attr, val)

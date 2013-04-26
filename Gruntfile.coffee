@@ -26,14 +26,16 @@ module.exports = (grunt) ->
 
     concat:
       coffee:
-        src: [ 'lib/lib/**/*.coffee',
-               'lib/<%= pkg.name %>.js.coffee',
+        src: [ 'lib/<%= pkg.name %>.js.coffee',
+               'lib/lib/**/*.coffee',
+               'lib/application.js.coffee',
                'lib/models/**/*.coffee',
                'lib/views/**/*.coffee' ]
         dest: 'dist/<%= pkg.name %>.coffee'
       dist:
-        src: [ 'dist/src/lib/**/*.js',
-               'dist/src/<%= pkg.name %>.js',
+        src: [ 'lib/<%= pkg.name %>.js.coffee',
+               'dist/src/lib/**/*.js',
+               'lib/application.js.coffee',
                'dist/src/models/**/*.js',
                'dist/src/views/**/*.js' ]
         dest: 'dist/<%= pkg.name %>.js'
@@ -59,6 +61,8 @@ module.exports = (grunt) ->
         'no_empty_param_list': {'level': 'warning'},
         'cyclomatic_complexity' : {'level' : 'warn', 'value' : 11},
         'max_line_length': {'level': 'warn'}
+
+
   )
 
   grunt.loadNpmTasks('grunt-contrib-coffee')

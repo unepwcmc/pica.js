@@ -1,3 +1,5 @@
+window.Pica ||= {}
+
 class Pica.Model extends Pica.Events
   url: () ->
 

@@ -1,5 +1,24 @@
+#
+# * pica.js
+# * https://github.com/unepwcmc/pica.js
+# *
+# * Copyright (c) 2012 UNEP-WCMC
+#
+
+# Dependencies:
+# -------------
+#
+# * http://jquery.com/
+# * http://leafletjs.com/
+# * https://github.com/Leaflet/Leaflet.draw
+
+
+window.Pica or= {} 
+
 window.Pica ||= {}
+
 class Pica.Events
+
   on: (event, callback) ->
     @events ||= {}
     @events[event] ||= []
@@ -24,6 +43,8 @@ class Pica.Events
     if @events? && @events[event]?
       for callback in @events[event]
         callback.apply(@, [].concat(args))
+
+window.Pica ||= {}
 
 class Pica.Model extends Pica.Events
   url: () ->
@@ -100,18 +121,14 @@ class Pica.Model extends Pica.Events
       @off()
     @sync(options)
 
-#
-# * pica.js
-# * https://github.com/unepwcmc/pica.js
-# *
-# * Copyright (c) 2012 UNEP-WCMC
-#
-
 window.Pica ||= {}
+console.log Pica, 1
 Pica.Models = {}
 Pica.Views = {}
+console.log Pica, 2
 
 class Pica.Application extends Pica.Events
+  
   constructor: (@config) ->
     Pica.config = @config
 

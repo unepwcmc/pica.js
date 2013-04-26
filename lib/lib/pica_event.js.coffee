@@ -1,5 +1,8 @@
+
 window.Pica ||= {}
+
 class Pica.Events
+
   on: (event, callback) ->
     @events ||= {}
     @events[event] ||= []

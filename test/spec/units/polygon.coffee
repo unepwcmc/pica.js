@@ -23,9 +23,9 @@ describe 'Pica.Models.Polygon', ->
         success: success
         error: error
       )
-      
+    
     after ->
-      # We need to restore the server or it will interfere with tests 
+      # We need to restore the server or it will interfere with tests
       # in different modules.
       magpieServer.server.restore()
 
@@ -58,11 +58,13 @@ describe 'Pica.Models.Polygon', ->
         )
     
         it('sets the polygon.area_id attribute', ->
-          expect(pica.currentWorkspace.currentArea.currentPolygon.get('area_id'))
-            .to.equal(pica.currentWorkspace.currentArea.get('id'))
+          expect(
+            pica.currentWorkspace.currentArea.currentPolygon.get('area_id'))
+              .to.equal(pica.currentWorkspace.currentArea.get('id'))
         )
         it('saves the area', ->
-          expect(pica.currentWorkspace.currentArea.get('id')).to.be.a('number')
+          expect(pica.currentWorkspace.currentArea.get('id'))
+            .to.be.a('number')
         )
 
         it('should send polygon save request to magpie', ->
@@ -87,7 +89,7 @@ describe 'Pica.Models.Polygon', ->
           it('does not call the error callback', ->
             expect(error.calledOnce).to.equal(false)
           )
-  
+    
         )
        
       )

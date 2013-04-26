@@ -82,7 +82,7 @@ class TestHelpers.FakeMagpieServer
       )
       @server.requests.splice(0,1)
     else
-      throw "server hasn't received a #{routeName} request"
+      throw new Error "server hasn't received a #{routeName} request"
 
   hasReceivedRequest: (routeName) ->
     routeDetails = @routes[routeName]

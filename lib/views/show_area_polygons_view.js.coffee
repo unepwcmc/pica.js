@@ -18,9 +18,9 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
         Wrapper = (args) ->
           return theConstructor.apply(@, args)
         Wrapper:: = theConstructor::
-
         return new Wrapper(args)
-      mapPolygon = newObject(L[polygon.get('geometry').type], polygon.asLeafletArguments()).addTo(Pica.config.map)
+      mapPolygon = newObject(L[polygon.get('geometry').type],
+        polygon.asLeafletArguments()).addTo(Pica.config.map)
 
       polygon.on('delete', (=>
         thatMapPolygon = mapPolygon
@@ -36,7 +36,7 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
       )())
 
       @mapPolygons.push(mapPolygon)
-  
+
   addPolygon: (polygon) =>
     polygon.on('change', @render)
     @polysObserved.push(polygon)

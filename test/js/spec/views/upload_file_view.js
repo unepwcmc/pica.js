@@ -1,22 +1,16 @@
 (function() {
   describe("Pica.Views.UploadFileView", function() {
     return describe("a view exists and has been rendered", function() {
-      var addEventListenerSpy, fileView;
+      var addEventListenerSpy, fileView, magpieServer;
 
       fileView = void 0;
       addEventListenerSpy = void 0;
+      magpieServer = void 0;
       before(function() {
-        var map, pica;
+        var pica;
 
-        map = L.map("map", {
-          center: [24.5, 54],
-          zoom: 9
-        });
-        pica = new Pica.Application({
-          magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
-          projectId: 5,
-          map: map
-        });
+        magpieServer = new window.TestHelpers.FakeMagpieServer();
+        pica = window.TestHelpers.buildPicaApplication();
         pica.newWorkspace();
         fileView = pica.currentWorkspace.currentArea.newUploadFileView({
           success: function() {},
@@ -25,6 +19,9 @@
         $("#side-panel").prepend(fileView.el);
         addEventListenerSpy = sinon.spy(window, "addEventListener");
         return fileView.render();
+      });
+      after(function() {
+        return magpieServer.server.restore();
       });
       it("creates an iframe for the file upload", function() {
         return expect($("#side-panel iframe").length).to.equal(1);

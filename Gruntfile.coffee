@@ -49,7 +49,7 @@ module.exports = (grunt) ->
           "example/js/lib/pica.js": "dist/pica.js"
 
     watch:
-      files: ['lib/**/*.coffee', 'example/**', 'test/**/*.coffee'],
+      files: ['lib/**/*.coffee', 'example/**/*.coffee', 'test/**/*.coffee'],
       tasks: 'default'
   )
 

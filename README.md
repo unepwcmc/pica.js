@@ -16,6 +16,21 @@ library using `grunt` then committing and merging the changes with the
 
 ## Development
 
+Install the Node package for the grunt command line interface globally.
+```sh
+   # You might want to use nvm here:
+   # https://github.com/creationix/nvm
+   # And once you have a Node Virtual Environment setup:
+   npm install -g grunt-cli
+   # Alternatively:
+   sudo npm install -g grunt-cli
+```
+
+Start the build (will install dependencies and build).
+```sh
+   npm install
+```
+
 Running `grunt watch` monitors `lib/` and `example/` for changes and
 auto compiles the Javascript, etc. Point your browser to
 `example/index.html` to view your changes.

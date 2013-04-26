@@ -1,41 +1,10 @@
-window.TestHelpers = {}
+window.TestHelpers or= {}
 
-TestHelpers.map ||= L.map("map",
+TestHelpers.map or= L.map("map",
   center: [24.5, 54]
   zoom: 9
 )
 
-TestHelpers.FakePolygonResponse = {
-  "id":98,
-  "area_of_interest_id":5,
-  "geometry":{
-    "type":"Polygon",
-    "coordinates":[
-      [
-        [
-          53.63250732421874,
-          24.599577462003484
-        ],
-        [
-          53.69293212890625,
-          24.12920858513251
-        ],
-        [
-          54.3878173828125,
-          24.241955877694206
-        ],
-        [
-          54.2779541015625,
-          24.80169495167004
-        ],
-        [
-          53.63250732421874,
-          24.599577462003484
-        ]
-      ]
-    ]
-  }
-}
 
 TestHelpers.buildPicaApplication = ->
 
@@ -46,6 +15,7 @@ TestHelpers.buildPicaApplication = ->
   )
 
 class TestHelpers.FakeMagpieServer
+
   constructor: ->
     @server = sinon.fakeServer.create()
 
@@ -53,7 +23,7 @@ class TestHelpers.FakeMagpieServer
     projectIndex:
       method: 'GET'
       matcher: /.*projects\/\d+\.json/
-      response: {"id":5,"name":"my_polygon","layers":[{"id":1,"display_name":"Protected Areas","tile_url":"http://184.73.201.235/blue/{z}/{x}/{y}","is_displayed":true}]}
+      response: TestHelpers.data.FAKE_PROJECT_INDEX_RESPONSE
     workspaceIndex:
       method: 'GET'
       matcher: /.*workspaces.json/
@@ -71,7 +41,7 @@ class TestHelpers.FakeMagpieServer
     polygonSave:
       method: 'POST'
       matcher: /.*polygons.json/
-      response: TestHelpers.FakePolygonResponse
+      response: TestHelpers.data.FAKE_POLYGON_RESPONSE
 
   respondTo: (routeName) ->
     if @hasReceivedRequest(routeName)

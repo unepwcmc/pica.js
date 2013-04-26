@@ -40,9 +40,9 @@ class Pica.Model extends Pica.Events
   sync: (options = {}) ->
     callback = options.success || () ->
 
-    # Extend callback to add returned data as model attributes
+    # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
-      #data = JSON.parse(data) unless 'object' == typeof data 
+      #data = JSON.parse(data) unless 'object' == typeof data
       if data.id?
         @parse(data)
         @trigger('sync', @)
@@ -53,7 +53,8 @@ class Pica.Model extends Pica.Events
       data = @attributes
       data = JSON.stringify(data) if options.type == 'post'
 
-    # Send nothing for delete, and set contentType, otherwise JQuery will try to parse it on return
+    # Send nothing for delete, and set contentType,
+    # otherwise JQuery will try to parse it on return.
     if options.type == 'delete'
       data = null
 
@@ -66,7 +67,7 @@ class Pica.Model extends Pica.Events
       )
     )
   
-  # Parse the data that is returned from the server
+  # Parse the data that is returned from the server.
   parse: (data) ->
     for attr, val of data
       @set(attr, val)
@@ -199,12 +200,13 @@ class Pica.Models.Area extends Pica.Model
     )
 
   url: () ->
-    create: "#{Pica.config.magpieUrl}/workspaces/#{@get('workspace_id')}/areas_of_interest.json"
-    read:   "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('id')}.json"
+    url = Pica.config.magpieUrl
+    create: "#{url}/workspaces/#{@get('workspace_id')}/areas_of_interest.json"
+    read:   "#{url}/areas_of_interest/#{@get('id')}.json"
 
   parse: (data) ->
     if data.polygons?
-      @polygons = [] 
+      @polygons = []
       for polygonAttributes in data.polygons
         polygon = new Pica.Models.Polygon(attributes:polygonAttributes)
         @addPolygon(polygon)
@@ -230,14 +232,25 @@ class Pica.Models.Area extends Pica.Model
           if @get('workspace_id')
             @save options
           else
-            options.error(@, {error: "Could not save workspace, so cannot save area"}, jqXHR)
+            options.error(
+              @,
+              {error: "Could not save workspace, so cannot save area"},
+              jqXHR
+            )
         error: (jqXHR, textStatus, errorThrown) =>
           console.log "Unable to save area:"
           console.log arguments
           console.log jqXHR.status
           console.log jqXHR.statusText
           console.log jqXHR.responseText
-          options.error(jqXHR, textStatus, {error: "Unable to obtain workspaceId, cannot save area", parentError: errorThrown}) if options.error?
+          options.error(
+            jqXHR,
+            textStatus,
+            {
+              error: "Unable to obtain workspaceId, cannot save area",
+              parentError: errorThrown
+            }
+          ) if options.error?
       )
 
 class Pica.Models.Polygon extends Pica.Model
@@ -285,8 +298,9 @@ class Pica.Models.Polygon extends Pica.Model
     return args
 
   url: () ->
-    read: "#{Pica.config.magpieUrl}/polygons/#{@get('id')}.json"
-    create: "#{Pica.config.magpieUrl}/areas_of_interest/#{@get('area_id')}/polygons.json"
+    url = Pica.config.magpieUrl
+    read: "#{url}/polygons/#{@get('id')}.json"
+    create: "#{url}/areas_of_interest/#{@get('area_id')}/polygons.json"
 
   save: (options) =>
     options ||= {}
@@ -300,16 +314,26 @@ class Pica.Models.Polygon extends Pica.Model
           if @get('area_id')
             @save options
           else
-            options.error(@, {error: "Unable to get area id, so cannot save polygon"}, jqXHR) if options.error?
+            options.error(
+              @,
+              {error: "Unable to get area id, so cannot save polygon"},
+              jqXHR
+            ) if options.error?
         error: (jqXHR, textStatus, errorThrown) =>
           console.log "Unable to save polygon:"
           console.log arguments
           console.log jqXHR.status
           console.log jqXHR.statusText
           console.log jqXHR.responseText
-          options.error(jqXHR, textStatus, {error: "Unable to obtain areaId, cannot save polygon", parentError: errorThrown}) if options.error?
+          options.error(
+            jqXHR,
+            textStatus,
+            {
+              error: "Unable to obtain areaId, cannot save polygon",
+              parentError: errorThrown
+            }
+          ) if options.error?
       )
-
 class Pica.Models.Workspace extends Pica.Model
   constructor: () ->
     @attributes = {}
@@ -431,9 +455,9 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
         Wrapper = (args) ->
           return theConstructor.apply(@, args)
         Wrapper:: = theConstructor::
-
         return new Wrapper(args)
-      mapPolygon = newObject(L[polygon.get('geometry').type], polygon.asLeafletArguments()).addTo(Pica.config.map)
+      mapPolygon = newObject(L[polygon.get('geometry').type],
+        polygon.asLeafletArguments()).addTo(Pica.config.map)
 
       polygon.on('delete', (=>
         thatMapPolygon = mapPolygon
@@ -449,7 +473,7 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
       )())
 
       @mapPolygons.push(mapPolygon)
-  
+
   addPolygon: (polygon) =>
     polygon.on('change', @render)
     @polysObserved.push(polygon)

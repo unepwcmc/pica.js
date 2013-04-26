@@ -77,9 +77,12 @@
     };
 
     Polygon.prototype.url = function() {
+      var url;
+
+      url = Pica.config.magpieUrl;
       return {
-        read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')) + ".json",
-        create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons.json"
+        read: "" + url + "/polygons/" + (this.get('id')) + ".json",
+        create: "" + url + "/areas_of_interest/" + (this.get('area_id')) + "/polygons.json"
       };
     };
 

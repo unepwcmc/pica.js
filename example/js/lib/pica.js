@@ -335,9 +335,12 @@
     };
 
     Area.prototype.url = function() {
+      var url;
+
+      url = Pica.config.magpieUrl;
       return {
-        create: "" + Pica.config.magpieUrl + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest.json",
-        read: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('id')) + ".json"
+        create: "" + url + "/workspaces/" + (this.get('workspace_id')) + "/areas_of_interest.json",
+        read: "" + url + "/areas_of_interest/" + (this.get('id')) + ".json"
       };
     };
 
@@ -489,9 +492,12 @@
     };
 
     Polygon.prototype.url = function() {
+      var url;
+
+      url = Pica.config.magpieUrl;
       return {
-        read: "" + Pica.config.magpieUrl + "/polygons/" + (this.get('id')) + ".json",
-        create: "" + Pica.config.magpieUrl + "/areas_of_interest/" + (this.get('area_id')) + "/polygons.json"
+        read: "" + url + "/polygons/" + (this.get('id')) + ".json",
+        create: "" + url + "/areas_of_interest/" + (this.get('area_id')) + "/polygons.json"
       };
     };
 

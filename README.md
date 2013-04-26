@@ -20,7 +20,7 @@ Install the Node package for the grunt command line interface globally.
 ```sh
    # You might want to use nvm here:
    # https://github.com/creationix/nvm
-   # And once you have a Node Virtual Environment setup:
+   # And once you have a Node Version Manager setup:
    npm install -g grunt-cli
    # Alternatively:
    sudo npm install -g grunt-cli

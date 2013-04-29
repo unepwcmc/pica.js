@@ -72,7 +72,8 @@ if (!jQuery.support.cors && window.XDomainRequest) {
               text: xdr.responseText
             });
           };
-          var postData = (userOptions.data && $.param(userOptions.data)) || '';
+          var data = $.parseJSON(userOptions.data);
+          var postData = (userOptions.data && $.param(data)) || '';
           xdr.open(options.type, options.url);
           // Yeah, this bit of code is baffling, see here: http://www.cypressnorth.com/blog/web-programming-and-development/internet-explorer-aborting-ajax-requests-fixed/
           setTimeout(function(){

@@ -1,36 +1,4 @@
-describe "Pica.Models.Workspace", ->
-  describe "when saving to a working magpie server", ->
-    success = undefined
-    error = undefined
-    before (done) ->
-      
-      # TODO application exists
-      pica = new Pica.Application(
-        magpieUrl: window.TESTS.magpieServer
-        projectId: 8
-        map: TestHelpers.map
-      )
-      
-      # Create a new workspace to work in
-      pica.newWorkspace()
-      success = sinon.spy(->
-        done()
-      )
-      error = sinon.spy((a, b, theError) ->
-        done()
-      )
-      
-      # create a file view
-      fileView = pica.currentWorkspace.save(
-        success: success
-        error: error
-      )
 
-    it "calls the success callback", ->
-      expect(success.calledOnce).to.equal true
-
-    it "does not call the error callback", ->
-      expect(error.calledOnce).to.equal false
 
 describe 'Pica.Models.Polygon', ->
 

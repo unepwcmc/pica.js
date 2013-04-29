@@ -26,16 +26,17 @@ module.exports = (grunt) ->
 
     concat:
       coffee:
-        src: [ 'lib/<%= pkg.name %>.js.coffee',
+        src: [ 'lib/pica.js.coffee',
                'lib/lib/**/*.coffee',
                'lib/application.js.coffee',
                'lib/models/**/*.coffee',
                'lib/views/**/*.coffee' ]
         dest: 'dist/<%= pkg.name %>.coffee'
       dist:
-        src: [ 'lib/<%= pkg.name %>.js.coffee',
+        src: [ 
+               'dist/src/<%= pkg.name %>.js',
                'dist/src/lib/**/*.js',
-               'lib/application.js.coffee',
+               'dist/src/application.js',
                'dist/src/models/**/*.js',
                'dist/src/views/**/*.js' ]
         dest: 'dist/<%= pkg.name %>.js'

@@ -1,6 +1,8 @@
 (function() {
   window.Pica || (window.Pica = {});
 
+  console.log(Pica, 2);
+
   Pica.Events = (function() {
     function Events() {}
 

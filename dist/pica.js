@@ -1,21 +1,14 @@
-#
-# * pica.js
-# * https://github.com/unepwcmc/pica.js
-# *
-# * Copyright (c) 2012 UNEP-WCMC
-#
-
-# Dependencies:
-# -------------
-#
-# * http://jquery.com/
-# * http://leafletjs.com/
-# * https://github.com/Leaflet/Leaflet.draw
-
-
-window.Pica or= {} 
 (function() {
   window.Pica || (window.Pica = {});
+
+  console.log(Pica, 1);
+
+}).call(this);
+
+(function() {
+  window.Pica || (window.Pica = {});
+
+  console.log(Pica, 2);
 
   Pica.Events = (function() {
     function Events() {}
@@ -216,43 +209,71 @@ window.Pica or= {}
 
 }).call(this);
 
-window.Pica ||= {}
-console.log Pica, 1
-Pica.Models = {}
-Pica.Views = {}
-console.log Pica, 2
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-class Pica.Application extends Pica.Events
-  
-  constructor: (@config) ->
-    Pica.config = @config
+  window.Pica || (window.Pica = {});
 
-    $.support.cors = true
+  console.log(Pica, 1);
 
-    $.ajaxSetup
-      headers:
-        'X-Magpie-ProjectId': Pica.config.projectId
+  Pica.Models = {};
 
-    @layers = []
-    @fetch()
+  Pica.Views = {};
 
-  newWorkspace: ->
-    @currentWorkspace = new Pica.Models.Workspace()
+  console.log(Pica, 2);
 
-  showTileLayers: ->
-    new Pica.Views.ShowLayersView(app:@)
+  Pica.Application = (function(_super) {
+    __extends(Application, _super);
 
-  fetch: ->
-    $.ajax(
-      url: "#{Pica.config.magpieUrl}/projects/#{Pica.config.projectId}.json"
-      type: 'get'
-      success: @parse
-    )
+    function Application(config) {
+      this.config = config;
+      this.parse = __bind(this.parse, this);
+      Pica.config = this.config;
+      $.support.cors = true;
+      $.ajaxSetup({
+        headers: {
+          'X-Magpie-ProjectId': Pica.config.projectId
+        }
+      });
+      this.layers = [];
+      this.fetch();
+    }
 
-  parse: (data) =>
-    for attr, val of data
-      @[attr] = val
-    @trigger('sync')
+    Application.prototype.newWorkspace = function() {
+      return this.currentWorkspace = new Pica.Models.Workspace();
+    };
+
+    Application.prototype.showTileLayers = function() {
+      return new Pica.Views.ShowLayersView({
+        app: this
+      });
+    };
+
+    Application.prototype.fetch = function() {
+      return $.ajax({
+        url: "" + Pica.config.magpieUrl + "/projects/" + Pica.config.projectId + ".json",
+        type: 'get',
+        success: this.parse
+      });
+    };
+
+    Application.prototype.parse = function(data) {
+      var attr, val;
+
+      for (attr in data) {
+        val = data[attr];
+        this[attr] = val;
+      }
+      return this.trigger('sync');
+    };
+
+    return Application;
+
+  })(Pica.Events);
+
+}).call(this);
 
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },

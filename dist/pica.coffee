@@ -15,7 +15,10 @@
 
 window.Pica or= {} 
 
+console.log  Pica, 1
+
 window.Pica ||= {}
+console.log  Pica, 2
 
 class Pica.Events
 

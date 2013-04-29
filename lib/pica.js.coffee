@@ -14,3 +14,5 @@
 
 
 window.Pica or= {} 
+
+console.log  Pica, 1

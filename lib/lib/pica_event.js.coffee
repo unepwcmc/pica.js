@@ -1,5 +1,6 @@
 
 window.Pica ||= {}
+console.log  Pica, 2
 
 class Pica.Events
 

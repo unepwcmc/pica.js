@@ -26,6 +26,9 @@ class Pica.Events
         callback.apply(@, [].concat(args))
 
 class Pica.Model extends Pica.Events
+  throwIfNoApp: ->
+    throw "Cannot create a Pica.Model without specifying a Pica.Application" unless @app?
+
   url: () ->
 
   get: (attribute) ->
@@ -98,7 +101,7 @@ class Pica.Model extends Pica.Events
       console.log("deleted #{@constructor.name} #{@get('id')}")
       originalCallback() if originalCallback
       @off()
-    @sync(options)
+    @sync(optionsArea)
 
 #
 # * pica.js
@@ -125,7 +128,7 @@ class Pica.Application extends Pica.Events
     @fetch()
 
   newWorkspace: ->
-    @currentWorkspace = new Pica.Models.Workspace()
+    @currentWorkspace = new Pica.Models.Workspace(@)
 
   showTileLayers: ->
     new Pica.Views.ShowLayersView(app:@)
@@ -143,7 +146,8 @@ class Pica.Application extends Pica.Events
     @trigger('sync')
 
 class Pica.Models.Area extends Pica.Model
-  constructor: (options) ->
+  constructor: (@app) ->
+    @throwIfNoApp()
     @polygons = []
 
     @set('name', 'My Lovely Area')
@@ -183,7 +187,7 @@ class Pica.Models.Area extends Pica.Model
     )
 
   createPolygon: ->
-    @currentPolygon = new Pica.Models.Polygon()
+    @currentPolygon = new Pica.Models.Polygon(@app)
     @addPolygon(@currentPolygon)
 
   # Create a new Pica.Views.UploadPolygonView for this area
@@ -254,7 +258,8 @@ class Pica.Models.Area extends Pica.Model
       )
 
 class Pica.Models.Polygon extends Pica.Model
-  constructor: (options = {}) ->
+  constructor: (@app, options = {}) ->
+    @throwIfNoApp()
     @attributes = if options.attributes? then options.attributes else {}
     @attributes['geometry'] ||= {type: 'Polygon'}
 
@@ -334,12 +339,14 @@ class Pica.Models.Polygon extends Pica.Model
             }
           ) if options.error?
       )
+
 class Pica.Models.Workspace extends Pica.Model
-  constructor: () ->
+  constructor: (@app, options) ->
+    @throwIfNoApp()
     @attributes = {}
     @areas = []
 
-    @currentArea = new Pica.Models.Area()
+    @currentArea = new Pica.Models.Area(@app)
     @addArea(@currentArea)
 
   url: () ->

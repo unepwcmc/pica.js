@@ -1,9 +1,10 @@
 class Pica.Models.Workspace extends Pica.Model
-  constructor: () ->
+  constructor: (@app, options) ->
+    @throwIfNoApp()
     @attributes = {}
     @areas = []
 
-    @currentArea = new Pica.Models.Area()
+    @currentArea = new Pica.Models.Area(@app)
     @addArea(@currentArea)
 
   url: () ->

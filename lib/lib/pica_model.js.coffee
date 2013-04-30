@@ -1,4 +1,7 @@
 class Pica.Model extends Pica.Events
+  throwIfNoApp: ->
+    throw "Cannot create a Pica.Model without specifying a Pica.Application" unless @app?
+
   url: () ->
 
   get: (attribute) ->
@@ -71,4 +74,4 @@ class Pica.Model extends Pica.Events
       console.log("deleted #{@constructor.name} #{@get('id')}")
       originalCallback() if originalCallback
       @off()
-    @sync(options)
+    @sync(optionsArea)

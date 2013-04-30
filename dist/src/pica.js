@@ -27,7 +27,7 @@
     }
 
     Application.prototype.newWorkspace = function() {
-      return this.currentWorkspace = new Pica.Models.Workspace();
+      return this.currentWorkspace = new Pica.Models.Workspace(this);
     };
 
     Application.prototype.showTileLayers = function() {

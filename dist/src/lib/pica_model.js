@@ -14,6 +14,12 @@
       return _ref;
     }
 
+    Model.prototype.throwIfNoApp = function() {
+      if (this.app == null) {
+        throw "Cannot create a Pica.Model without specifying a Pica.Application";
+      }
+    };
+
     Model.prototype.url = function() {};
 
     Model.prototype.get = function(attribute) {
@@ -125,7 +131,7 @@
         }
         return _this.off();
       };
-      return this.sync(options);
+      return this.sync(optionsArea);
     };
 
     return Model;

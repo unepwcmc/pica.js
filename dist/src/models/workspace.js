@@ -6,10 +6,13 @@
   Pica.Models.Workspace = (function(_super) {
     __extends(Workspace, _super);
 
-    function Workspace() {
-      this.save = __bind(this.save, this);      this.attributes = {};
+    function Workspace(app, options) {
+      this.app = app;
+      this.save = __bind(this.save, this);
+      this.throwIfNoApp();
+      this.attributes = {};
       this.areas = [];
-      this.currentArea = new Pica.Models.Area();
+      this.currentArea = new Pica.Models.Area(this.app);
       this.addArea(this.currentArea);
     }
 

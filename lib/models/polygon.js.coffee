@@ -1,5 +1,6 @@
 class Pica.Models.Polygon extends Pica.Model
-  constructor: (options = {}) ->
+  constructor: (@app, options = {}) ->
+    @throwIfNoApp()
     @attributes = if options.attributes? then options.attributes else {}
     @attributes['geometry'] ||= {type: 'Polygon'}
 

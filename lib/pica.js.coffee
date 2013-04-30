@@ -23,7 +23,7 @@ class Pica.Application extends Pica.Events
     @fetch()
 
   newWorkspace: ->
-    @currentWorkspace = new Pica.Models.Workspace()
+    @currentWorkspace = new Pica.Models.Workspace(@)
 
   showTileLayers: ->
     new Pica.Views.ShowLayersView(app:@)

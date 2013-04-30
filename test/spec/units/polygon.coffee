@@ -1,4 +1,21 @@
 describe 'Pica.Models.Polygon', ->
+  describe '.constructor', ->
+    describe 'when given a pica application', ->
+      pica = polygon = null
+      before ->
+        pica = {config: "I'm only a mock!"}
+        polygon = new Pica.Models.Polygon(pica)
+        
+      it 'stores a references to the given pica application', ->
+        expect(polygon.app).to.equal(pica)
+
+    describe 'when not given a pica application', ->
+      it 'throws an error', ->
+        expect(->
+          new Pica.Models.Polygon()
+        ).to.throwException((e)->
+          expect(e).to.be.equal('Cannot create a Pica.Model without specifying a Pica.Application')
+        )
 
   describe 'saving a new polygon', ->
 

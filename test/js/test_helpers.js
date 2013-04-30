@@ -8,10 +8,10 @@
 
   TestHelpers.buildPicaApplication = function(url, id) {
     if (url == null) {
-      url = "http://10.1.1.138:3000";
+      url = "http://magpie.unepwcmc-005.vm.brightbox.net";
     }
     if (id == null) {
-      id = 2;
+      id = 5;
     }
     return new Pica.Application({
       magpieUrl: url,

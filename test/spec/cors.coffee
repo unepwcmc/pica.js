@@ -7,12 +7,8 @@ describe 'Pica.Models.Polygon', ->
     success = error = server = pica = magpieServer = null
 
     before (done) ->
-      pica = new Pica.Application(
-        magpieUrl: window.TESTS.magpieServer
-        projectId: 8
-        map: TestHelpers.map
-      )
- 
+      pica = TestHelpers.buildPicaApplication()
+
       pica.newWorkspace()
 
       success = sinon.spy(->

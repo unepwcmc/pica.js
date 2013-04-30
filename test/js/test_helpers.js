@@ -6,10 +6,16 @@
     zoom: 9
   }));
 
-  TestHelpers.buildPicaApplication = function() {
+  TestHelpers.buildPicaApplication = function(url, id) {
+    if (url == null) {
+      url = "http://10.1.1.138:3000";
+    }
+    if (id == null) {
+      id = 2;
+    }
     return new Pica.Application({
-      magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
-      projectId: 5,
+      magpieUrl: url,
+      projectId: id,
       map: TestHelpers.map
     });
   };

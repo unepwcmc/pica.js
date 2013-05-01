@@ -43,6 +43,8 @@ class Pica.Model extends Pica.Events
   sync: (options = {}) ->
     callback = options.success || () ->
 
+    @app.trigger('syncFinished')
+
     # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
       #data = JSON.parse(data) unless 'object' == typeof data
@@ -50,6 +52,7 @@ class Pica.Model extends Pica.Events
         @parse(data)
         @trigger('sync', @)
 
+      @app.trigger('syncFinished')
       callback(@, textStatus, jqXHR)
 
     if options.type == 'post' or options.type == 'put'
@@ -144,20 +147,6 @@ class Pica.Application extends Pica.Events
     for attr, val of data
       @[attr] = val
     @trigger('sync')
-
-  notifySyncStarted: ->
-    @syncsInProgress or= 0
-    @syncsInProgress = @syncsInProgress + 1
-
-    if @syncsInProgress is 1
-      @trigger('syncStarted')
-
-  notifySyncFinished: ->
-    @syncsInProgress or= 0
-    @syncsInProgress = @syncsInProgress - 1
-
-    if @syncsInProgress is 0
-      @trigger('syncFinished')
 
 class Pica.Models.Area extends Pica.Model
   constructor: (@app) ->

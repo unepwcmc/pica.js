@@ -113,11 +113,13 @@
         options = {};
       }
       callback = options.success || function() {};
+      this.app.trigger('syncFinished');
       options.success = function(data, textStatus, jqXHR) {
         if (data.id != null) {
           _this.parse(data);
           _this.trigger('sync', _this);
         }
+        _this.app.trigger('syncFinished');
         return callback(_this, textStatus, jqXHR);
       };
       if (options.type === 'post' || options.type === 'put') {
@@ -258,22 +260,6 @@
         this[attr] = val;
       }
       return this.trigger('sync');
-    };
-
-    Application.prototype.notifySyncStarted = function() {
-      this.syncsInProgress || (this.syncsInProgress = 0);
-      this.syncsInProgress = this.syncsInProgress + 1;
-      if (this.syncsInProgress === 1) {
-        return this.trigger('syncStarted');
-      }
-    };
-
-    Application.prototype.notifySyncFinished = function() {
-      this.syncsInProgress || (this.syncsInProgress = 0);
-      this.syncsInProgress = this.syncsInProgress - 1;
-      if (this.syncsInProgress === 0) {
-        return this.trigger('syncFinished');
-      }
     };
 
     return Application;

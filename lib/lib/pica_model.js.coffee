@@ -16,6 +16,8 @@ class Pica.Model extends Pica.Events
   sync: (options = {}) ->
     callback = options.success || () ->
 
+    @app.trigger('syncFinished')
+
     # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
       #data = JSON.parse(data) unless 'object' == typeof data
@@ -23,6 +25,7 @@ class Pica.Model extends Pica.Events
         @parse(data)
         @trigger('sync', @)
 
+      @app.trigger('syncFinished')
       callback(@, textStatus, jqXHR)
 
     if options.type == 'post' or options.type == 'put'

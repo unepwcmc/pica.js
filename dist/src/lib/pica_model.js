@@ -49,11 +49,13 @@
         options = {};
       }
       callback = options.success || function() {};
+      this.app.trigger('syncFinished');
       options.success = function(data, textStatus, jqXHR) {
         if (data.id != null) {
           _this.parse(data);
           _this.trigger('sync', _this);
         }
+        _this.app.trigger('syncFinished');
         return callback(_this, textStatus, jqXHR);
       };
       if (options.type === 'post' || options.type === 'put') {

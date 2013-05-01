@@ -22,6 +22,10 @@ class Pica.Application extends Pica.Events
     @layers = []
     @fetch()
 
+    # If Leaflet LayerControl activation is delegated
+    # to pica, then show Tile Layers by default.
+    if @config.delegateLayerControl then @showTileLayers()
+
   newWorkspace: ->
     @currentWorkspace = new Pica.Models.Workspace(@)
 

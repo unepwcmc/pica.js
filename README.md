@@ -68,11 +68,35 @@ List of tile layers used in the application
 options:
 
 * **area**:
-* **magpieUrl**: Address of your magpie server
-* **appId**: ID of your application
-* **map**: leaflet map object
+* **magpieUrl**: String, address of your magpie server.
+* **appId**: Number, ID of your application.
+* **map**: Object, Leaflet map object.
+* **delegateLayerControl**: Boolean (optional), if true Pica will be responsible for rendering a Leatlet Layer Control.
+* **extraOverlays**: Object (optional), extra layers to be added in the Layer Control.
 
-Creates a new instance of pica
+Creates a new instance of pica.
+Code example:
+
+```coffee
+  # Create a leaflet map.
+  map = L.map("map",
+    center: [54, 24.5]
+    zoom: 4
+  )
+  # Add a base layer.
+  tileLayer = new L.TileLayer(baseTileLayerUrl).addTo(map)
+  # Extra layers for Pica.
+  overlayMaps =
+    "Boundaries and Places": L.tileLayer(placesTileLayerUrl)
+  # Create a new instance of pica, with the given options.
+  window.pica = new Pica.Application(
+    magpieUrl: "http://10.1.1.138:3000"
+    projectId: 2
+    map: map
+    delegateLayerControl: yes
+    extraOverlays: overlayMaps
+  )
+```
 
 #### newWorkspace()
 Create a new workspace

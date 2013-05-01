@@ -1,6 +1,7 @@
 class Pica.Model extends Pica.Events
   throwIfNoApp: ->
-    throw "Cannot create a Pica.Model without specifying a Pica.Application" unless @app?
+    unless @app?
+      throw "Cannot create a Pica.Model without specifying a Pica.Application"
 
   url: () ->
 

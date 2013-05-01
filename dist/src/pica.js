@@ -24,6 +24,9 @@
       });
       this.layers = [];
       this.fetch();
+      if (this.config.delegateLayerControl) {
+        this.showTileLayers();
+      }
     }
 
     Application.prototype.newWorkspace = function() {

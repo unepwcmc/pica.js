@@ -14,6 +14,12 @@
       return _ref;
     }
 
+    Model.prototype.throwIfNoApp = function() {
+      if (this.app == null) {
+        throw "Cannot create a Pica.Model without specifying a Pica.Application";
+      }
+    };
+
     Model.prototype.url = function() {};
 
     Model.prototype.get = function(attribute) {
@@ -36,19 +42,25 @@
     };
 
     Model.prototype.sync = function(options) {
-      var callback, data,
+      var data, errorCallback, successCallback,
         _this = this;
 
       if (options == null) {
         options = {};
       }
-      callback = options.success || function() {};
+      successCallback = options.success || function() {};
       options.success = function(data, textStatus, jqXHR) {
         if (data.id != null) {
           _this.parse(data);
           _this.trigger('sync', _this);
         }
-        return callback(_this, textStatus, jqXHR);
+        _this.app.notifySyncFinished();
+        return successCallback(_this, textStatus, jqXHR);
+      };
+      errorCallback = options.error || function() {};
+      options.error = function(data, textStatus, jqXHR) {
+        _this.app.notifySyncFinished();
+        return errorCallback(_this, textStatus, jqXHR);
       };
       if (options.type === 'post' || options.type === 'put') {
         data = this.attributes;
@@ -59,6 +71,7 @@
       if (options.type === 'delete') {
         data = null;
       }
+      this.app.notifySyncStarted();
       return $.ajax($.extend(options, {
         contentType: "application/json",
         dataType: "json",

@@ -1,5 +1,30 @@
 (function() {
   describe('Pica.Models.Polygon', function() {
+    describe('.constructor', function() {
+      describe('when given a pica application', function() {
+        var pica, polygon;
+
+        pica = polygon = null;
+        before(function() {
+          pica = {
+            config: "I'm only a mock!"
+          };
+          return polygon = new Pica.Models.Polygon(pica);
+        });
+        return it('stores a references to the given pica application', function() {
+          return expect(polygon.app).to.equal(pica);
+        });
+      });
+      return describe('when not given a pica application', function() {
+        return it('throws an error', function() {
+          return expect(function() {
+            return new Pica.Models.Polygon();
+          }).to.throwException(function(e) {
+            return expect(e).to.be.equal('Cannot create a Pica.Model without specifying a Pica.Application');
+          });
+        });
+      });
+    });
     return describe('saving a new polygon', function() {
       var error, magpieServer, pica, server, success;
 

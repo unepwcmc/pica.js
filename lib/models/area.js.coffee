@@ -1,5 +1,6 @@
 class Pica.Models.Area extends Pica.Model
-  constructor: (options) ->
+  constructor: (@app) ->
+    @throwIfNoApp()
     @polygons = []
 
     @set('name', 'My Lovely Area')
@@ -39,7 +40,7 @@ class Pica.Models.Area extends Pica.Model
     )
 
   createPolygon: ->
-    @currentPolygon = new Pica.Models.Polygon()
+    @currentPolygon = new Pica.Models.Polygon(@app)
     @addPolygon(@currentPolygon)
 
   # Create a new Pica.Views.UploadPolygonView for this area

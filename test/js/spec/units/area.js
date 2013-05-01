@@ -1,6 +1,45 @@
 (function() {
   describe('Pica.Models.Area', function() {
-    return describe('saving a new area', function() {
+    describe('.constructor', function() {
+      describe('when given a pica application', function() {
+        var area, pica;
+
+        pica = area = null;
+        before(function() {
+          pica = {
+            config: "I'm only a mock!"
+          };
+          return area = new Pica.Models.Area(pica);
+        });
+        return it('stores a references to the given pica application', function() {
+          return expect(area.app).to.equal(pica);
+        });
+      });
+      return describe('when not given a pica application', function() {
+        return it('throws an error', function() {
+          return expect(function() {
+            return new Pica.Models.Area();
+          }).to.throwException(function(e) {
+            return expect(e).to.be.equal('Cannot create a Pica.Model without specifying a Pica.Application');
+          });
+        });
+      });
+    });
+    describe('.createPolygon', function() {
+      var area;
+
+      area = null;
+      before(function() {
+        area = new Pica.Models.Area({
+          config: "I'm a mock!"
+        });
+        return area.createPolygon();
+      });
+      return it('creates a new polygon and stores it in .currentPolygon', function() {
+        return expect(area.currentPolygon).not.to.be(void 0);
+      });
+    });
+    return describe('.save', function() {
       var error, magpieServer, pica, server, success;
 
       success = error = server = pica = magpieServer = null;
@@ -21,9 +60,6 @@
       });
       it('should send a workspace save request to magpie', function() {
         return expect(magpieServer.hasReceivedRequest('workspaceSave')).to.be.ok();
-      });
-      it('should have received 1 requests', function() {
-        return expect(magpieServer.server.requests.length).to.be(1);
       });
       return describe('when magpie responds with a workspace id', function() {
         before(function() {

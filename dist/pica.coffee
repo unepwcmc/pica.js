@@ -145,6 +145,20 @@ class Pica.Application extends Pica.Events
       @[attr] = val
     @trigger('sync')
 
+  notifySyncStarted: ->
+    @syncsInProgress or= 0
+    @syncsInProgress = @syncsInProgress + 1
+
+    if @syncsInProgress is 1
+      @trigger('syncStarted')
+
+  notifySyncFinished: ->
+    @syncsInProgress or= 0
+    @syncsInProgress = @syncsInProgress - 1
+
+    if @syncsInProgress is 0
+      @trigger('syncFinished')
+
 class Pica.Models.Area extends Pica.Model
   constructor: (@app) ->
     @throwIfNoApp()

@@ -41,9 +41,7 @@ class Pica.Model extends Pica.Events
     @trigger('change')
 
   sync: (options = {}) ->
-    callback = options.success || () ->
-
-    @app.trigger('syncFinished')
+    successCallback = options.success || () ->
 
     # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
@@ -53,7 +51,14 @@ class Pica.Model extends Pica.Events
         @trigger('sync', @)
 
       @app.trigger('syncFinished')
-      callback(@, textStatus, jqXHR)
+      successCallback(@, textStatus, jqXHR)
+
+    errorCallback = options.error || () ->
+
+    # Extend callback to add returned data as model attributes.
+    options.error = (data, textStatus, jqXHR) =>
+      @app.trigger('syncFinished')
+      errorCallback(@, textStatus, jqXHR)
 
     if options.type == 'post' or options.type == 'put'
       data = @attributes
@@ -63,6 +68,8 @@ class Pica.Model extends Pica.Events
     # otherwise JQuery will try to parse it on return.
     if options.type == 'delete'
       data = null
+
+    @app.trigger('syncStarted')
 
     $.ajax(
       $.extend(

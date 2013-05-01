@@ -91,6 +91,14 @@ Returns a new Pica.Views.ShowLayersView for the app
 
 Triggered when the layers are fetched from the server
 
+#### syncStarted
+
+Triggered when the app begins any ajax syncing event on a model
+
+#### syncFinished
+
+Triggered when the app finishes any ajax syncing event on a model (success or error)
+
 
 ## Workspace
 

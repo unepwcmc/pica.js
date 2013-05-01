@@ -1,4 +1,8 @@
 class Pica.Model extends Pica.Events
+  throwIfNoApp: ->
+    unless @app?
+      throw "Cannot create a Pica.Model without specifying a Pica.Application"
+
   url: () ->
 
   get: (attribute) ->
@@ -11,7 +15,7 @@ class Pica.Model extends Pica.Events
     @trigger('change')
 
   sync: (options = {}) ->
-    callback = options.success || () ->
+    successCallback = options.success || () ->
 
     # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
@@ -20,7 +24,15 @@ class Pica.Model extends Pica.Events
         @parse(data)
         @trigger('sync', @)
 
-      callback(@, textStatus, jqXHR)
+      @app.notifySyncFinished()
+      successCallback(@, textStatus, jqXHR)
+
+    errorCallback = options.error || () ->
+
+    # Extend callback to add returned data as model attributes.
+    options.error = (data, textStatus, jqXHR) =>
+      @app.notifySyncFinished()
+      errorCallback(@, textStatus, jqXHR)
 
     if options.type == 'post' or options.type == 'put'
       data = @attributes
@@ -30,6 +42,8 @@ class Pica.Model extends Pica.Events
     # otherwise JQuery will try to parse it on return.
     if options.type == 'delete'
       data = null
+
+    @app.notifySyncStarted()
 
     $.ajax(
       $.extend(

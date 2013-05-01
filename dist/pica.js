@@ -78,6 +78,12 @@
       return _ref;
     }
 
+    Model.prototype.throwIfNoApp = function() {
+      if (this.app == null) {
+        throw "Cannot create a Pica.Model without specifying a Pica.Application";
+      }
+    };
+
     Model.prototype.url = function() {};
 
     Model.prototype.get = function(attribute) {
@@ -100,19 +106,25 @@
     };
 
     Model.prototype.sync = function(options) {
-      var callback, data,
+      var data, errorCallback, successCallback,
         _this = this;
 
       if (options == null) {
         options = {};
       }
-      callback = options.success || function() {};
+      successCallback = options.success || function() {};
       options.success = function(data, textStatus, jqXHR) {
         if (data.id != null) {
           _this.parse(data);
           _this.trigger('sync', _this);
         }
-        return callback(_this, textStatus, jqXHR);
+        _this.app.notifySyncFinished();
+        return successCallback(_this, textStatus, jqXHR);
+      };
+      errorCallback = options.error || function() {};
+      options.error = function(data, textStatus, jqXHR) {
+        _this.app.notifySyncFinished();
+        return errorCallback(_this, textStatus, jqXHR);
       };
       if (options.type === 'post' || options.type === 'put') {
         data = this.attributes;
@@ -123,6 +135,7 @@
       if (options.type === 'delete') {
         data = null;
       }
+      this.app.notifySyncStarted();
       return $.ajax($.extend(options, {
         contentType: "application/json",
         dataType: "json",
@@ -230,7 +243,7 @@
     }
 
     Application.prototype.newWorkspace = function() {
-      return this.currentWorkspace = new Pica.Models.Workspace();
+      return this.currentWorkspace = new Pica.Models.Workspace(this);
     };
 
     Application.prototype.showTileLayers = function() {
@@ -257,6 +270,22 @@
       return this.trigger('sync');
     };
 
+    Application.prototype.notifySyncStarted = function() {
+      this.syncsInProgress || (this.syncsInProgress = 0);
+      this.syncsInProgress = this.syncsInProgress + 1;
+      if (this.syncsInProgress === 1) {
+        return this.trigger('syncStarted');
+      }
+    };
+
+    Application.prototype.notifySyncFinished = function() {
+      this.syncsInProgress || (this.syncsInProgress = 0);
+      this.syncsInProgress = this.syncsInProgress - 1;
+      if (this.syncsInProgress === 0) {
+        return this.trigger('syncFinished');
+      }
+    };
+
     return Application;
 
   })(Pica.Events);
@@ -271,9 +300,12 @@
   Pica.Models.Area = (function(_super) {
     __extends(Area, _super);
 
-    function Area(options) {
+    function Area(app) {
+      this.app = app;
       this.save = __bind(this.save, this);
-      this.getAreaId = __bind(this.getAreaId, this);      this.polygons = [];
+      this.getAreaId = __bind(this.getAreaId, this);
+      this.throwIfNoApp();
+      this.polygons = [];
       this.set('name', 'My Lovely Area');
     }
 
@@ -320,7 +352,7 @@
     };
 
     Area.prototype.createPolygon = function() {
-      this.currentPolygon = new Pica.Models.Polygon();
+      this.currentPolygon = new Pica.Models.Polygon(this.app);
       return this.addPolygon(this.currentPolygon);
     };
 
@@ -424,13 +456,15 @@
   Pica.Models.Polygon = (function(_super) {
     __extends(Polygon, _super);
 
-    function Polygon(options) {
+    function Polygon(app, options) {
       var _base;
 
+      this.app = app;
       if (options == null) {
         options = {};
       }
       this.save = __bind(this.save, this);
+      this.throwIfNoApp();
       this.attributes = options.attributes != null ? options.attributes : {};
       (_base = this.attributes)['geometry'] || (_base['geometry'] = {
         type: 'Polygon'
@@ -555,10 +589,13 @@
   Pica.Models.Workspace = (function(_super) {
     __extends(Workspace, _super);
 
-    function Workspace() {
-      this.save = __bind(this.save, this);      this.attributes = {};
+    function Workspace(app, options) {
+      this.app = app;
+      this.save = __bind(this.save, this);
+      this.throwIfNoApp();
+      this.attributes = {};
       this.areas = [];
-      this.currentArea = new Pica.Models.Area();
+      this.currentArea = new Pica.Models.Area(this.app);
       this.addArea(this.currentArea);
     }
 

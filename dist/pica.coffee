@@ -26,6 +26,10 @@ class Pica.Events
         callback.apply(@, [].concat(args))
 
 class Pica.Model extends Pica.Events
+  throwIfNoApp: ->
+    unless @app?
+      throw "Cannot create a Pica.Model without specifying a Pica.Application"
+
   url: () ->
 
   get: (attribute) ->
@@ -38,7 +42,7 @@ class Pica.Model extends Pica.Events
     @trigger('change')
 
   sync: (options = {}) ->
-    callback = options.success || () ->
+    successCallback = options.success || () ->
 
     # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
@@ -47,7 +51,15 @@ class Pica.Model extends Pica.Events
         @parse(data)
         @trigger('sync', @)
 
-      callback(@, textStatus, jqXHR)
+      @app.notifySyncFinished()
+      successCallback(@, textStatus, jqXHR)
+
+    errorCallback = options.error || () ->
+
+    # Extend callback to add returned data as model attributes.
+    options.error = (data, textStatus, jqXHR) =>
+      @app.notifySyncFinished()
+      errorCallback(@, textStatus, jqXHR)
 
     if options.type == 'post' or options.type == 'put'
       data = @attributes
@@ -57,6 +69,8 @@ class Pica.Model extends Pica.Events
     # otherwise JQuery will try to parse it on return.
     if options.type == 'delete'
       data = null
+
+    @app.notifySyncStarted()
 
     $.ajax(
       $.extend(
@@ -129,7 +143,7 @@ class Pica.Application extends Pica.Events
     if @config.delegateLayerControl then @showTileLayers()
 
   newWorkspace: ->
-    @currentWorkspace = new Pica.Models.Workspace()
+    @currentWorkspace = new Pica.Models.Workspace(@)
 
   showTileLayers: ->
     new Pica.Views.ShowLayersView(app:@)
@@ -146,8 +160,23 @@ class Pica.Application extends Pica.Events
       @[attr] = val
     @trigger('sync')
 
+  notifySyncStarted: ->
+    @syncsInProgress or= 0
+    @syncsInProgress = @syncsInProgress + 1
+
+    if @syncsInProgress is 1
+      @trigger('syncStarted')
+
+  notifySyncFinished: ->
+    @syncsInProgress or= 0
+    @syncsInProgress = @syncsInProgress - 1
+
+    if @syncsInProgress is 0
+      @trigger('syncFinished')
+
 class Pica.Models.Area extends Pica.Model
-  constructor: (options) ->
+  constructor: (@app) ->
+    @throwIfNoApp()
     @polygons = []
 
     @set('name', 'My Lovely Area')
@@ -187,7 +216,7 @@ class Pica.Models.Area extends Pica.Model
     )
 
   createPolygon: ->
-    @currentPolygon = new Pica.Models.Polygon()
+    @currentPolygon = new Pica.Models.Polygon(@app)
     @addPolygon(@currentPolygon)
 
   # Create a new Pica.Views.UploadPolygonView for this area
@@ -258,7 +287,8 @@ class Pica.Models.Area extends Pica.Model
       )
 
 class Pica.Models.Polygon extends Pica.Model
-  constructor: (options = {}) ->
+  constructor: (@app, options = {}) ->
+    @throwIfNoApp()
     @attributes = if options.attributes? then options.attributes else {}
     @attributes['geometry'] ||= {type: 'Polygon'}
 
@@ -338,12 +368,14 @@ class Pica.Models.Polygon extends Pica.Model
             }
           ) if options.error?
       )
+
 class Pica.Models.Workspace extends Pica.Model
-  constructor: () ->
+  constructor: (@app, options) ->
+    @throwIfNoApp()
     @attributes = {}
     @areas = []
 
-    @currentArea = new Pica.Models.Area()
+    @currentArea = new Pica.Models.Area(@app)
     @addArea(@currentArea)
 
   url: () ->

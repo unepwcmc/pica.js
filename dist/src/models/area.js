@@ -6,9 +6,12 @@
   Pica.Models.Area = (function(_super) {
     __extends(Area, _super);
 
-    function Area(options) {
+    function Area(app) {
+      this.app = app;
       this.save = __bind(this.save, this);
-      this.getAreaId = __bind(this.getAreaId, this);      this.polygons = [];
+      this.getAreaId = __bind(this.getAreaId, this);
+      this.throwIfNoApp();
+      this.polygons = [];
       this.set('name', 'My Lovely Area');
     }
 
@@ -55,7 +58,7 @@
     };
 
     Area.prototype.createPolygon = function() {
-      this.currentPolygon = new Pica.Models.Polygon();
+      this.currentPolygon = new Pica.Models.Polygon(this.app);
       return this.addPolygon(this.currentPolygon);
     };
 

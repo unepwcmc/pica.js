@@ -6,13 +6,15 @@
   Pica.Models.Polygon = (function(_super) {
     __extends(Polygon, _super);
 
-    function Polygon(options) {
+    function Polygon(app, options) {
       var _base;
 
+      this.app = app;
       if (options == null) {
         options = {};
       }
       this.save = __bind(this.save, this);
+      this.throwIfNoApp();
       this.attributes = options.attributes != null ? options.attributes : {};
       (_base = this.attributes)['geometry'] || (_base['geometry'] = {
         type: 'Polygon'

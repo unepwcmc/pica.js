@@ -27,7 +27,7 @@ class Pica.Application extends Pica.Events
     if @config.delegateLayerControl then @showTileLayers()
 
   newWorkspace: ->
-    @currentWorkspace = new Pica.Models.Workspace()
+    @currentWorkspace = new Pica.Models.Workspace(@)
 
   showTileLayers: ->
     new Pica.Views.ShowLayersView(app:@)
@@ -43,3 +43,17 @@ class Pica.Application extends Pica.Events
     for attr, val of data
       @[attr] = val
     @trigger('sync')
+
+  notifySyncStarted: ->
+    @syncsInProgress or= 0
+    @syncsInProgress = @syncsInProgress + 1
+
+    if @syncsInProgress is 1
+      @trigger('syncStarted')
+
+  notifySyncFinished: ->
+    @syncsInProgress or= 0
+    @syncsInProgress = @syncsInProgress - 1
+
+    if @syncsInProgress is 0
+      @trigger('syncFinished')

@@ -241,7 +241,7 @@ class Pica.Models.Area extends Pica.Model
     if data.polygons?
       @polygons = []
       for polygonAttributes in data.polygons
-        polygon = new Pica.Models.Polygon(attributes:polygonAttributes)
+        polygon = new Pica.Models.Polygon(@app, attributes:polygonAttributes)
         @addPolygon(polygon)
       delete data.polygons
     else

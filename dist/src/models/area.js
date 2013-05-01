@@ -93,7 +93,7 @@
         _ref = data.polygons;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           polygonAttributes = _ref[_i];
-          polygon = new Pica.Models.Polygon({
+          polygon = new Pica.Models.Polygon(this.app, {
             attributes: polygonAttributes
           });
           this.addPolygon(polygon);

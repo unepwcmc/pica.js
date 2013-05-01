@@ -39,6 +39,23 @@
         return expect(area.currentPolygon).not.to.be(void 0);
       });
     });
+    describe('.parse', function() {
+      return it('creates polygons with correct attributes from the given data.polygons', function() {
+        var area;
+
+        area = new Pica.Models.Area({
+          config: "I'm a mock!"
+        });
+        area.parse({
+          polygons: [
+            {
+              id: 141
+            }
+          ]
+        });
+        return expect(area.polygons[0].get('id')).to.equal(141);
+      });
+    });
     return describe('.save', function() {
       var error, magpieServer, pica, server, success;
 

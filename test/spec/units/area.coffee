@@ -26,6 +26,16 @@ describe 'Pica.Models.Area', ->
     it 'creates a new polygon and stores it in .currentPolygon', ->
       expect(area.currentPolygon).not.to.be(undefined)
 
+  describe '.parse', ->
+    it 'creates polygons with correct attributes from the given data.polygons', ->
+      area = new Pica.Models.Area({config: "I'm a mock!"})
+      area.parse(
+        polygons:[
+          id: 141
+        ]
+      )
+      expect(area.polygons[0].get('id')).to.equal(141)
+
   describe '.save', ->
 
     success = error = server = pica = magpieServer = null

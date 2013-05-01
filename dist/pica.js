@@ -850,6 +850,7 @@
       this.render = __bind(this.render, this);      this.app = options.app;
       this.app.on('sync', this.render);
       this.tileLayers = {};
+      this.layerControl = false;
     }
 
     ShowLayersView.prototype.render = function() {
@@ -870,22 +871,22 @@
     };
 
     ShowLayersView.prototype.renderLayerControl = function(map) {
-      var extraOverlays, o;
+      var extraOverlays, layers;
 
       if (this.app.config.delegateLayerControl) {
         extraOverlays = this.app.config.extraOverlays || {};
-        o = $.extend(this.tileLayers, extraOverlays);
-        this.showFirstOverlay(o, map);
-        return L.control.layers({}, o).addTo(map);
+        layers = $.extend(this.tileLayers, extraOverlays);
+        this.showFirstOverlay(layers, map);
+        return L.control.layers({}, layers).addTo(map);
       }
     };
 
-    ShowLayersView.prototype.showFirstOverlay = function(overLays, map) {
-      var name, overLay;
+    ShowLayersView.prototype.showFirstOverlay = function(layers, map) {
+      var layer, name;
 
-      for (name in overLays) {
-        overLay = overLays[name];
-        overLay.addTo(map);
+      for (name in layers) {
+        layer = layers[name];
+        layer.addTo(map);
         return;
       }
     };
@@ -905,7 +906,7 @@
     ShowLayersView.prototype.removeLayerControl = function() {
       var _ref;
 
-      return (_ref = this.layerControl) != null ? _ref.removeFrom(this.map) : void 0;
+      return (_ref = this.layerControl) != null ? _ref.removeFrom(this.app.map) : void 0;
     };
 
     ShowLayersView.prototype.close = function() {

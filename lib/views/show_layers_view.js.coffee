@@ -3,11 +3,12 @@ class Pica.Views.ShowLayersView
     @app = options.app
     @app.on('sync', @render)
     @tileLayers = {}
+    @layerControl = no
 
   # For every layer in @app.layers,
-  # we build a @tileLayers object, compatible with L.control.layers args,
-  # and, if we are not delegating the Layer Control functionality to Pica,
-  # we simply add every layer to the map in order.
+  # we build a @tileLayers object, compatible with the arguments to
+  # L.control.layers, and, if we are not delegating the Layer Control 
+  # functionality to Pica, we simply add every layer to the map in order.
   render: =>
     @removeTileLayers()
     @removeLayerControl()
@@ -24,13 +25,13 @@ class Pica.Views.ShowLayersView
   renderLayerControl: (map) ->
     if @app.config.delegateLayerControl
       extraOverlays = @app.config.extraOverlays or {}
-      o = $.extend @tileLayers, extraOverlays
-      @showFirstOverlay(o, map)
-      return L.control.layers({}, o).addTo map
+      layers = $.extend @tileLayers, extraOverlays
+      @showFirstOverlay(layers, map)
+      return L.control.layers({}, layers).addTo map
 
-  showFirstOverlay: (overLays, map) ->
-    for name, overLay of overLays
-      overLay.addTo map
+  showFirstOverlay: (layers, map) ->
+    for name, layer of layers
+      layer.addTo map
       return
  
   removeTileLayers: =>
@@ -38,7 +39,7 @@ class Pica.Views.ShowLayersView
       @app.map.removeLayer(tileLayer)
 
   removeLayerControl: ->
-    @layerControl?.removeFrom @map
+    @layerControl?.removeFrom @app.map
 
   close: ->
     @removeTileLayers()

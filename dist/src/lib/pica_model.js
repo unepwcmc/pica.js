@@ -133,7 +133,7 @@
         }
         return _this.off();
       };
-      return this.sync(optionsArea);
+      return this.sync(options);
     };
 
     return Model;

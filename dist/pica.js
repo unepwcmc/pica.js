@@ -118,12 +118,12 @@
           _this.parse(data);
           _this.trigger('sync', _this);
         }
-        _this.app.trigger('syncFinished');
+        _this.app.notifySyncFinished();
         return successCallback(_this, textStatus, jqXHR);
       };
       errorCallback = options.error || function() {};
       options.error = function(data, textStatus, jqXHR) {
-        _this.app.trigger('syncFinished');
+        _this.app.notifySyncFinished();
         return errorCallback(_this, textStatus, jqXHR);
       };
       if (options.type === 'post' || options.type === 'put') {
@@ -135,7 +135,7 @@
       if (options.type === 'delete') {
         data = null;
       }
-      this.app.trigger('syncStarted');
+      this.app.notifySyncStarted();
       return $.ajax($.extend(options, {
         contentType: "application/json",
         dataType: "json",
@@ -268,6 +268,22 @@
         this[attr] = val;
       }
       return this.trigger('sync');
+    };
+
+    Application.prototype.notifySyncStarted = function() {
+      this.syncsInProgress || (this.syncsInProgress = 0);
+      this.syncsInProgress = this.syncsInProgress + 1;
+      if (this.syncsInProgress === 1) {
+        return this.trigger('syncStarted');
+      }
+    };
+
+    Application.prototype.notifySyncFinished = function() {
+      this.syncsInProgress || (this.syncsInProgress = 0);
+      this.syncsInProgress = this.syncsInProgress - 1;
+      if (this.syncsInProgress === 0) {
+        return this.trigger('syncFinished');
+      }
     };
 
     return Application;

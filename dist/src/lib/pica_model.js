@@ -54,12 +54,12 @@
           _this.parse(data);
           _this.trigger('sync', _this);
         }
-        _this.app.trigger('syncFinished');
+        _this.app.notifySyncFinished();
         return successCallback(_this, textStatus, jqXHR);
       };
       errorCallback = options.error || function() {};
       options.error = function(data, textStatus, jqXHR) {
-        _this.app.trigger('syncFinished');
+        _this.app.notifySyncFinished();
         return errorCallback(_this, textStatus, jqXHR);
       };
       if (options.type === 'post' || options.type === 'put') {
@@ -71,7 +71,7 @@
       if (options.type === 'delete') {
         data = null;
       }
-      this.app.trigger('syncStarted');
+      this.app.notifySyncStarted();
       return $.ajax($.extend(options, {
         contentType: "application/json",
         dataType: "json",

@@ -57,6 +57,22 @@
       return this.trigger('sync');
     };
 
+    Application.prototype.notifySyncStarted = function() {
+      this.syncsInProgress || (this.syncsInProgress = 0);
+      this.syncsInProgress = this.syncsInProgress + 1;
+      if (this.syncsInProgress === 1) {
+        return this.trigger('syncStarted');
+      }
+    };
+
+    Application.prototype.notifySyncFinished = function() {
+      this.syncsInProgress || (this.syncsInProgress = 0);
+      this.syncsInProgress = this.syncsInProgress - 1;
+      if (this.syncsInProgress === 0) {
+        return this.trigger('syncFinished');
+      }
+    };
+
     return Application;
 
   })(Pica.Events);

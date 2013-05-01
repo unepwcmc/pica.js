@@ -867,18 +867,18 @@
           tileLayer.addTo(this.app.config.map);
         }
       }
-      return this.layerControl = this.renderLayerControl(this.app.config.map);
+      if (this.app.config.delegateLayerControl) {
+        return this.layerControl = this.renderLayerControl(this.app.config.map);
+      }
     };
 
     ShowLayersView.prototype.renderLayerControl = function(map) {
       var extraOverlays, layers;
 
-      if (this.app.config.delegateLayerControl) {
-        extraOverlays = this.app.config.extraOverlays || {};
-        layers = $.extend(this.tileLayers, extraOverlays);
-        this.showFirstOverlay(layers, map);
-        return L.control.layers({}, layers).addTo(map);
-      }
+      extraOverlays = this.app.config.extraOverlays || {};
+      layers = $.extend(this.tileLayers, extraOverlays);
+      this.showFirstOverlay(layers, map);
+      return L.control.layers({}, layers).addTo(map);
     };
 
     ShowLayersView.prototype.showFirstOverlay = function(layers, map) {

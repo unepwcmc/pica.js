@@ -17,17 +17,17 @@ class Pica.Views.ShowLayersView
       @tileLayers[layer.display_name] = tileLayer
       if not @app.config.delegateLayerControl
         tileLayer.addTo(@app.config.map)
-    @layerControl = @renderLayerControl @app.config.map
+    if @app.config.delegateLayerControl
+      @layerControl = @renderLayerControl @app.config.map
 
   # I we are delegating the Layer Control functionality to Pica:
   # first merge optional extra overlays from config into @tileLayers and
   # show first layer with Layer Control.
   renderLayerControl: (map) ->
-    if @app.config.delegateLayerControl
-      extraOverlays = @app.config.extraOverlays or {}
-      layers = $.extend @tileLayers, extraOverlays
-      @showFirstOverlay(layers, map)
-      return L.control.layers({}, layers).addTo map
+    extraOverlays = @app.config.extraOverlays or {}
+    layers = $.extend @tileLayers, extraOverlays
+    @showFirstOverlay(layers, map)
+    L.control.layers({}, layers).addTo map
 
   showFirstOverlay: (layers, map) ->
     for name, layer of layers

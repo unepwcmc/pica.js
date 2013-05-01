@@ -61,9 +61,9 @@
     };
 
     ShowLayersView.prototype.removeLayerControl = function() {
-      var _ref;
-
-      return (_ref = this.layerControl) != null ? _ref.removeFrom(this.app.map) : void 0;
+      if (this.layerControl) {
+        return this.layerControl.removeFrom(this.app.map);
+      }
     };
 
     ShowLayersView.prototype.close = function() {

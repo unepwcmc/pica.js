@@ -46,70 +46,52 @@ describe 'Pica.Models.Polygon', ->
       # in different modules.
       magpieServer.server.restore()
 
-    it('sends a workspace save request to magpie', ->
+    it 'sends a workspace save request to magpie', ->
       expect(magpieServer.hasReceivedRequest('workspaceSave')).to.be.ok()
-    )
 
-    it('receives 1 request', ->
+    it 'receives 1 request', ->
       expect(magpieServer.server.requests.length).to.be(1)
-    )
 
-    describe('when magpie responds with a workspace id', ->
+    describe 'when magpie responds with a workspace id', ->
     
-      before(->
+      before ->
         magpieServer.respondTo('workspaceSave')
-      )
     
-      it('saves the parent workspace and sets the area.workspace_id attribute', ->
+      it 'saves the parent workspace and sets the area.workspace_id attribute', ->
         expect(pica.currentWorkspace.get('id')).to.be.a('number')
-      )
     
-      it('should send an area save request to magpie', ->
+      it 'should send an area save request to magpie', ->
         expect(magpieServer.hasReceivedRequest('areaSave')).to.be.ok()
-      )
+
     
-      describe('when magpie responds with an area id', ->
+      describe 'when magpie responds with an area id', ->
     
-        before(->
+        before ->
           magpieServer.respondTo('areaSave')
-        )
     
-        it('sets the polygon.area_id attribute', ->
+        it 'sets the polygon.area_id attribute', ->
           expect(
             pica.currentWorkspace.currentArea.currentPolygon.get('area_id'))
               .to.equal(pica.currentWorkspace.currentArea.get('id'))
-        )
-        it('saves the area', ->
+
+        it 'saves the area', ->
           expect(pica.currentWorkspace.currentArea.get('id'))
             .to.be.a('number')
-        )
 
-        it('should send polygon save request to magpie', ->
+        it 'should send polygon save request to magpie', ->
           expect(magpieServer.hasReceivedRequest('polygonSave')).to.be.ok()
-        )
 
+        describe 'when magpie responds with an area id', ->
 
-        describe('when magpie responds with an area id', ->
-
-          before(->
+          before ->
             magpieServer.respondTo('polygonSave')
-          )
 
-          it('saves the polygon', ->
+          it 'saves the polygon', ->
             expect(pica.currentWorkspace.currentArea.currentPolygon
               .get('id')).to.be.a('number')
-          )
 
-          it('calls the success callback', ->
+          it 'calls the success callback', ->
             expect(success.calledOnce).to.equal(true)
-          )
-          it('does not call the error callback', ->
+
+          it 'does not call the error callback', ->
             expect(error.calledOnce).to.equal(false)
-          )
-    
-        )
-       
-      )
-    )
-
-

@@ -77,4 +77,4 @@ class Pica.Model extends Pica.Events
       console.log("deleted #{@constructor.name} #{@get('id')}")
       originalCallback() if originalCallback
       @off()
-    @sync(optionsArea)
+    @sync(options)

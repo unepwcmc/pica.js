@@ -39,7 +39,8 @@ class Pica.Views.ShowLayersView
       @app.map.removeLayer(tileLayer)
 
   removeLayerControl: ->
-    @layerControl?.removeFrom @app.map
+    if @layerControl
+      @layerControl.removeFrom @app.map
 
   close: ->
     @removeTileLayers()

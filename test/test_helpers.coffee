@@ -6,12 +6,13 @@ TestHelpers.map or= L.map("map",
 )
 
 
-TestHelpers.buildPicaApplication = (url="http://magpie.unepwcmc-005.vm.brightbox.net", id=5) ->
-  new Pica.Application(
-    magpieUrl: url,
-    projectId: id,
+TestHelpers.buildPicaApplication = (options={}) ->
+  default_options = 
     map: TestHelpers.map
-  )
+    magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net"
+    projectId: 5
+  $.extend default_options, options
+  new Pica.Application default_options
 
 class TestHelpers.FakeMagpieServer
 

@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Mocha Spec Runner</title>
     <link rel="stylesheet" href="lib/mocha/mocha.css">
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/main.css" />
   </head>                    
   <body>                     
     <div id="mocha"></div>   
@@ -30,10 +32,13 @@
 
     <!-- include spec files here... -->
     <script src='js/spec/units/pica.js'></script>
+    
     <script src='js/spec/units/workspace.js'></script>
     <script src='js/spec/units/area.js'></script>
     <script src='js/spec/units/polygon.js'></script>
+    
     <script src='js/spec/views/upload_file_view.js'></script>
+    <script src='js/spec/views/show_layer_view.js'></script>
 
     <!-- trigger the mocha runner -->
     <script>

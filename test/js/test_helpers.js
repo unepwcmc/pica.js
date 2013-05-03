@@ -6,18 +6,19 @@
     zoom: 9
   }));
 
-  TestHelpers.buildPicaApplication = function(url, id) {
-    if (url == null) {
-      url = "http://magpie.unepwcmc-005.vm.brightbox.net";
+  TestHelpers.buildPicaApplication = function(options) {
+    var default_options;
+
+    if (options == null) {
+      options = {};
     }
-    if (id == null) {
-      id = 5;
-    }
-    return new Pica.Application({
-      magpieUrl: url,
-      projectId: id,
-      map: TestHelpers.map
-    });
+    default_options = {
+      map: TestHelpers.map,
+      magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
+      projectId: 5
+    };
+    $.extend(default_options, options);
+    return new Pica.Application(default_options);
   };
 
   TestHelpers.FakeMagpieServer = (function() {

@@ -20,9 +20,9 @@ class Pica.Views.ShowLayersView
     if @app.config.delegateLayerControl
       @layerControl = @renderLayerControl @app.config.map
 
-  # I we are delegating the Layer Control functionality to Pica:
-  # first merge optional extra overlays from config into @tileLayers and
-  # show first layer with Layer Control.
+  # If we are delegating the Layer Control functionality to Pica:
+  # first we merge optional extra overlays from the config into 
+  # @tileLayers and then we show the first layer in the Layer Control.
   renderLayerControl: (map) ->
     extraOverlays = @app.config.extraOverlays or {}
     layers = $.extend @tileLayers, extraOverlays

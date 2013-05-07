@@ -5,20 +5,32 @@
 
       spyRenderLayerControl = magpieServer = void 0;
       before(function() {
-        var pica;
-
-        spyRenderLayerControl = sinon.spy(Pica.Views.ShowLayersView.prototype, 'renderLayerControl');
-        magpieServer = new TestHelpers.FakeMagpieServer();
-        return pica = TestHelpers.buildPicaApplication({
-          delegateLayerControl: true
-        });
+        return magpieServer = new TestHelpers.FakeMagpieServer();
+      });
+      beforeEach(function() {
+        return spyRenderLayerControl = sinon.spy(Pica.Views.ShowLayersView.prototype, 'renderLayerControl');
+      });
+      afterEach(function() {
+        return spyRenderLayerControl.restore();
       });
       after(function() {
         return magpieServer.server.restore();
       });
-      return it("renderLayerControl is called once", function() {
+      it("calls renderLayerControl once with delegateLayerControl option set to true", function() {
+        var pica;
+
+        pica = TestHelpers.buildPicaApplication({
+          delegateLayerControl: true
+        });
         magpieServer.respondTo('projectIndex');
         return expect(spyRenderLayerControl.calledOnce).to.equal(true);
+      });
+      return it("does not call renderLayerControl without the delegateLayerControl option", function() {
+        var pica;
+
+        pica = TestHelpers.buildPicaApplication();
+        magpieServer.respondTo('projectIndex');
+        return expect(spyRenderLayerControl.calledOnce).to.equal(false);
       });
     });
   });

@@ -16,19 +16,25 @@ library using `grunt` then committing and merging the changes with the
 
 ## Development
 
-Install the Node package for the grunt command line interface globally.
+Global Node packages:
 ```sh
-   # You might want to use nvm here:
+   ###
+   # You might want to use nvm:
    # https://github.com/creationix/nvm
-   # And once you have a Node Version Manager setup:
+   ###
+   # Once you have a Node Version Manager setup,
+   # install the grunt command line interface.
    npm install -g grunt-cli
-   # Alternatively:
-   sudo npm install -g grunt-cli
+   # Alternatively, if you do not want to use nvm:
+   #sudo npm install -g grunt-cli
+   # Install bower.
+   npm install -g bower
 ```
 
 Start the build (will install dependencies and build).
 ```sh
    npm install
+   bower install
 ```
 
 Running `grunt watch` monitors `lib/` and `example/` for changes and

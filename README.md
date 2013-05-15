@@ -42,29 +42,6 @@ you'll probably want to run a super simple python web server
 
 Then hit up http://localhost:8000/example/
 
-## AMD modules
-
-This is a version of Pica that relies on the [Asynchronous Module Definition](https://github.com/amdjs/amdjs-api/wiki/AMD) specification 
-and more specifically on the [requirejs](https://github.com/jrburke/requirejs) implementation of it.
-
-  
-To build a new AMD compatible pica.js distribution file with the [requirejs optimizer](http://requirejs.org/docs/optimization.html):
-```sh
-   grunt requirejs
-```
-The files are saved in `dist/`, 
-according to the instructions in `Gruntfile requirejs-task`.
-`pica.js` exposes a variable named `pica` that points to an object, containing Pica's public interface.
-If `pica.js` is used outside of an AMD environment it will still work, but the variable `pica` will be a global.
-To see or modify Pica's public interface look into `coffee/pica.coffee`.
-
-The AMD configuration is split between `coffee/app.coffee` and the `Gruntfile`, 
-that uses `coffee/app.coffee` as the `mainConfigFile` upon wich it builds the distribution files.
-For a complete description of all configuration options in the requirejs optimizer look into: [example.build.js](https://github.com/jrburke/r.js/blob/master/build/example.build.js).
-
-
-
-
 
 ## Usage example
 The source code for the demo app is in the example folder. It's commented and should be fairly easy to follow. Start in the script tag in example/index.html.
@@ -113,7 +90,7 @@ Code example:
   overlayMaps =
     "Boundaries and Places": L.tileLayer(placesTileLayerUrl)
   # Create a new instance of pica, with the given options.
-  window.pica_app = new pica.PicaApplication(
+  window.pica = new Pica.Application(
     magpieUrl: "http://10.1.1.138:3000"
     projectId: 2
     map: map

@@ -1,31 +1,36 @@
-window.Pica ||= {}
-class Pica.Events
-  on: (event, callback) ->
-    @events ||= {}
-    @events[event] ||= []
-    @events[event].push callback
+define [], ->
 
-  off: (event, callback) ->
-    return unless @events?
+  class PicaEvents
+    on: (event, callback) ->
+      @events ||= {}
+      @events[event] ||= []
+      @events[event].push callback
+  
+    off: (event, callback) ->
+      return unless @events?
+  
+      if event?
+        if @events[event]?
+          if callback?
+            for eventCallback, index in @events[event]
+              if eventCallback == callback
+                @events[event].splice(index, 1)
+                index -= 1
+          else
+            delete @events[event]
+      else
+        @events = []
+  
+    trigger: (event, args) ->
+      if @events? && @events[event]?
+        for callback in @events[event]
+          callback.apply(@, [].concat(args))
 
-    if event?
-      if @events[event]?
-        if callback?
-          for eventCallback, index in @events[event]
-            if eventCallback == callback
-              @events[event].splice(index, 1)
-              index -= 1
-        else
-          delete @events[event]
-    else
-      @events = []
+define [
+  "Pica_event"
+], (PicaEvents) ->
 
-  trigger: (event, args) ->
-    if @events? && @events[event]?
-      for callback in @events[event]
-        callback.apply(@, [].concat(args))
-
-class Pica.Model extends Pica.Events
+class PicaModel extends PicaEvents
   throwIfNoApp: ->
     unless @app?
       throw "Cannot create a Pica.Model without specifying a Pica.Application"
@@ -97,7 +102,6 @@ class Pica.Model extends Pica.Events
     sync.done => console.log("saving #{@constructor.name} #{@get('id')}")
     sync
     
-
   fetch: (options = {}) =>
     options.url = if @url().read? then @url().read else @url()
     console.log("fetching #{@constructor.name} #{@get('id')}")
@@ -121,59 +125,62 @@ class Pica.Model extends Pica.Events
 # * Copyright (c) 2012 UNEP-WCMC
 #
 
-window.Pica ||= {}
-Pica.Models = {}
-Pica.Views = {}
+define [
+  "lib/pica_model"
+  "lib/pica_event"
+  "views/show_layers_view"
+], (PicaModels, PicaEvents, ShowLayersView) ->
 
-class Pica.Application extends Pica.Events
-  constructor: (@config) ->
-    Pica.config = @config
+  Pica = {}
 
-    $.support.cors = true
-
-    $.ajaxSetup
-      headers:
-        'X-Magpie-ProjectId': Pica.config.projectId
-
-    @layers = []
-    @fetch()
-
-    # If Leaflet LayerControl activation is delegated
-    # to pica, then show Tile Layers by default.
-    if @config.delegateLayerControl then @showTileLayers()
-
-  newWorkspace: ->
-    @currentWorkspace = new Pica.Models.Workspace(@)
-
-  showTileLayers: ->
-    new Pica.Views.ShowLayersView(app:@)
-
-  fetch: ->
-    $.ajax(
-      url: "#{Pica.config.magpieUrl}/projects/#{Pica.config.projectId}.json"
-      type: 'get'
-      success: @parse
-    )
-
-  parse: (data) =>
-    for attr, val of data
-      @[attr] = val
-    @trigger('sync')
-
-  notifySyncStarted: ->
-    @syncsInProgress or= 0
-    @syncsInProgress = @syncsInProgress + 1
-
-    if @syncsInProgress is 1
-      @trigger('syncStarted')
-
-  notifySyncFinished: ->
-    @syncsInProgress or= 0
-    @syncsInProgress = @syncsInProgress - 1
-
-    if @syncsInProgress is 0
-      @trigger('syncFinished')
-
+  class PicaApplication extends PicaEvents
+    constructor: (@config) ->
+  
+      $.support.cors = true
+  
+      $.ajaxSetup
+        headers:
+          'X-Magpie-ProjectId': @config.projectId
+  
+      @layers = []
+      @fetch()
+  
+      # If Leaflet LayerControl activation is delegated
+      # to pica, then show Tile Layers by default.
+      if @config.delegateLayerControl then @showTileLayers()
+  
+    newWorkspace: ->
+      @currentWorkspace = new PicaModels.Workspace(@)
+  
+    showTileLayers: ->
+      new ShowLayersView app:@
+  
+    fetch: ->
+      $.ajax(
+        url: "#{@config.magpieUrl}/projects/#{@config.projectId}.json"
+        type: 'get'
+        success: @parse
+      )
+  
+    parse: (data) =>
+      for attr, val of data
+        @[attr] = val
+      @trigger('sync')
+  
+    notifySyncStarted: ->
+      @syncsInProgress or= 0
+      @syncsInProgress = @syncsInProgress + 1
+  
+      if @syncsInProgress is 1
+        @trigger('syncStarted')
+  
+    notifySyncFinished: ->
+      @syncsInProgress or= 0
+      @syncsInProgress = @syncsInProgress - 1
+  
+      if @syncsInProgress is 0
+        @trigger('syncFinished')
+  
 class Pica.Models.Area extends Pica.Model
   constructor: (@app) ->
     @throwIfNoApp()
@@ -532,7 +539,11 @@ class Pica.Views.ShowAreaPolygonsView extends Pica.Events
   triggerPolyClick: (polygon, event, mapPolygon) =>
     @trigger('polygonClick', [polygon, event, mapPolygon])
 
-class Pica.Views.ShowLayersView
+define [
+  "leaflet"
+], (L) ->
+
+class ShowLayersView
   constructor: (options) ->
     @app = options.app
     @app.on('sync', @render)

@@ -1,92 +1,96 @@
 (function() {
-  window.Pica || (window.Pica = {});
+  define([], function() {
+    var PicaEvents;
 
-  Pica.Events = (function() {
-    function Events() {}
+    return PicaEvents = (function() {
+      function PicaEvents() {}
 
-    Events.prototype.on = function(event, callback) {
-      var _base;
+      PicaEvents.prototype.on = function(event, callback) {
+        var _base;
 
-      this.events || (this.events = {});
-      (_base = this.events)[event] || (_base[event] = []);
-      return this.events[event].push(callback);
-    };
+        this.events || (this.events = {});
+        (_base = this.events)[event] || (_base[event] = []);
+        return this.events[event].push(callback);
+      };
 
-    Events.prototype.off = function(event, callback) {
-      var eventCallback, index, _i, _len, _ref, _results;
+      PicaEvents.prototype.off = function(event, callback) {
+        var eventCallback, index, _i, _len, _ref, _results;
 
-      if (this.events == null) {
-        return;
-      }
-      if (event != null) {
-        if (this.events[event] != null) {
-          if (callback != null) {
-            _ref = this.events[event];
-            _results = [];
-            for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
-              eventCallback = _ref[index];
-              if (eventCallback === callback) {
-                this.events[event].splice(index, 1);
-                _results.push(index -= 1);
-              } else {
-                _results.push(void 0);
+        if (this.events == null) {
+          return;
+        }
+        if (event != null) {
+          if (this.events[event] != null) {
+            if (callback != null) {
+              _ref = this.events[event];
+              _results = [];
+              for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+                eventCallback = _ref[index];
+                if (eventCallback === callback) {
+                  this.events[event].splice(index, 1);
+                  _results.push(index -= 1);
+                } else {
+                  _results.push(void 0);
+                }
               }
+              return _results;
+            } else {
+              return delete this.events[event];
             }
-            return _results;
-          } else {
-            return delete this.events[event];
           }
+        } else {
+          return this.events = [];
         }
-      } else {
-        return this.events = [];
-      }
-    };
+      };
 
-    Events.prototype.trigger = function(event, args) {
-      var callback, _i, _len, _ref, _results;
+      PicaEvents.prototype.trigger = function(event, args) {
+        var callback, _i, _len, _ref, _results;
 
-      if ((this.events != null) && (this.events[event] != null)) {
-        _ref = this.events[event];
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          callback = _ref[_i];
-          _results.push(callback.apply(this, [].concat(args)));
+        if ((this.events != null) && (this.events[event] != null)) {
+          _ref = this.events[event];
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            callback = _ref[_i];
+            _results.push(callback.apply(this, [].concat(args)));
+          }
+          return _results;
         }
-        return _results;
-      }
-    };
+      };
 
-    return Events;
+      return PicaEvents;
 
-  })();
+    })();
+  });
 
 }).call(this);
 
 (function() {
-  var _ref,
+  var PicaModel, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Pica.Model = (function(_super) {
-    __extends(Model, _super);
+  define(["Pica_event"], function(PicaEvents) {});
 
-    function Model() {
+  PicaModel = (function(_super) {
+    __extends(PicaModel, _super);
+
+    function PicaModel() {
       this.destroy = __bind(this.destroy, this);
       this.fetch = __bind(this.fetch, this);
-      this.save = __bind(this.save, this);      _ref = Model.__super__.constructor.apply(this, arguments);
+      this.save = __bind(this.save, this);      _ref = PicaModel.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    Model.prototype.throwIfNoApp = function() {
+    PicaModel.prototype.throwIfNoApp = function() {
       if (this.app == null) {
         throw "Cannot create a Pica.Model without specifying a Pica.Application";
       }
     };
 
-    Model.prototype.url = function() {};
+    PicaModel.prototype.url = function() {};
 
-    Model.prototype.get = function(attribute) {
+    PicaModel.prototype.get = function(attribute) {
       var _ref1;
 
       if ((_ref1 = this.attributes) == null) {
@@ -95,7 +99,7 @@
       return this.attributes[attribute];
     };
 
-    Model.prototype.set = function(attribute, value) {
+    PicaModel.prototype.set = function(attribute, value) {
       var _ref1;
 
       if ((_ref1 = this.attributes) == null) {
@@ -105,7 +109,7 @@
       return this.trigger('change');
     };
 
-    Model.prototype.sync = function(options) {
+    PicaModel.prototype.sync = function(options) {
       var data, errorCallback, successCallback,
         _this = this;
 
@@ -143,7 +147,7 @@
       }));
     };
 
-    Model.prototype.parse = function(data) {
+    PicaModel.prototype.parse = function(data) {
       var attr, val, _results;
 
       _results = [];
@@ -154,7 +158,7 @@
       return _results;
     };
 
-    Model.prototype.save = function(options) {
+    PicaModel.prototype.save = function(options) {
       var sync,
         _this = this;
 
@@ -175,7 +179,7 @@
       return sync;
     };
 
-    Model.prototype.fetch = function(options) {
+    PicaModel.prototype.fetch = function(options) {
       if (options == null) {
         options = {};
       }
@@ -184,7 +188,7 @@
       return this.sync(options);
     };
 
-    Model.prototype.destroy = function(options) {
+    PicaModel.prototype.destroy = function(options) {
       var originalCallback,
         _this = this;
 
@@ -205,9 +209,9 @@
       return this.sync(options);
     };
 
-    return Model;
+    return PicaModel;
 
-  })(Pica.Events);
+  })(PicaEvents);
 
 }).call(this);
 
@@ -216,79 +220,77 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  window.Pica || (window.Pica = {});
+  define(["lib/pica_model", "lib/pica_event", "views/show_layers_view"], function(PicaModels, PicaEvents, ShowLayersView) {
+    var Pica, PicaApplication;
 
-  Pica.Models = {};
+    Pica = {};
+    return PicaApplication = (function(_super) {
+      __extends(PicaApplication, _super);
 
-  Pica.Views = {};
-
-  Pica.Application = (function(_super) {
-    __extends(Application, _super);
-
-    function Application(config) {
-      this.config = config;
-      this.parse = __bind(this.parse, this);
-      Pica.config = this.config;
-      $.support.cors = true;
-      $.ajaxSetup({
-        headers: {
-          'X-Magpie-ProjectId': Pica.config.projectId
+      function PicaApplication(config) {
+        this.config = config;
+        this.parse = __bind(this.parse, this);
+        $.support.cors = true;
+        $.ajaxSetup({
+          headers: {
+            'X-Magpie-ProjectId': this.config.projectId
+          }
+        });
+        this.layers = [];
+        this.fetch();
+        if (this.config.delegateLayerControl) {
+          this.showTileLayers();
         }
-      });
-      this.layers = [];
-      this.fetch();
-      if (this.config.delegateLayerControl) {
-        this.showTileLayers();
       }
-    }
 
-    Application.prototype.newWorkspace = function() {
-      return this.currentWorkspace = new Pica.Models.Workspace(this);
-    };
+      PicaApplication.prototype.newWorkspace = function() {
+        return this.currentWorkspace = new PicaModels.Workspace(this);
+      };
 
-    Application.prototype.showTileLayers = function() {
-      return new Pica.Views.ShowLayersView({
-        app: this
-      });
-    };
+      PicaApplication.prototype.showTileLayers = function() {
+        return new ShowLayersView({
+          app: this
+        });
+      };
 
-    Application.prototype.fetch = function() {
-      return $.ajax({
-        url: "" + Pica.config.magpieUrl + "/projects/" + Pica.config.projectId + ".json",
-        type: 'get',
-        success: this.parse
-      });
-    };
+      PicaApplication.prototype.fetch = function() {
+        return $.ajax({
+          url: "" + this.config.magpieUrl + "/projects/" + this.config.projectId + ".json",
+          type: 'get',
+          success: this.parse
+        });
+      };
 
-    Application.prototype.parse = function(data) {
-      var attr, val;
+      PicaApplication.prototype.parse = function(data) {
+        var attr, val;
 
-      for (attr in data) {
-        val = data[attr];
-        this[attr] = val;
-      }
-      return this.trigger('sync');
-    };
+        for (attr in data) {
+          val = data[attr];
+          this[attr] = val;
+        }
+        return this.trigger('sync');
+      };
 
-    Application.prototype.notifySyncStarted = function() {
-      this.syncsInProgress || (this.syncsInProgress = 0);
-      this.syncsInProgress = this.syncsInProgress + 1;
-      if (this.syncsInProgress === 1) {
-        return this.trigger('syncStarted');
-      }
-    };
+      PicaApplication.prototype.notifySyncStarted = function() {
+        this.syncsInProgress || (this.syncsInProgress = 0);
+        this.syncsInProgress = this.syncsInProgress + 1;
+        if (this.syncsInProgress === 1) {
+          return this.trigger('syncStarted');
+        }
+      };
 
-    Application.prototype.notifySyncFinished = function() {
-      this.syncsInProgress || (this.syncsInProgress = 0);
-      this.syncsInProgress = this.syncsInProgress - 1;
-      if (this.syncsInProgress === 0) {
-        return this.trigger('syncFinished');
-      }
-    };
+      PicaApplication.prototype.notifySyncFinished = function() {
+        this.syncsInProgress || (this.syncsInProgress = 0);
+        this.syncsInProgress = this.syncsInProgress - 1;
+        if (this.syncsInProgress === 0) {
+          return this.trigger('syncFinished');
+        }
+      };
 
-    return Application;
+      return PicaApplication;
 
-  })(Pica.Events);
+    })(PicaEvents);
+  });
 
 }).call(this);
 
@@ -879,9 +881,12 @@
 }).call(this);
 
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var ShowLayersView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  Pica.Views.ShowLayersView = (function() {
+  define(["leaflet"], function(L) {});
+
+  ShowLayersView = (function() {
     function ShowLayersView(options) {
       this.removeTileLayers = __bind(this.removeTileLayers, this);
       this.render = __bind(this.render, this);      this.app = options.app;

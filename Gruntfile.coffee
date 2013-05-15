@@ -59,6 +59,38 @@ module.exports = (grunt) ->
         'no_empty_param_list': {'level': 'warning'},
         'cyclomatic_complexity' : {'level' : 'warn', 'value' : 11},
         'max_line_length': {'level': 'warn'}
+
+    # Optimization and build.
+    requirejs:
+      options:
+        baseUrl: "js"
+      compress_no_dependencies:
+        options:
+          optimize: 'uglify2'
+          out: "dist/pica.min.js"
+          mainConfigFile: 'js/app.js'
+          exclude: [
+            'jquery',
+            'jQueryXDomainRequest',
+            'leaflet',
+            'leaflet_draw'
+          ]
+      plain_no_dependencies:
+        options:
+          optimize: 'none'
+          out: "dist/pica.js"
+          mainConfigFile: 'js/app.js'
+          exclude: [
+            'jquery',
+            'jQueryXDomainRequest'
+            'leaflet',
+            'leaflet_draw'
+          ]
+      #css:
+      #  options:
+      #    optimizeCss: "standard"
+      #    cssIn: "style/main.css"
+      #    out: "dist/main.css"
   )
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
@@ -68,6 +100,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-coffeelint')
+  grunt.loadNpmTasks('grunt-requirejs')
 
   grunt.registerTask('default', ['clean', 'coffee', 'concat', 'uglify', 'copy'])
 

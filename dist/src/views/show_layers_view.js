@@ -1,7 +1,10 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var ShowLayersView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  Pica.Views.ShowLayersView = (function() {
+  define(["leaflet"], function(L) {});
+
+  ShowLayersView = (function() {
     function ShowLayersView(options) {
       this.removeTileLayers = __bind(this.removeTileLayers, this);
       this.render = __bind(this.render, this);      this.app = options.app;

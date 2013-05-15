@@ -1,28 +1,30 @@
 (function() {
-  var _ref,
+  var PicaModel, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Pica.Model = (function(_super) {
-    __extends(Model, _super);
+  define(["Pica_event"], function(PicaEvents) {});
 
-    function Model() {
+  PicaModel = (function(_super) {
+    __extends(PicaModel, _super);
+
+    function PicaModel() {
       this.destroy = __bind(this.destroy, this);
       this.fetch = __bind(this.fetch, this);
-      this.save = __bind(this.save, this);      _ref = Model.__super__.constructor.apply(this, arguments);
+      this.save = __bind(this.save, this);      _ref = PicaModel.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    Model.prototype.throwIfNoApp = function() {
+    PicaModel.prototype.throwIfNoApp = function() {
       if (this.app == null) {
         throw "Cannot create a Pica.Model without specifying a Pica.Application";
       }
     };
 
-    Model.prototype.url = function() {};
+    PicaModel.prototype.url = function() {};
 
-    Model.prototype.get = function(attribute) {
+    PicaModel.prototype.get = function(attribute) {
       var _ref1;
 
       if ((_ref1 = this.attributes) == null) {
@@ -31,7 +33,7 @@
       return this.attributes[attribute];
     };
 
-    Model.prototype.set = function(attribute, value) {
+    PicaModel.prototype.set = function(attribute, value) {
       var _ref1;
 
       if ((_ref1 = this.attributes) == null) {
@@ -41,7 +43,7 @@
       return this.trigger('change');
     };
 
-    Model.prototype.sync = function(options) {
+    PicaModel.prototype.sync = function(options) {
       var data, errorCallback, successCallback,
         _this = this;
 
@@ -79,7 +81,7 @@
       }));
     };
 
-    Model.prototype.parse = function(data) {
+    PicaModel.prototype.parse = function(data) {
       var attr, val, _results;
 
       _results = [];
@@ -90,7 +92,7 @@
       return _results;
     };
 
-    Model.prototype.save = function(options) {
+    PicaModel.prototype.save = function(options) {
       var sync,
         _this = this;
 
@@ -111,7 +113,7 @@
       return sync;
     };
 
-    Model.prototype.fetch = function(options) {
+    PicaModel.prototype.fetch = function(options) {
       if (options == null) {
         options = {};
       }
@@ -120,7 +122,7 @@
       return this.sync(options);
     };
 
-    Model.prototype.destroy = function(options) {
+    PicaModel.prototype.destroy = function(options) {
       var originalCallback,
         _this = this;
 
@@ -141,8 +143,8 @@
       return this.sync(options);
     };
 
-    return Model;
+    return PicaModel;
 
-  })(Pica.Events);
+  })(PicaEvents);
 
 }).call(this);

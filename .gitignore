@@ -18,3 +18,7 @@
 
 # Ignore node_modules folder because it gets built every time
 node_modules/
+# Ignore js external libs
+vendor/
+# Just a local test on AMD loading
+test.html

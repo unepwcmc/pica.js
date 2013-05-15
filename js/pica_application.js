@@ -3,10 +3,9 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(["lib/pica_model", "lib/pica_event", "views/show_layers_view"], function(PicaModels, PicaEvents, ShowLayersView) {
-    var Pica, PicaApplication;
+  define(["lib/pica_event", "lib/pica_model", "models/workspace", "views/show_layers_view"], function(PicaEvents, PicaModel, PicaModelsWorkspace, ShowLayersView) {
+    var PicaApplication;
 
-    Pica = {};
     return PicaApplication = (function(_super) {
       __extends(PicaApplication, _super);
 
@@ -27,7 +26,7 @@
       }
 
       PicaApplication.prototype.newWorkspace = function() {
-        return this.currentWorkspace = new PicaModels.Workspace(this);
+        return this.currentWorkspace = new PicaModelsWorkspace(this);
       };
 
       PicaApplication.prototype.showTileLayers = function() {

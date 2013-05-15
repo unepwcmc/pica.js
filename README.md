@@ -31,7 +31,7 @@ Start the build (will install dependencies and build).
    npm install
 ```
 
-Running `grunt watch` monitors `lib/` and `example/` for changes and
+Running `grunt watch` monitors `coffee/` and `example/` for changes and
 auto compiles the Javascript, etc. Point your browser to
 `example/index.html` to view your changes.
 
@@ -41,6 +41,26 @@ you'll probably want to run a super simple python web server
     python -m SimpleHTTPServer
 
 Then hit up http://localhost:8000/example/
+
+## AMD modules
+
+* [AMD specification](https://github.com/amdjs/amdjs-api/wiki/AMD)
+* [requirejs](https://github.com/jrburke/requirejs)
+  
+To build a new pica.js distribution file:
+```sh
+   grunt requirejs
+```
+This will create the AMD compatible distribution files in `dist/`, according to the instructions in `Gruntfile requirejs-task`.
+These files expose a variable named `pica` that points to an object, containing Pica's public interface.
+If Pica is used outside of an AMD environment it will still work, but the variable `pica` will be a global.
+To see or modify Pica's public interface look into `coffee/pica.coffee`.
+
+The AMD configuration is split between `coffee/app.coffee` and the `Gruntfile`, that uses `coffee/app.coffee` as the `mainConfigFile` upon wich it builds the distribution files.
+
+
+
+
 
 ## Usage example
 The source code for the demo app is in the example folder. It's commented and should be fairly easy to follow. Start in the script tag in example/index.html.

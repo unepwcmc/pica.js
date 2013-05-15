@@ -44,19 +44,23 @@ Then hit up http://localhost:8000/example/
 
 ## AMD modules
 
-* [AMD specification](https://github.com/amdjs/amdjs-api/wiki/AMD)
-* [requirejs](https://github.com/jrburke/requirejs)
+This is a version of Pica that relies on the [Asynchronous Module Definition](https://github.com/amdjs/amdjs-api/wiki/AMD) specification 
+and more specifically on the [requirejs](https://github.com/jrburke/requirejs) implementation of it.
+
   
-To build a new pica.js distribution file:
+To build a new AMD compatible pica.js distribution file with the [requirejs optimizer](http://requirejs.org/docs/optimization.html):
 ```sh
    grunt requirejs
 ```
-This will create the AMD compatible distribution files in `dist/`, according to the instructions in `Gruntfile requirejs-task`.
-These files expose a variable named `pica` that points to an object, containing Pica's public interface.
+The files are saved in `dist/`, 
+according to the instructions in `Gruntfile requirejs-task`.
+`pica.js` exposes a variable named `pica` that points to an object, containing Pica's public interface.
 If Pica is used outside of an AMD environment it will still work, but the variable `pica` will be a global.
 To see or modify Pica's public interface look into `coffee/pica.coffee`.
 
-The AMD configuration is split between `coffee/app.coffee` and the `Gruntfile`, that uses `coffee/app.coffee` as the `mainConfigFile` upon wich it builds the distribution files.
+The AMD configuration is split between `coffee/app.coffee` and the `Gruntfile`, 
+that uses `coffee/app.coffee` as the `mainConfigFile` upon wich it builds the distribution files.
+For a complete description of all configuration options in the requirejs optimizer look into: [example.build.js](https://github.com/jrburke/r.js/blob/master/build/example.build.js).
 
 
 

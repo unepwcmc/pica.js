@@ -55,7 +55,7 @@ To build a new AMD compatible pica.js distribution file with the [requirejs opti
 The files are saved in `dist/`, 
 according to the instructions in `Gruntfile requirejs-task`.
 `pica.js` exposes a variable named `pica` that points to an object, containing Pica's public interface.
-If Pica is used outside of an AMD environment it will still work, but the variable `pica` will be a global.
+If `pica.js` is used outside of an AMD environment it will still work, but the variable `pica` will be a global.
 To see or modify Pica's public interface look into `coffee/pica.coffee`.
 
 The AMD configuration is split between `coffee/app.coffee` and the `Gruntfile`, 

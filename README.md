@@ -113,7 +113,7 @@ Code example:
   overlayMaps =
     "Boundaries and Places": L.tileLayer(placesTileLayerUrl)
   # Create a new instance of pica, with the given options.
-  window.pica = new Pica.Application(
+  window.pica_app = new pica.PicaApplication(
     magpieUrl: "http://10.1.1.138:3000"
     projectId: 2
     map: map

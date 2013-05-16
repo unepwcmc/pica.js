@@ -8,6 +8,7 @@
     "chai": "1.6.0",
     "sinon": "https://raw.github.com/cjohansen/sinon-web/master/releases/sinon.js",
     "sinon-chai": "2.4.0",
-    "requirejs": "2.1.5"
+    "requirejs": "2.1.5",
+    "expectjs": "https://raw.github.com/LearnBoost/expect.js/master/expect.js"
   }
 }

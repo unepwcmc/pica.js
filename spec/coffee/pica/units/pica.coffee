@@ -57,7 +57,6 @@ define [
         before ->
           magpieServer = new testHelpers.FakeMagpieServer()
           pica = testHelpers.buildPicaApplication()
-          console.log pica, 'TRD'
           pica.syncsInProgress = 1
   
           syncStartedListener = sinon.spy()

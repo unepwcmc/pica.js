@@ -81,5 +81,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-coffeelint')
   grunt.loadNpmTasks('grunt-requirejs')
 
-  grunt.registerTask('default', ['clean', 'coffee', 'copy'])
+  grunt.registerTask('default', ['coffee', 'copy'])
 

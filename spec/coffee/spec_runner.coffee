@@ -36,7 +36,6 @@ requirejs.config
 
     # Leaflet has added AMD compatibility with this commit:
     # https://github.com/Leaflet/Leaflet/commit/323245ffc356683914f63fb9b70f6fe8627cdc69
-    # But still not in distribution.
     leaflet:
       exports: "L"
 
@@ -51,7 +50,7 @@ requirejs.config
     mocha:
       init: ->
         mocha.setup "bdd"
-        mocha    
+        mocha
 
 
   requirejs ["main_spec"]

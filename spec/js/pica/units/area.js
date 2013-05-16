@@ -4,7 +4,7 @@
     var should;
 
     should = chai.should();
-    return describe('Pica.Models.Area', function() {
+    return describe('PicaModelsArea', function() {
       describe('.constructor', function() {
         describe('when given a pica application', function() {
           var area, pica;

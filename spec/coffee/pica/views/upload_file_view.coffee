@@ -10,7 +10,7 @@ define [
 
   should = chai.should()
 
-  describe "PicaViewsUploadFileView", ->
+  describe "ViewsUploadFileView", ->
   
     describe "a view exists and has been rendered", ->
       fileView = undefined

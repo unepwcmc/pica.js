@@ -4,7 +4,7 @@
     var should;
 
     should = chai.should();
-    return describe("PicaViewsUploadFileView", function() {
+    return describe("ViewsUploadFileView", function() {
       return describe("a view exists and has been rendered", function() {
         var addEventListenerSpy, fileView, magpieServer;
 

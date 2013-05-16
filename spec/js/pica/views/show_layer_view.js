@@ -4,7 +4,7 @@
     var should;
 
     should = chai.should();
-    return describe("Pica.Views.ShowLayersView", function() {
+    return describe("ShowLayersView", function() {
       return describe("Leaflet Layer Control is delegated to Pica", function() {
         var magpieServer, spyRenderLayerControl;
 

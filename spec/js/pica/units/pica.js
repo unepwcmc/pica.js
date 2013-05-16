@@ -4,7 +4,7 @@
     var should;
 
     should = chai.should();
-    return describe('Pica.Application', function() {
+    return describe('PicaApplication', function() {
       describe('.createWorkspace', function() {
         var magpieServer, pica;
 
@@ -43,7 +43,7 @@
             return pica.notifySyncStarted();
           });
           it('fires the syncStarted event', function() {
-            return syncStartedListener.calledOnce.should.be.ok;
+            return syncStartedListener.should.have.been.calledOnce;
           });
           return it('increments syncsInProgress', function() {
             return pica.syncsInProgress.should.equal(1);
@@ -58,13 +58,14 @@
 
             magpieServer = new testHelpers.FakeMagpieServer();
             pica = testHelpers.buildPicaApplication();
+            console.log(pica, 'TRD');
             pica.syncsInProgress = 1;
             syncStartedListener = sinon.spy();
             pica.on('syncStarted', syncStartedListener);
             return pica.notifySyncStarted();
           });
           it('does not fire the syncStarted again', function() {
-            return syncStartedListener.calledOnce.should.to.be.ok;
+            return syncStartedListener.should.have.been.calledOnce;
           });
           return it('increments syncsInProgress', function() {
             return pica.syncsInProgress.should.equal(2);
@@ -90,7 +91,7 @@
             return pica.syncsInProgress.should.equal(0);
           });
           return it('fires the syncFinished event', function() {
-            return syncFinishedListener.calledOnce.should.be.ok;
+            return syncFinishedListener.should.have.been.calledOnce;
           });
         });
         return describe('called when 2 syncsInProgress', function() {

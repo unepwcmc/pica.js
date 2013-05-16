@@ -10,7 +10,7 @@ define [
 
   should = chai.should()
 
-  describe 'Pica.Models.Polygon', ->
+  describe 'PicaModelsPolygon', ->
     describe '.constructor', ->
       describe 'when given a pica application', ->
         pica = polygon = null

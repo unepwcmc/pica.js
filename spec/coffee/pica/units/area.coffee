@@ -10,7 +10,7 @@ define [
 
   should = chai.should()
 
-  describe 'Pica.Models.Area', ->
+  describe 'PicaModelsArea', ->
     describe '.constructor', ->
       describe 'when given a pica application', ->
         pica = area = null

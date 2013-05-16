@@ -4,7 +4,7 @@
     var should;
 
     should = chai.should();
-    return describe('Pica.Models.Workspace', function() {
+    return describe('PicaModelsWorkspace', function() {
       describe('.constructor', function() {
         describe('when given a pica application', function() {
           var pica, workspace;

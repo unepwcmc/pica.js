@@ -9,7 +9,7 @@ define [
 
   should = chai.should()
 
-  describe 'Pica.Application', ->
+  describe 'PicaApplication', ->
   
     describe '.createWorkspace', ->
       pica = magpieServer = null
@@ -47,7 +47,7 @@ define [
           pica.notifySyncStarted()
   
         it 'fires the syncStarted event', ->
-          syncStartedListener.calledOnce.should.be.ok
+          syncStartedListener.should.have.been.calledOnce
   
         it 'increments syncsInProgress', ->
           pica.syncsInProgress.should.equal 1
@@ -57,6 +57,7 @@ define [
         before ->
           magpieServer = new testHelpers.FakeMagpieServer()
           pica = testHelpers.buildPicaApplication()
+          console.log pica, 'TRD'
           pica.syncsInProgress = 1
   
           syncStartedListener = sinon.spy()
@@ -65,7 +66,7 @@ define [
           pica.notifySyncStarted()
   
         it 'does not fire the syncStarted again', ->
-          syncStartedListener.calledOnce.should.to.be.ok
+          syncStartedListener.should.have.been.calledOnce
   
         it 'increments syncsInProgress', ->
           pica.syncsInProgress.should.equal 2
@@ -87,7 +88,7 @@ define [
           pica.syncsInProgress.should.equal 0
   
         it 'fires the syncFinished event', ->
-          syncFinishedListener.calledOnce.should.be.ok
+          syncFinishedListener.should.have.been.calledOnce
   
       describe 'called when 2 syncsInProgress', ->
         pica = syncFinishedListener = null

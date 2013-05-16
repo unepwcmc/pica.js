@@ -10,7 +10,7 @@ define [
 
   should = chai.should()
 
-  describe "Pica.Views.ShowLayersView", ->
+  describe "ShowLayersView", ->
   
     describe "Leaflet Layer Control is delegated to Pica", ->
       spyRenderLayerControl = magpieServer = undefined

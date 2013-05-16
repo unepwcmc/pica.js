@@ -1,6 +1,7 @@
+
 requirejs.config
 
-  #baseUrl: "./"
+  baseUrl: "../js"
   
   # Specify dependency libraries
   paths:
@@ -10,6 +11,21 @@ requirejs.config
     leaflet_draw: "../vendor/leaflet.draw/index"
     almond: "../node_modules/grunt-requirejs/node_modules/almond/almond"
     pica: "pica"
+
+    # Spec paths
+    chai: "../vendor/chai/chai"
+    sinonChai: "../vendor/sinon-chai/lib/sinon-chai"
+    sinon: "../vendor/sinon/index"
+    mocha: "../vendor/mocha/mocha"
+    main_spec: "../spec/js/main"
+    specHelpers: "../spec/js/spec_helpers"
+    specData: "../spec/js/spec_data"
+    workspaceSpec: "../spec/js/pica/units/workspace"
+    areaSpec: "../spec/js/pica/units/area"
+    picaSpec: "../spec/js/pica/units/pica"
+    polygonSpec: "../spec/js/pica/units/polygon"
+    showLayerViewSpec: "../spec/js/pica/views/show_layer_view"
+    uploadFileViewSpec: "../spec/js/pica/views/upload_file_view"
 
 
   # Not AMD-capable per default,
@@ -28,11 +44,14 @@ requirejs.config
       deps: ["leaflet"]
       exports: "L"
 
-  name: "almond"
-  include: ["pica"]
-  
-  #insertRequire: ["charter"] 
+    # Spec shims
+    sinon:
+      exports: "sinon"
 
-  wrap:
-    startFile: "../wrap/start.frag"
-    endFile: "../wrap/end.frag"
+    mocha:
+      init: ->
+        mocha.setup "bdd"
+        mocha    
+
+
+  requirejs ["main_spec"]

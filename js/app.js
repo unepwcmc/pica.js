@@ -12,6 +12,9 @@
       jQueryXDomainRequest: {
         exports: "jquery"
       },
+      leaflet: {
+        exports: "L"
+      },
       leaflet_draw: {
         deps: ["leaflet"],
         exports: "L"

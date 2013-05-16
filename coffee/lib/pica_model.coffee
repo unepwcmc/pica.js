@@ -5,7 +5,7 @@ define [
   class PicaModel extends PicaEvents
     throwIfNoApp: ->
       unless @app?
-        throw "Cannot create a PicaModel without specifying a PicaApplication"
+        throw new Error "Cannot create a PicaModel without specifying a PicaApplication"
   
     url: () ->
   

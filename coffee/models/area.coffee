@@ -60,6 +60,7 @@ define [
       new PicaViewsUploadFileView(
         callbacks: callbacks
         area: @
+        magpieUrl: @app.config.magpieUrl
       )
   
     # spawns a new ShowAreaPolygonsView for this area

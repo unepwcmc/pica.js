@@ -19,9 +19,9 @@ module.exports = (grunt) ->
         ext: '.js'
       test:
         expand: true
-        cwd: 'test'
+        cwd: 'spec/coffee'
         src: '**/*.coffee'
-        dest: 'test/js'
+        dest: 'spec/js'
         ext: '.js'
 
     copy:
@@ -30,11 +30,11 @@ module.exports = (grunt) ->
           "example/js/lib/pica.js": "dist/pica.js"
 
     watch:
-      files: ['coffee/**/*.coffee', 'example/**/*.coffee', 'test/**/*.coffee'],
+      files: ['coffee/**/*.coffee', 'example/**/*.coffee', 'spec/coffee/**/*.coffee'],
       tasks: 'default'
 
     coffeelint:
-      files: ['coffee/**/*.coffee', 'example/**/*.coffee', 'test/**/*.coffee'],
+      files: ['coffee/**/*.coffee', 'example/**/*.coffee', 'spec/coffee/**/*.coffee'],
       options:
         'no_trailing_whitespace': {'level': 'error'},
         'no_empty_param_list': {'level': 'warning'},

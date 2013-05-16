@@ -70,7 +70,8 @@
       PicaModelsArea.prototype.newUploadFileView = function(callbacks) {
         return new PicaViewsUploadFileView({
           callbacks: callbacks,
-          area: this
+          area: this,
+          magpieUrl: this.app.config.magpieUrl
         });
       };
 

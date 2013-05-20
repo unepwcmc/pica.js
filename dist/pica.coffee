@@ -47,7 +47,7 @@ class Pica.Model extends Pica.Events
     # Extend callback to add returned data as model attributes.
     options.success = (data, textStatus, jqXHR) =>
       #data = JSON.parse(data) unless 'object' == typeof data
-      if data.id?
+      if data?.id?
         @parse(data)
         @trigger('sync', @)
 

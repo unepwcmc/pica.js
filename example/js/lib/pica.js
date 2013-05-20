@@ -114,7 +114,7 @@
       }
       successCallback = options.success || function() {};
       options.success = function(data, textStatus, jqXHR) {
-        if (data.id != null) {
+        if ((data != null ? data.id : void 0) != null) {
           _this.parse(data);
           _this.trigger('sync', _this);
         }

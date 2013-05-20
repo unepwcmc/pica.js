@@ -31,7 +31,7 @@ Start the build (will install dependencies and build).
    npm install
 ```
 
-Running `grunt watch` monitors `lib/` and `example/` for changes and
+Running `grunt watch` monitors `coffee/` and `example/` for changes and
 auto compiles the Javascript, etc. Point your browser to
 `example/index.html` to view your changes.
 
@@ -41,6 +41,7 @@ you'll probably want to run a super simple python web server
     python -m SimpleHTTPServer
 
 Then hit up http://localhost:8000/example/
+
 
 ## Usage example
 The source code for the demo app is in the example folder. It's commented and should be fairly easy to follow. Start in the script tag in example/index.html.

@@ -42,6 +42,15 @@ you'll probably want to run a super simple python web server
 
 Then hit up http://localhost:8000/example/
 
+### CORS
+
+Pica.js connects to a Magpie server through AJAX requests, meaning that
+there can be some issues in Internet Explorer with CORS.
+
+If you are getting `Access is Denied` errors in IE, or if it is blocking
+requests, try including
+[jQuery.XDomainRequest](https://github.com/MoonScript/jQuery-ajaxTransport-XDomainRequest)
+on your page before Pica.js.
 
 ## Usage example
 The source code for the demo app is in the example folder. It's commented and should be fairly easy to follow. Start in the script tag in example/index.html.
